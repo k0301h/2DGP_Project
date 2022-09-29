@@ -1,15 +1,30 @@
 from pico2d import *
 from characterclass import *
+from map_floor import *
+#from PIL import Image
 
 character = CHARACTER()
 open_canvas()
 
 character_I = load_image('char_yellow.png')
+#chracter_reverse_I = character_I.transpose(Image.FL)
+BG_stage_I = load_image('bg_cave.png')
+FLOOR_stage_I = load_image('floor_cave.png')
+
+
+def draw_map_floor():
+    FLOOR_stage_I..clip_draw(0, 1406, 130, 130, 0, 0)
+    
 
 def draw_character():
     clear_canvas()
-    character_I.clip_draw(character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128,
-                          character.X, character.Y)
+    #if character.Action == 1:
+    #   character_I.clip_draw(character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y)
+    #elif character.Action == 3:
+    #   character_reverse_I.clip_draw(character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y)
+    BG_stage_I.draw(400,300)
+    character_I.clip_draw(character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y)
+    
     update_canvas()
     delay(0.075)
     events = get_events()
@@ -27,7 +42,7 @@ def draw_character():
                 character.Action = 2
             elif event.key == SDLK_LEFT:
                 character.Action = 3
-            elif event.key == SDLK_b:
+            elif event.key == SDLK_LALT:
                 character.Action = 4
                 character.Y += 10
         elif event.type == SDL_KEYUP:
@@ -39,7 +54,7 @@ def draw_character():
                 character.Action = 0
             elif event.key == SDLK_LEFT:
                 character.Action = 0
-            elif event.key == SDLK_b:
+            elif event.key == SDLK_LALT:
                 character.Action = 0
 
     if character.Action == 0:
@@ -58,5 +73,6 @@ def draw_character():
 
 while (1):
     draw_character()
+    draw_map_floor()
 
 close_canvas()
