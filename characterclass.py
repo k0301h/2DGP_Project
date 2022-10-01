@@ -5,7 +5,7 @@ class CHARACTER(UNIT):
     UNIT.Action = 0
     UNIT.MotionIndex = 0
     UNIT.X = 400
-    UNIT.Y = 300
+    UNIT.Y = 0
     UNIT.DIRECTION = 0
     BombCount = 4
     RopeCount = 4

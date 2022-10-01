@@ -17,7 +17,8 @@ FLOOR_stage_I = load_image('floor_cave.png')
 Gravity = 2.0
 JumpSpeed = 20
 
-shift_on = 0
+shift_on = True
+Jump_Key_State = False
 
 start = 0
 end = 0
@@ -42,6 +43,7 @@ def draw_character():
     # global Can_Jump
     global shift_on
     global JumpSpeed
+    global Jump_Key_State
 
     clear_canvas()
     BG_stage_I.draw(400, 300)
@@ -70,10 +72,9 @@ def draw_character():
                 character.DIRECTION = 1
                 character.Action = 3
             elif event.key == SDLK_LALT:
-                # Jump_Key_State = True
-                character.Action = 4
+                Jump_Key_State = True
             elif event.key == SDLK_LSHIFT:
-                shift_on = 1
+                shift_on = True
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_RIGHT and character.Action == 1:
                 character.Action = 0
@@ -81,39 +82,39 @@ def draw_character():
                 character.Action = 0
             elif event.key == SDLK_LEFT and character.Action == 3:
                 character.Action = 0
-            elif event.key == SDLK_LALT and character.Action == 4:
-                # Jump_Key_State = False
-                character.Action = 0
+            elif event.key == SDLK_LALT and Jump_Key_State:
+                Jump_Key_State = False
                 JumpSpeed = 20
             elif event.key == SDLK_LSHIFT:
-                shift_on = 0
+                shift_on = False
+
+    if Jump_Key_State:
+        Jump()
 
     if character.Action == 0:
         character.MotionIndex = 0
     elif character.Action == 1:
-        character.MotionIndex = (character.MotionIndex + 1) % 8
+        if Jump_Key_State == False:
+            character.MotionIndex = (character.MotionIndex + 1) % 8
         if shift_on == 0:
             character.X += 5
         else:
             character.X += 15
     elif character.Action == 2:
-        if character.MotionIndex < 18:
+        if character.MotionIndex < 18 and Jump_Key_State == False:
             character.MotionIndex = (character.MotionIndex + 1) % 16 % 3 + 16
     elif character.Action == 3:
-        character.MotionIndex = (character.MotionIndex + 1) % 8
+        if Jump_Key_State == False:
+            character.MotionIndex = (character.MotionIndex + 1) % 8
         if shift_on == 0:
             character.X -= 5
         else:
             character.X -= 15
-    elif character.Action == 4:
-        character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
-        Jump()
-
-
 
 def Jump():
     global JumpSpeed
     global character
+    character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
     JumpSpeed -= Gravity
     if JumpSpeed > 0:
         character.Y += JumpSpeed
