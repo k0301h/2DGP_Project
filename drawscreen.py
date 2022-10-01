@@ -14,7 +14,7 @@ FLOOR_stage_I = load_image('floor_cave.png')
 
 # Jump_Key_State = False
 # Can_Jump = True
-Gravity = 3.0
+Gravity = 2.0
 JumpSpeed = 20
 
 shift_on = 0
@@ -75,15 +75,13 @@ def draw_character():
             elif event.key == SDLK_LSHIFT:
                 shift_on = 1
         elif event.type == SDL_KEYUP:
-            if event.key == SDLK_UP:
+            if event.key == SDLK_RIGHT and character.Action == 1:
                 character.Action = 0
-            elif event.key == SDLK_RIGHT:
+            elif event.key == SDLK_DOWN and character.Action == 2:
                 character.Action = 0
-            elif event.key == SDLK_DOWN:
+            elif event.key == SDLK_LEFT and character.Action == 3:
                 character.Action = 0
-            elif event.key == SDLK_LEFT:
-                character.Action = 0
-            elif event.key == SDLK_LALT:
+            elif event.key == SDLK_LALT and character.Action == 4:
                 # Jump_Key_State = False
                 character.Action = 0
                 JumpSpeed = 20
