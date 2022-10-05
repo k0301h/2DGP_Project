@@ -36,7 +36,9 @@ def end_timer():
 def draw_map_floor():
     for index in range(0, 25 * 25):
         if map_floor_array[index] == 1:
-            FLOOR_stage_I.clip_draw(0, 448, 64, 64, index % 25 * 64, 600 - index // 25 * 64)
+            FLOOR_stage_I.clip_draw(0, 1410, 130, 130, index % 25 * 60, 600 - index // 25 * 60, 60, 60)
+        elif map_floor_array[index] == 2:
+            FLOOR_stage_I.clip_draw(45, 386, 300, 240, index % 25 * 60, 600 - index // 25 * 60, 225, 180)
     
 
 def draw_character():
@@ -53,7 +55,7 @@ def draw_character():
     BG_stage_I.draw(200, 600)
     BG_stage_I.draw(600, 600)
 
-    # draw_map_floor()
+    draw_map_floor()
     if character.DIRECTION == 0:
       character_I.clip_draw(character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y)
     elif character.DIRECTION == 1:
