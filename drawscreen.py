@@ -5,6 +5,12 @@ import time
 import threading
 
 character = CHARACTER()
+
+for index in range(0, 25 * 25):
+    if map_floor_array[index] == 2:
+        character.X = index % 25 * 60
+        character.Y = 600 - index // 25 * 60 - 30
+
 open_canvas()
 
 character_I = load_image('char_yellow.png')
@@ -17,12 +23,13 @@ FLOOR_stage_I = load_image('floor_cave.png')
 Gravity = 2.0
 JumpSpeed = 20
 
-shift_on = True
+shift_on = False
 Jump_Key_State = False
 Down_Jump_state = False
 
 start = 0
 end = 0
+
 
 def start_time():
     global start
@@ -57,10 +64,10 @@ def draw_character():
 
     draw_map_floor()
     if character.DIRECTION == 0:
-      character_I.clip_draw(character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y)
+      character_I.clip_draw(character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y, 120, 120)
     elif character.DIRECTION == 1:
-      character_reverse_I.clip_draw(1918 - character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y)
-    # character_I.clip_draw(character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y)
+      character_reverse_I.clip_draw(1918 - character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y, 120, 120)
+
     update_canvas()
     delay(0.05)
     events = get_events()
@@ -104,7 +111,10 @@ def draw_character():
 
     Motion()
 
-
+def gravity():
+    global character
+    if map_floor_array[(600 - character.Y) // 60] == 0 and character.Y // 60 // 25 * 60 < character.Y:
+        character.Y = character.Y - 10
 
 def Motion():
     global character
@@ -112,7 +122,8 @@ def Motion():
         Jump()
     elif Down_Jump_state:
         Down_Jump()
-
+    else:
+        gravity()
 
     if character.Action == 0:
         if not Jump_Key_State:
@@ -134,6 +145,7 @@ def Motion():
             character.X -= 5
         else:
             character.X -= 15
+
 
 def Jump():
     global character

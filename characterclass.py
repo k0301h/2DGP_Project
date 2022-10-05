@@ -1,4 +1,5 @@
 from Unitclass import *
+
 class CHARACTER(UNIT):
     UNIT.HP = 5
     UNIT.ATK = 1
