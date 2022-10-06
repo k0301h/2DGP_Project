@@ -23,6 +23,9 @@ FLOOR_stage_I = load_image('floor_cave.png')
 Gravity = 2.0
 JumpSpeed = 20
 
+camera_move_x = 0
+camera_move_y = 0
+
 shift_on = False
 Jump_Key_State = False
 Down_Jump_state = False
@@ -43,9 +46,9 @@ def end_timer():
 def draw_map_floor():
     for index in range(0, 25 * 25):
         if map_floor_array[index] == 1:
-            FLOOR_stage_I.clip_draw(0, 1410, 130, 130, index % 25 * 60, 600 - index // 25 * 60, 60, 60)
+            FLOOR_stage_I.clip_draw(0, 1410, 130, 130, index % 25 * 60 + camera_move_x, 600 - index // 25 * 60 + camera_move_y, 60, 60)
         elif map_floor_array[index] == 2:
-            FLOOR_stage_I.clip_draw(45, 386, 300, 240, index % 25 * 60, 600 - index // 25 * 60, 225, 180)
+            FLOOR_stage_I.clip_draw(45, 386, 300, 240, index % 25 * 60 + camera_move_x, 600 - index // 25 * 60 + camera_move_y, 225, 180)
     
 
 def draw_character():
@@ -113,11 +116,17 @@ def draw_character():
 
 def gravity():
     global character
-    if map_floor_array[(600 - character.Y) // 60] == 0 and character.Y // 60 // 25 * 60 < character.Y:
+    print(int((600 - character.Y) // 60 + 2 + camera_move_y // 60) * 25 + int(character.X // 60 + camera_move_x // 60))
+    index = int((600 - character.Y) // 60 + 2 + camera_move_y // 60) * 25+ int(character.X // 60 + camera_move_x // 60)
+    if map_floor_array[index] == 0 or map_floor_array[index] == 2:
         character.Y = character.Y - 10
+    elif int(25 - index // 25) * 60 < character.Y:
+        character.Y = character.Y - 1
 
 def Motion():
     global character
+    global camera_move_x
+    global camera_move_y
     if Jump_Key_State:
         Jump()
     elif Down_Jump_state:
@@ -133,8 +142,10 @@ def Motion():
             character.MotionIndex = (character.MotionIndex + 1) % 8
         if shift_on == 0:
             character.X += 5
+            camera_move_x -= 5
         else:
             character.X += 15
+            camera_move_x -= 15
     elif character.Action == 2:
         if character.MotionIndex < 18 and not Jump_Key_State:
             character.MotionIndex = (character.MotionIndex + 1) % 16 % 3 + 16
@@ -143,8 +154,10 @@ def Motion():
             character.MotionIndex = (character.MotionIndex + 1) % 8
         if shift_on == 0:
             character.X -= 5
+            camera_move_x += 5
         else:
             character.X -= 15
+            camera_move_x += 15
 
 
 def Jump():
