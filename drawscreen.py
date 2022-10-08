@@ -24,7 +24,7 @@ FLOOR_stage_I = load_image('floor_cave.png')
 # Jump_Key_State = False
 # Can_Jump = True
 Gravity = 2.0
-JumpSpeed = 0
+JumpSpeed = 30
 
 camera_move_x = 0
 camera_move_y = 0
@@ -32,6 +32,7 @@ camera_move_y = 0
 shift_on = False
 Jump_Key_State = False
 Down_Jump_state = False
+Gravity_state = False
 
 start = 0
 end = 0
@@ -139,11 +140,15 @@ def draw_character():
 
 def gravity():
     global character
+    global Gravity_state
     index = int((HEIGHT - character.Y + 32) // 60 + 2 + camera_move_y // 60) * 25 + int(character.X // 60 - camera_move_x // 60) - 25
 
     if map_floor_array[index] == 0 or map_floor_array[index] == 1:
         character.Y = character.Y - 10
         character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
+        Gravity_state = True
+    else:
+        Gravity_state = False
 
 def Motion():
     global character
@@ -154,10 +159,8 @@ def Motion():
     elif Down_Jump_state:
         Down_Jump()
 
-    gravity()
-
     if character.Action == 0:
-        if not Jump_Key_State:
+        if not Jump_Key_State and not Gravity_state:
             character.MotionIndex = 0
     elif character.Action == 1:
         if not Jump_Key_State:
@@ -180,6 +183,8 @@ def Motion():
         else:
             character.X -= 15
             camera_move_x += 15
+
+    gravity()
 
 
 def Jump():
