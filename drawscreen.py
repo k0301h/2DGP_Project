@@ -137,6 +137,12 @@ def draw_character():
 
     Motion()
 
+def Conflict_checking():
+    global character
+    if character.Action == 1:
+        pass
+
+
 def gravity():
     global character
     global Gravity_state
