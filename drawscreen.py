@@ -6,12 +6,15 @@ import threading
 
 character = CHARACTER()
 
-for index in range(0, 25 * 25):
-    if map_floor_array[index] == 2:
-        character.X = index % 25 * 60
-        character.Y = 600 - index // 25 * 60 - 30
+LEN = 1280
+WIDTH = 800
 
-open_canvas()
+for index in range(0, 25 * 25):
+    if map_floor_array[index] == 1:
+        character.X = index % 25 * 60
+        character.Y = WIDTH - index // 25 * 60 - 30
+
+open_canvas(LEN, WIDTH)
 
 character_I = load_image('char_yellow.png')
 character_reverse_I = load_image('r_char_yellow.png')
@@ -21,7 +24,7 @@ FLOOR_stage_I = load_image('floor_cave.png')
 # Jump_Key_State = False
 # Can_Jump = True
 Gravity = 2.0
-JumpSpeed = 20
+JumpSpeed = 0
 
 camera_move_x = 0
 camera_move_y = 0
@@ -45,10 +48,22 @@ def end_timer():
 # 느낌만 구현 나중에 맵 구체적으로 계획후 배열 제작
 def draw_map_floor():
     for index in range(0, 25 * 25):
-        if map_floor_array[index] == 1:
-            FLOOR_stage_I.clip_draw(0, 1410, 130, 130, index % 25 * 60 + camera_move_x, 600 - index // 25 * 60 + camera_move_y, 60, 60)
-        elif map_floor_array[index] == 2:
-            FLOOR_stage_I.clip_draw(45, 386, 300, 240, index % 25 * 60 + camera_move_x, 600 - index // 25 * 60 + camera_move_y, 225, 180)
+        if map_floor_array[index] == 0:
+            pass
+        elif map_floor_array[index] == 1:
+            FLOOR_stage_I.clip_draw(45, 386, 300, 240, index % 25 * 60 + camera_move_x,
+                                    WIDTH - index // 25 * 60 + camera_move_y, 225, 180)
+        # elif map_floor_array[index] == 2:
+        #     FLOOR_stage_I.clip_draw(0, 1410, 128, 128, index % 25 * 60 + camera_move_x,
+        #                             WIDTH - index // 25 * 60 + camera_move_y, 60, 60)
+        else:
+            FLOOR_stage_I.clip_draw(128 * ((map_floor_array[index] - 2) % 4), 1410 - 128 * ((map_floor_array[index] - 2) // 4), 128, 128, index % 25 * 60 + camera_move_x,
+                                    WIDTH - index // 25 * 60 + camera_move_y, 60, 60)
+            if not index % 25 == 24 and map_floor_array[index + 1] == 0:
+                FLOOR_stage_I.clip_draw(687, 765, 30, 130, index % 25 * 60 + camera_move_x + 30,
+                                        WIDTH - index // 25 * 60 + camera_move_y, 15, 60)
+            elif not index :
+                pass
     
 
 def draw_character():
@@ -60,10 +75,10 @@ def draw_character():
     global Down_Jump_state
 
     clear_canvas()
-    BG_stage_I.draw(200, 200)
-    BG_stage_I.draw(600, 200)
-    BG_stage_I.draw(200, 600)
-    BG_stage_I.draw(600, 600)
+    BG_stage_I.draw(320, 320)
+    BG_stage_I.draw(960, 320)
+    BG_stage_I.draw(320, 960)
+    BG_stage_I.draw(960, 960)
 
     draw_map_floor()
     if character.DIRECTION == 0:
@@ -108,7 +123,7 @@ def draw_character():
             elif event.key == SDLK_LALT and (Jump_Key_State or Down_Jump_state):
                 Jump_Key_State = False
                 Down_Jump_state = False
-                JumpSpeed = 20
+                JumpSpeed = 30
             elif event.key == SDLK_LSHIFT:
                 shift_on = False
 
@@ -116,11 +131,13 @@ def draw_character():
 
 def gravity():
     global character
-    print(int((600 - character.Y) // 60 + 2 + camera_move_y // 60) * 25 + int(character.X // 60 + camera_move_x // 60))
-    index = int((600 - character.Y) // 60 + 2 + camera_move_y // 60) * 25+ int(character.X // 60 + camera_move_x // 60)
-    if map_floor_array[index] == 0 or map_floor_array[index] == 2:
+    print(int((WIDTH - character.Y) // 60 + 2 + camera_move_y // 60) * 25 + int(character.X // 60 + camera_move_x // 60))
+    index = int((WIDTH - character.Y) // 60 + 2 + camera_move_y // 60) * 25+ int(character.X // 60 + camera_move_x // 60)
+
+    if not map_floor_array[index] == 2:
         character.Y = character.Y - 10
-    elif int(25 - index // 25) * 60 < character.Y:
+        character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
+    elif int(25 - index // 25) * 60 < character.Y - 60:
         character.Y = character.Y - 1
 
 def Motion():
@@ -131,8 +148,8 @@ def Motion():
         Jump()
     elif Down_Jump_state:
         Down_Jump()
-    else:
-        gravity()
+
+    gravity()
 
     if character.Action == 0:
         if not Jump_Key_State:
