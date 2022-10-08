@@ -69,6 +69,10 @@ def draw_map_floor():
             if index + 25 < 25 * 25 and map_floor_array[index + 25] == 0:
                 FLOOR_stage_I.clip_draw(640, 560, 130, 40, index % 25 * 60 + camera_move_x,
                                         WIDTH - index // 25 * 60 + camera_move_y - 30, 60, 20)
+            if index - 25 >= 0 and map_floor_array[index - 25] == 0:
+                FLOOR_stage_I.clip_draw(640, 680, 130, 40, index % 25 * 60 + camera_move_x,
+                                        WIDTH - index // 25 * 60 + camera_move_y + 30, 60, 20)
+
 
 def draw_character():
     # global Jump_Key_State
