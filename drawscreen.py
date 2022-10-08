@@ -62,9 +62,13 @@ def draw_map_floor():
             if not index % 25 == 24 and map_floor_array[index + 1] == 0:
                 FLOOR_stage_I.clip_draw(687, 765, 30, 130, index % 25 * 60 + camera_move_x + 30,
                                         WIDTH - index // 25 * 60 + camera_move_y, 15, 60)
-            elif not index :
-                pass
-    
+            if not index % 25 == 0 and map_floor_array[index - 1] == 0:
+                FLOOR_stage_I.clip_draw(687, 765, 30, 130, index % 25 * 60 + camera_move_x - 30,
+                                        WIDTH - index // 25 * 60 + camera_move_y, 15, 60)
+#               좌우반전 필요
+            if index + 25 < 25 * 25 and map_floor_array[index + 25] == 0:
+                FLOOR_stage_I.clip_draw(640, 560, 130, 40, index % 25 * 60 + camera_move_x,
+                                        WIDTH - index // 25 * 60 + camera_move_y - 30, 60, 20)
 
 def draw_character():
     # global Jump_Key_State
