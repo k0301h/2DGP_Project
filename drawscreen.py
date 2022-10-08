@@ -187,7 +187,7 @@ def Motion():
     gravity()
 
 
-def Jump():
+def Jump(): # 점프키 입력시간에 비례하여 점프 높이 조절
     global character
     global JumpSpeed
     character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
