@@ -6,15 +6,15 @@ import threading
 
 character = CHARACTER()
 
-LEN = 1280
-WIDTH = 800
+WIDTH = 1280
+HEIGHT = 800
 
 for index in range(0, 25 * 25):
     if map_floor_array[index] == 1:
         character.X = index % 25 * 60
-        character.Y = WIDTH - index // 25 * 60 - 30
+        character.Y = HEIGHT - index // 25 * 60 - 30
 
-open_canvas(LEN, WIDTH)
+open_canvas(WIDTH, HEIGHT)
 
 character_I = load_image('char_yellow.png')
 character_reverse_I = load_image('r_char_yellow.png')
@@ -52,26 +52,26 @@ def draw_map_floor():
             pass
         elif map_floor_array[index] == 1:
             FLOOR_stage_I.clip_draw(45, 386, 300, 240, index % 25 * 60 + camera_move_x,
-                                    WIDTH - index // 25 * 60 + camera_move_y, 225, 180)
+                                    HEIGHT - index // 25 * 60 + camera_move_y, 225, 180)
         # elif map_floor_array[index] == 2:
         #     FLOOR_stage_I.clip_draw(0, 1410, 128, 128, index % 25 * 60 + camera_move_x,
         #                             WIDTH - index // 25 * 60 + camera_move_y, 60, 60)
         else:
             FLOOR_stage_I.clip_draw(128 * ((map_floor_array[index] - 2) % 4), 1410 - 128 * ((map_floor_array[index] - 2) // 4), 128, 128, index % 25 * 60 + camera_move_x,
-                                    WIDTH - index // 25 * 60 + camera_move_y, 60, 60)
+                                    HEIGHT - index // 25 * 60 + camera_move_y, 60, 60)
             if not index % 25 == 24 and map_floor_array[index + 1] == 0:
                 FLOOR_stage_I.clip_draw(687, 765, 30, 130, index % 25 * 60 + camera_move_x + 30,
-                                        WIDTH - index // 25 * 60 + camera_move_y, 15, 60)
+                                        HEIGHT - index // 25 * 60 + camera_move_y, 15, 60)
             if not index % 25 == 0 and map_floor_array[index - 1] == 0:
                 FLOOR_stage_I.clip_draw(687, 765, 30, 130, index % 25 * 60 + camera_move_x - 30,
-                                        WIDTH - index // 25 * 60 + camera_move_y, 15, 60)
+                                        HEIGHT - index // 25 * 60 + camera_move_y, 15, 60)
 #               좌우반전 필요
             if index + 25 < 25 * 25 and map_floor_array[index + 25] == 0:
                 FLOOR_stage_I.clip_draw(640, 560, 130, 40, index % 25 * 60 + camera_move_x,
-                                        WIDTH - index // 25 * 60 + camera_move_y - 30, 60, 20)
+                                        HEIGHT - index // 25 * 60 + camera_move_y - 30, 60, 20)
             if index - 25 >= 0 and map_floor_array[index - 25] == 0:
                 FLOOR_stage_I.clip_draw(640, 680, 130, 40, index % 25 * 60 + camera_move_x,
-                                        WIDTH - index // 25 * 60 + camera_move_y + 30, 60, 20)
+                                        HEIGHT - index // 25 * 60 + camera_move_y + 30, 60, 20)
 
 
 def draw_character():
@@ -139,14 +139,11 @@ def draw_character():
 
 def gravity():
     global character
-    print(int((WIDTH - character.Y) // 60 + 2 + camera_move_y // 60) * 25 + int(character.X // 60 + camera_move_x // 60))
-    index = int((WIDTH - character.Y) // 60 + 2 + camera_move_y // 60) * 25+ int(character.X // 60 + camera_move_x // 60)
+    index = int((HEIGHT - character.Y + 32) // 60 + 2 + camera_move_y // 60) * 25 + int(character.X // 60 - camera_move_x // 60) - 25
 
-    if not map_floor_array[index] == 2:
+    if map_floor_array[index] == 0 or map_floor_array[index] == 1:
         character.Y = character.Y - 10
         character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
-    elif int(25 - index // 25) * 60 < character.Y - 60:
-        character.Y = character.Y - 1
 
 def Motion():
     global character
