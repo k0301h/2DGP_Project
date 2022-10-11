@@ -147,10 +147,12 @@ def gravity():
     global character
     global Gravity_state
     global Can_Jump
+    global camera_move_y
     index = int((HEIGHT - character.Y + 32) // 60 + 2 + camera_move_y // 60) * 25 + int(character.X // 60 - camera_move_x // 60) - 25
 
     if map_floor_array[index] == 0 or map_floor_array[index] == 1:
         character.Y = character.Y - 10
+        camera_move_y += 10
         character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
         Can_Jump = False
     else:
@@ -196,21 +198,27 @@ def Motion():
 def Jump(): # 점프키 입력시간에 비례하여 점프 높이 조절
     global character
     global JumpSpeed
+    global camera_move_y
     character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
     JumpSpeed -= Gravity
     if JumpSpeed > 0:
         character.Y += JumpSpeed
+        camera_move_y -= JumpSpeed
 
 def Down_Jump():
     global character
     global JumpSpeed
+    global camera_move_y
     character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
     JumpSpeed -= Gravity
     if JumpSpeed > 0:
         character.Y -= JumpSpeed
+        camera_move_y += JumpSpeed
+
+
+
 
 while (1):
     draw_character()
-
 
 close_canvas()
