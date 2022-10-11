@@ -137,10 +137,12 @@ def draw_character():
 
     Motion()
 
-def Conflict_checking():
-    global character
-    if character.Action == 1:
-        pass
+def Conflict_checking(Action):
+    index = int((HEIGHT - character.Y + 32) // 60 + 2 + camera_move_y // 60) * 25 + int(
+        character.X // 60 - camera_move_x // 60) - 25
+    if Action == 1:
+        if map_floor_array[index + 1] == 0 or map_floor_array[index + 1] == 1:
+            return True
 
 
 def gravity():
@@ -173,12 +175,13 @@ def Motion():
     elif character.Action == 1:
         if not Jump_Key_State:
             character.MotionIndex = (character.MotionIndex + 1) % 8
-        if shift_on == 0:
-            character.X += 5
-            camera_move_x -= 5
-        else:
-            character.X += 15
-            camera_move_x -= 15
+        if Conflict_checking(character.Action):
+            if shift_on == 0:
+                character.X += 5
+                camera_move_x -= 5
+            else:
+                character.X += 15
+                camera_move_x -= 15
     elif character.Action == 2:
         if character.MotionIndex < 18 and not Jump_Key_State:
             character.MotionIndex = (character.MotionIndex + 1) % 16 % 3 + 16
