@@ -21,8 +21,9 @@ character_reverse_I = load_image('r_char_yellow.png')
 BG_stage_I = load_image('bg_cave.png')
 FLOOR_stage_I = load_image('floor_cave.png')
 
-Gravity = 2.0
-JumpSpeed = 30
+Gravity = 0.3
+JumpSpeed = 10
+DownSpeed = 0
 
 camera_move_x = 0
 camera_move_y = 0
@@ -90,12 +91,12 @@ def draw_character():
 
     draw_map_floor()
     if character.DIRECTION == 0:
-      character_I.clip_draw(character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y, 120, 120)
+      character_I.clip_draw(int(character.MotionIndex) % 16 * 128, 1918 - 128 * (int(character.MotionIndex) // 16), 128, 128, character.X, character.Y, 120, 120)
     elif character.DIRECTION == 1:
-      character_reverse_I.clip_draw(1918 - character.MotionIndex % 16 * 128, 1918 - 128 * (character.MotionIndex // 16), 128, 128, character.X, character.Y, 120, 120)
+      character_reverse_I.clip_draw(1918 - int(character.MotionIndex) % 16 * 128, 1918 - 128 * (int(character.MotionIndex) // 16), 128, 128, character.X, character.Y, 120, 120)
 
     update_canvas()
-    delay(0.05)
+    delay(0.01)
     events = get_events()
 
     for event in events:
@@ -131,34 +132,40 @@ def draw_character():
             elif event.key == SDLK_LALT and (Jump_Key_State or Down_Jump_state):
                 Jump_Key_State = False
                 Down_Jump_state = False
-                JumpSpeed = 30
+                JumpSpeed = 10
             elif event.key == SDLK_LSHIFT:
                 shift_on = False
 
     Motion()
 
 def Conflict_checking(Action):
-    index = int((HEIGHT - character.Y + 32) // 60 + 2 + camera_move_y // 60) * 25 + int(
-        character.X // 60 - camera_move_x // 60) - 25
+    # index = int((HEIGHT - character.Y + 60) // 60 + 2 + camera_move_y // 60) * 25 + int(
+    #     character.X // 60 - camera_move_x // 60) - 25
+    index = character.X // 60
+    print(index)
     if Action == 1:
-        if map_floor_array[index + 1] == 0 or map_floor_array[index + 1] == 1:
-            return True
+        for i in range(0,25):
+            if map_floor_array[i * 25 + index] == 0 or map_floor_array[i * 25 + index] == 1:
+                return True
 
 
 def gravity():
     global character
     global Gravity_state
     global Can_Jump
+    global DownSpeed
     global camera_move_y
     index = int((HEIGHT - character.Y + 32) // 60 + 2 + camera_move_y // 60) * 25 + int(character.X // 60 - camera_move_x // 60) - 25
 
     if map_floor_array[index] == 0 or map_floor_array[index] == 1:
-        character.Y = character.Y - 10
-        camera_move_y += 10
-        character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
+        DownSpeed += Gravity
+        character.Y = character.Y - DownSpeed
+        camera_move_y += DownSpeed
+        character.MotionIndex = (character.MotionIndex + 0.1) % 16 % 8 + 16 * 9
         Can_Jump = False
     else:
         Can_Jump = True
+        DownSpeed = 0
 
 def Motion():
     global character
@@ -173,27 +180,31 @@ def Motion():
         if not Jump_Key_State and not Gravity_state:
             character.MotionIndex = 0
     elif character.Action == 1:
-        if not Jump_Key_State:
-            character.MotionIndex = (character.MotionIndex + 1) % 8
         if Conflict_checking(character.Action):
             if shift_on == 0:
-                character.X += 5
-                camera_move_x -= 5
+                character.X += 1
+                camera_move_x -= 1
+                if not Jump_Key_State:
+                    character.MotionIndex = (character.MotionIndex + 0.1) % 8
             else:
-                character.X += 15
-                camera_move_x -= 15
+                character.X += 3
+                camera_move_x -= 3
+                if not Jump_Key_State:
+                    character.MotionIndex = (character.MotionIndex + 0.3) % 8
     elif character.Action == 2:
         if character.MotionIndex < 18 and not Jump_Key_State:
-            character.MotionIndex = (character.MotionIndex + 1) % 16 % 3 + 16
+            character.MotionIndex = (character.MotionIndex + 0.1) % 16 % 3 + 16
     elif character.Action == 3:
-        if not Jump_Key_State:
-            character.MotionIndex = (character.MotionIndex + 1) % 8
         if shift_on == 0:
-            character.X -= 5
-            camera_move_x += 5
+            character.X -= 1
+            camera_move_x += 1
+            if not Jump_Key_State:
+                character.MotionIndex = (character.MotionIndex + 0.1) % 8
         else:
-            character.X -= 15
-            camera_move_x += 15
+            character.X -= 3
+            camera_move_x += 3
+            if not Jump_Key_State:
+                character.MotionIndex = (character.MotionIndex + 0.3) % 8
 
     gravity()
 
@@ -202,7 +213,7 @@ def Jump(): # 점프키 입력시간에 비례하여 점프 높이 조절
     global character
     global JumpSpeed
     global camera_move_y
-    character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
+    character.MotionIndex = (character.MotionIndex + 0.1) % 16 % 8 + 16 * 9
     JumpSpeed -= Gravity
     if JumpSpeed > 0:
         character.Y += JumpSpeed
@@ -212,7 +223,7 @@ def Down_Jump():
     global character
     global JumpSpeed
     global camera_move_y
-    character.MotionIndex = (character.MotionIndex + 1) % 16 % 8 + 16 * 9
+    character.MotionIndex = (character.MotionIndex + 0.1) % 16 % 8 + 16 * 9
     JumpSpeed -= Gravity
     if JumpSpeed > 0:
         character.Y -= JumpSpeed
