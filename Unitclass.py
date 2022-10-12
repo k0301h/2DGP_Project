@@ -5,3 +5,5 @@ class UNIT:
     MotionIndex = int(0) # 움직임 스프라이트 순서
     X, Y = 0, 0
     DIRECTION = 0
+
+
