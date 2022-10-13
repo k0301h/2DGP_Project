@@ -34,7 +34,7 @@ class CHARACTER(UNIT):
             for index_y in range(0, 25):
                 if map_floor.map_floor_array[index_y][index_x] == 1:
                     self.X = index_x * 60
-                    self.Y = map_floor.HEIGHT - index_y * 60 - 60
+                    self.Y = map_floor.HEIGHT - index_y * 60 - 30
 
     def Conflict_checking(self):
         # index = int((HEIGHT - character.Y + 60) // 60 + 2 + camera_move_y // 60) * 25 + int(
@@ -59,11 +59,17 @@ class CHARACTER(UNIT):
         character_index_x = int(self.X // 60 - self.camera_move_x // 60)
         character_index_y = int((map_floor.HEIGHT - self.Y) // 60 + self.camera_move_y // 60)
 
-        for index_y in range(character_index_y - 2, character_index_y + 2):
-            for index_x in range(character_index_x - 2, character_index_x + 2):
+        for index_y in range(character_index_y - 2, character_index_y + 3):
+            for index_x in range(character_index_x - 2, character_index_x + 3):
                 #index % 25 * 60 + self.camera_move_x, map_floor.HEIGHT - index // 25 * 60 + self.camera_move_y
-                if not map_floor.map_floor_array[index_y][index_x] == 0 and not map_floor.map_floor_array[index_y][index_x] == 1 and index_x * 60 + self.camera_move_x - 40 <= self.X <= index_x * 60 + self.camera_move_x + 40 and map_floor.HEIGHT - index_y * 60 + self.camera_move_y - 40 <= self.Y <= map_floor.HEIGHT - index_y * 60 + self.camera_move_y + 40:
+                if (not map_floor.map_floor_array[index_y][index_x] == 0 and not map_floor.map_floor_array[index_y][index_x] == 1) and \
+                        index_x * 60 + self.camera_move_x - 40 <= self.X <= index_x * 60 + self.camera_move_x + 40:
                     return False
+
+                if index_x == 3:
+                    print(self.Y)
+                    print(index_x, index_y)
+                    print(map_floor.HEIGHT - index_y * 60 + self.camera_move_y - 40 <= self.Y)
         return True
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
         self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
@@ -85,19 +91,27 @@ class CHARACTER(UNIT):
         # index_Y = (HEIGHT - character.Y) // 60
         # print(index)
 
-        if self.Conflict_checking():
-            if self.DownSpeed <= 10:
-                self.DownSpeed += self.Gravity
-            self.Y = self.Y - self.DownSpeed
-            self.camera_move_y += self.DownSpeed
-            self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
-            self.Can_Jump = False
-        else:
-            self.Can_Jump = True
-            self.DownSpeed = 0
+        character_index_x = int(self.X // 60 - self.camera_move_x // 60)
+        character_index_y = int((map_floor.HEIGHT - self.Y) // 60 + self.camera_move_y // 60)
+
+        for index_y in range(character_index_y - 2, character_index_y + 3):
+            for index_x in range(character_index_x - 2, character_index_x + 3):
+                if map_floor.HEIGHT - index_y * 60 + self.camera_move_y - 40 <= self.Y <= map_floor.HEIGHT - index_y * 60 + self.camera_move_y + 40:
+                    if self.DownSpeed <= 5:
+                        self.DownSpeed += self.Gravity
+                    self.Y = self.Y - self.DownSpeed
+                    self.camera_move_y += self.DownSpeed
+                    self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
+                    self.Can_Jump = False
+                else:
+                    self.Can_Jump = True
+                    self.DownSpeed = 0
+
 
     def Motion(self):
         if self.Conflict_checking():
+            self.gravity()
+
             if self.Jump_Key_State:
                 self.Jump()
             elif self.Down_Jump_state:
@@ -132,7 +146,6 @@ class CHARACTER(UNIT):
                     if not self.Jump_Key_State:
                         self.MotionIndex = (self.MotionIndex + 0.3) % 8
 
-        self.gravity()
 
     def key_down(self):
         events = get_events()
