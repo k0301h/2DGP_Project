@@ -30,10 +30,11 @@ class CHARACTER(UNIT):
     Gravity_state = False
 
     def Place(self):
-        for index in range(0, 25 * 25):
-            if map_floor.map_floor_array[index] == 1:
-                self.X = index % 25 * 60
-                self.Y = map_floor.HEIGHT - index // 25 * 60 - 30
+        for index_x in range(0, 25):
+            for index_y in range(0, 25):
+                if map_floor.map_floor_array[index_y][index_x] == 1:
+                    self.X = index_x * 60
+                    self.Y = map_floor.HEIGHT - index_y * 60 - 60
 
     def Conflict_checking(self):
         # index = int((HEIGHT - character.Y + 60) // 60 + 2 + camera_move_y // 60) * 25 + int(
@@ -43,18 +44,26 @@ class CHARACTER(UNIT):
         #
         # if map_floor_array[int((index_Y + 2) * 25 + index_X)] == 0 or map_floor_array[int((index_Y + 2) * 25 + index_X)] == 1:
         #     return True
-        tmpx_index = int(self.X // 60)
-        tmpy_index = int((map_floor.HEIGHT - self.Y) // 60)
-        distance = 0
+        # tmpx_index = int(self.X // 60)
+        # tmpy_index = int((map_floor.HEIGHT - self.Y) // 60)
+        # distance = 0
+        #
+        # for index_Y in range(tmpy_index - 5, tmpy_index + 5):
+        #     for index_X in range(tmpx_index - 5, tmpx_index + 5):
+        #         if not map_floor.map_floor_array[index_Y * 25 + index_X] == 0 and not map_floor.map_floor_array[index_Y * 25 + index_X] == 1:
+        #             distance = ((index_X * 60 - self.X) ** 2 + (index_Y * 60 - self.Y) ** 2) ** (1 / 2)
+        #
+        #             if distance <= 100:
+        #                 print(distance)
+        #                 return False
+        character_index_x = int(self.X // 60 - self.camera_move_x // 60)
+        character_index_y = int((map_floor.HEIGHT - self.Y) // 60 + self.camera_move_y // 60)
 
-        for index_Y in range(tmpy_index - 5, tmpy_index + 5):
-            for index_X in range(tmpx_index - 5, tmpx_index + 5):
-                if not map_floor.map_floor_array[index_Y * 25 + index_X] == 0 and not map_floor.map_floor_array[index_Y * 25 + index_X] == 1:
-                    distance = ((index_X * 60 - self.X) ** 2 + (index_Y * 60 - self.Y) ** 2) ** (1 / 2)
-
-                    if distance <= 100:
-                        print(distance)
-                        return False
+        for index_y in range(character_index_y - 2, character_index_y + 2):
+            for index_x in range(character_index_x - 2, character_index_x + 2):
+                #index % 25 * 60 + self.camera_move_x, map_floor.HEIGHT - index // 25 * 60 + self.camera_move_y
+                if not map_floor.map_floor_array[index_y][index_x] == 0 and not map_floor.map_floor_array[index_y][index_x] == 1 and index_x * 60 + self.camera_move_x - 40 <= self.X <= index_x * 60 + self.camera_move_x + 40 and map_floor.HEIGHT - index_y * 60 + self.camera_move_y - 40 <= self.Y <= map_floor.HEIGHT - index_y * 60 + self.camera_move_y + 40:
+                    return False
         return True
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
         self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
@@ -70,12 +79,13 @@ class CHARACTER(UNIT):
             self.Y -= self.JumpSpeed
             self.camera_move_y += self.JumpSpeed
     def gravity(self):
-        index = int((map_floor.HEIGHT - self.Y + 60) // 60 + 2 + self.camera_move_y // 60) * 25 + int(
-            self.X // 60 - self.camera_move_x // 60) - 25
+        # index = int((map_floor.HEIGHT - self.Y + 60) // 60 + self.camera_move_y // 60) * 25 + int(
+        #     self.X // 60 - self.camera_move_x // 60)
         # index_X = character.X // 60
         # index_Y = (HEIGHT - character.Y) // 60
+        # print(index)
 
-        if map_floor.map_floor_array[index] == 0 or map_floor.map_floor_array[index] == 1:
+        if self.Conflict_checking():
             if self.DownSpeed <= 10:
                 self.DownSpeed += self.Gravity
             self.Y = self.Y - self.DownSpeed
