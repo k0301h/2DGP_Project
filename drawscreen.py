@@ -34,29 +34,29 @@ def draw_map_floor():
             if map_floor_array[index_y][index_x] == 0:
                 pass
             elif map_floor_array[index_y][index_x] == 1:
-                FLOOR_stage_I.clip_draw(45, 386, 300, 240, index_x * 60 + character.camera_move_x,
-                                        HEIGHT - index_y * 60 + character.camera_move_y, 200, 160)
+                FLOOR_stage_I.clip_draw(45, 386, 300, 240, index_x * 60 - character.camera_move_x,
+                                        HEIGHT - index_y * 60 - character.camera_move_y, 200, 160)
         # elif map_floor_array[index] == 2:
         #     FLOOR_stage_I.clip_draw(0, 1410, 128, 128, index % 25 * 60 + camera_move_x,
         #                             WIDTH - index // 25 * 60 + camera_move_y, 60, 60)
             else:
                 FLOOR_stage_I.clip_draw(128 * ((map_floor_array[index_y][index_x] - 2) % 4),
                                         1410 - 128 * ((map_floor_array[index_y][index_x] - 2) // 4), 128, 128,
-                                        index_x * 60 + character.camera_move_x,
-                                        HEIGHT - index_y * 60 + character.camera_move_y, 60, 60)
+                                        index_x * 60 - character.camera_move_x,
+                                        HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
                 if not index_x == 24 and map_floor_array[index_y][index_x + 1] == 0:
-                    FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 + character.camera_move_x + 30,
-                                            HEIGHT - index_y * 60 + character.camera_move_y, 15, 60)
+                    FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 - character.camera_move_x + 30,
+                                            HEIGHT - index_y * 60 - character.camera_move_y, 15, 60)
                 if not index_x == 0 and map_floor_array[index_y][index_x - 1] == 0:
-                    FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 + character.camera_move_x - 30,
-                                            HEIGHT - index_y * 60 + character.camera_move_y, 15, 60)
+                    FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 - character.camera_move_x - 30,
+                                            HEIGHT - index_y * 60 - character.camera_move_y, 15, 60)
                 #               좌우반전 필요
                 if index_y * 25 + index_x < 25 * 25 and map_floor_array[index_y + 1][index_x] == 0:
-                    FLOOR_stage_I.clip_draw(640, 560, 130, 40, index_x * 60 + character.camera_move_x,
-                                            HEIGHT - index_y * 60 + character.camera_move_y - 30, 60, 20)
+                    FLOOR_stage_I.clip_draw(640, 560, 130, 40, index_x * 60 - character.camera_move_x,
+                                            HEIGHT - index_y * 60 - character.camera_move_y - 30, 60, 20)
                 if index_x + index_y * 25 >= 0 and map_floor_array[index_y - 1][index_x] == 0:
-                    FLOOR_stage_I.clip_draw(640, 680, 130, 40, index_x * 60 + character.camera_move_x,
-                                            HEIGHT - index_y * 60 + character.camera_move_y + 30, 60, 20)
+                    FLOOR_stage_I.clip_draw(640, 680, 130, 40, index_x * 60 - character.camera_move_x,
+                                            HEIGHT - index_y * 60 - character.camera_move_y + 30, 60, 20)
 
 
 def draw_character():
@@ -71,11 +71,11 @@ def draw_character():
     draw_map_floor()
     if character.DIRECTION == 0:
         character_I.clip_draw(int(character.MotionIndex) % 16 * 128, 1918 - 128 * (int(character.MotionIndex) // 16),
-                              128, 128, character.X, character.Y, 90, 90)
+                              128, 128, character.X - character.camera_move_x, character.Y - character.camera_move_y, 90, 90)
     elif character.DIRECTION == 1:
         character_reverse_I.clip_draw(1918 - int(character.MotionIndex) % 16 * 128,
-                                      1918 - 128 * (int(character.MotionIndex) // 16), 128, 128, character.X,
-                                      character.Y, 90, 90)
+                                      1918 - 128 * (int(character.MotionIndex) // 16), 128, 128, character.X - character.camera_move_x,
+                                      character.Y - character.camera_move_y, 90, 90)
 
     update_canvas()
     delay(0.013)

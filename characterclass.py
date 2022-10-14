@@ -36,41 +36,25 @@ class CHARACTER(UNIT):
                     self.X = index_x * 60
                     self.Y = map_floor.HEIGHT - index_y * 60 - 30
 
-    def Conflict_checking(self):
-        # index = int((HEIGHT - character.Y + 60) // 60 + 2 + camera_move_y // 60) * 25 + int(
-        #     character.X // 60 - camera_move_x // 60) - 25
-        # index_X = character.X // 60
-        # index_Y = (HEIGHT - character.Y) // 60
-        #
-        # if map_floor_array[int((index_Y + 2) * 25 + index_X)] == 0 or map_floor_array[int((index_Y + 2) * 25 + index_X)] == 1:
-        #     return True
-        # tmpx_index = int(self.X // 60)
-        # tmpy_index = int((map_floor.HEIGHT - self.Y) // 60)
-        # distance = 0
-        #
-        # for index_Y in range(tmpy_index - 5, tmpy_index + 5):
-        #     for index_X in range(tmpx_index - 5, tmpx_index + 5):
-        #         if not map_floor.map_floor_array[index_Y * 25 + index_X] == 0 and not map_floor.map_floor_array[index_Y * 25 + index_X] == 1:
-        #             distance = ((index_X * 60 - self.X) ** 2 + (index_Y * 60 - self.Y) ** 2) ** (1 / 2)
-        #
-        #             if distance <= 100:
-        #                 print(distance)
-        #                 return False
-        character_index_x = int(self.X // 60 - self.camera_move_x // 60)
-        character_index_y = int((map_floor.HEIGHT - self.Y) // 60 + self.camera_move_y // 60)
+    def Conflict_checking(self, mode, move): # mode : x,y충돌 검사 , move : 다음에 움직일 크기
+        character_index_x = int((self.X + move) // 60 - self.camera_move_x // 60)
+        character_index_y = int((map_floor.HEIGHT - (self.Y + move)) // 60 - self.camera_move_y // 60)
 
-        for index_y in range(character_index_y - 2, character_index_y + 3):
+        if mode == 1:
+            for index_y in range(character_index_y - 2, character_index_y + 3):
+                if (not map_floor.map_floor_array[index_y][character_index_x] == 0 and not map_floor.map_floor_array[index_y][character_index_x] == 1) and \
+                    abs(self.Y - (map_floor.HEIGHT - index_y * 60)) <= 60:
+                    return False
+        elif mode == 2:
             for index_x in range(character_index_x - 2, character_index_x + 3):
                 #index % 25 * 60 + self.camera_move_x, map_floor.HEIGHT - index // 25 * 60 + self.camera_move_y
-                if (not map_floor.map_floor_array[index_y][index_x] == 0 and not map_floor.map_floor_array[index_y][index_x] == 1) and \
-                        index_x * 60 + self.camera_move_x - 40 <= self.X <= index_x * 60 + self.camera_move_x + 40:
+                if (not map_floor.map_floor_array[character_index_y][index_x] == 0 and not map_floor.map_floor_array[character_index_y][index_x] == 1) and \
+                        abs(self.X - (map_floor.HEIGHT - index_x * 60)) <= 60:
                     return False
-
-                if index_x == 3:
-                    print(self.Y)
-                    print(index_x, index_y)
-                    print(map_floor.HEIGHT - index_y * 60 + self.camera_move_y - 40 <= self.Y)
+        elif mode == 0:
+            pass
         return True
+
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
         self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
         self.JumpSpeed -= self.Gravity
@@ -84,6 +68,7 @@ class CHARACTER(UNIT):
         if self.JumpSpeed > 0:
             self.Y -= self.JumpSpeed
             self.camera_move_y += self.JumpSpeed
+
     def gravity(self):
         # index = int((map_floor.HEIGHT - self.Y + 60) // 60 + self.camera_move_y // 60) * 25 + int(
         #     self.X // 60 - self.camera_move_x // 60)
@@ -92,7 +77,7 @@ class CHARACTER(UNIT):
         # print(index)
 
         character_index_x = int(self.X // 60 - self.camera_move_x // 60)
-        character_index_y = int((map_floor.HEIGHT - self.Y) // 60 + self.camera_move_y // 60)
+        character_index_y = int((map_floor.HEIGHT - self.Y) // 60 - self.camera_move_y // 60)
 
         for index_y in range(character_index_y - 2, character_index_y + 3):
             for index_x in range(character_index_x - 2, character_index_x + 3):
@@ -100,7 +85,7 @@ class CHARACTER(UNIT):
                     if self.DownSpeed <= 5:
                         self.DownSpeed += self.Gravity
                     self.Y = self.Y - self.DownSpeed
-                    self.camera_move_y += self.DownSpeed
+                    self.camera_move_y -= self.DownSpeed
                     self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
                     self.Can_Jump = False
                 else:
@@ -123,12 +108,14 @@ class CHARACTER(UNIT):
             elif self.Action == 1:
                 if self.shift_on == 0:
                     self.X += 2
-                    self.camera_move_x -= 2
+                    if self.X - self.camera_move_x >= 1000:
+                        self.camera_move_x += 2
                     if not self.Jump_Key_State:
                         self.MotionIndex = (self.MotionIndex + 0.1) % 8
                 else:
                     self.X += 5
-                    self.camera_move_x -= 5
+                    if self.X - self.camera_move_x >= 1000:
+                        self.camera_move_x += 5
                     if not self.Jump_Key_State:
                         self.MotionIndex = (self.MotionIndex + 0.3) % 8
             elif self.Action == 2:
@@ -137,12 +124,14 @@ class CHARACTER(UNIT):
             elif self.Action == 3:
                 if self.shift_on == 0:
                     self.X -= 2
-                    self.camera_move_x += 2
+                    if self.X - self.camera_move_x <= 200:
+                        self.camera_move_x -= 2
                     if not self.Jump_Key_State:
                         self.MotionIndex = (self.MotionIndex + 0.1) % 8
                 else:
                     self.X -= 5
-                    self.camera_move_x += 5
+                    if self.X - self.camera_move_x <= 200:
+                        self.camera_move_x -= 5
                     if not self.Jump_Key_State:
                         self.MotionIndex = (self.MotionIndex + 0.3) % 8
 
