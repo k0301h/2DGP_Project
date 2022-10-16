@@ -1,5 +1,5 @@
 from Unitclass import *
-import map_floor
+from map_floor import *
 from pico2d import *
 
 class CHARACTER(UNIT):
@@ -31,29 +31,29 @@ class CHARACTER(UNIT):
     whip = UNIT()
 
     def Place(self):
-        for index_x in range(0, 25):
-            for index_y in range(0, 25):
-                if map_floor.map_floor_array[index_y][index_x] == 1:
+        for index_x in range(0, map_size):
+            for index_y in range(0, map_size):
+                if map_floor_array[index_y][index_x] == 1:
                     self.X = index_x * 60
-                    self.Y = map_floor.HEIGHT - index_y * 60 - 30
+                    self.Y = HEIGHT - index_y * 60 - 30
 
     def Conflict_checking(self, mode, move): # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         character_index_x = int((self.X + move) // 60)
-        character_index_y = int((map_floor.HEIGHT - (self.Y + move)) // 60)
+        character_index_y = int((HEIGHT - (self.Y + move)) // 60)
 
         if mode == 1:       # Y충돌 체크
             for index_y in range(character_index_y - 2, character_index_y + 3):
                 for index_x in range(character_index_x - 1, character_index_x + 2):
-                    print(index_x,index_y)
-                    if 0 <= index_x < 25 and 0 <= index_y < 25 and\
-                            (not map_floor.map_floor_array[index_y][index_x] == 0 and not map_floor.map_floor_array[index_y][index_x] == 1) and \
-                            abs(self.Y + move - (map_floor.HEIGHT - index_y * 60)) <= 70:
+                    print(index_x, index_y)
+                    if 0 <= index_x < map_size and 0 <= index_y < map_size and\
+                            (not map_floor_array[index_y][index_x] == 0 and not map_floor_array[index_y][index_x] == 1) and \
+                            abs(self.Y + move - (HEIGHT - index_y * 60)) <= 70:
                         return False
         elif mode == 2:     # X충돌 체크
             for index_y in range(character_index_y - 1, character_index_y + 2):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
-                    if 0 <= index_x < 25 and 0 <= index_y < 25 and\
-                            (not map_floor.map_floor_array[index_y][index_x] == 0 and not map_floor.map_floor_array[index_y][index_x] == 1) and \
+                    if 0 <= index_x < map_size and 0 <= index_y < map_size and\
+                            (not map_floor_array[index_y][index_x] == 0 and not map_floor_array[index_y][index_x] == 1) and \
                             abs(self.X + move - index_x * 60) <= 60:
                         return False
         return True
