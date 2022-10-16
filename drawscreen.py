@@ -50,9 +50,21 @@ def draw_character(character, BG_stage_I, FLOOR_stage_I, character_I, character_
 
     draw_map_floor(FLOOR_stage_I, character)
     if character.DIRECTION == 0:
+        if character.Attack_state:
+            character_I.clip_draw(int(character.whip.MotionIndex) % 16 * 128,
+                                  1918 - 128 * (int(character.whip.MotionIndex) // 16),
+                                  128, 128, character.whip.X - character.camera_move_x,
+                                  character.whip.Y - character.camera_move_y, 60, 60)
         character_I.clip_draw(int(character.MotionIndex) % 16 * 128, 1918 - 128 * (int(character.MotionIndex) // 16),
-                              128, 128, character.X - character.camera_move_x, character.Y - character.camera_move_y, 90, 90)
+                              128, 128, character.X - character.camera_move_x, character.Y - character.camera_move_y,
+                              90, 90)
     elif character.DIRECTION == 1:
+        if character.Attack_state:
+            character_I.clip_draw(int(character.whip.MotionIndex) % 16 * 128,
+                                  1918 - 128 * (int(character.whip.MotionIndex) // 16),
+                                  128, 128, character.whip.X - character.camera_move_x,
+                                  character.whip.Y - character.camera_move_y, 60, 60)
         character_reverse_I.clip_draw(1918 - int(character.MotionIndex) % 16 * 128,
-                                      1918 - 128 * (int(character.MotionIndex) // 16), 128, 128, character.X - character.camera_move_x,
+                                      1918 - 128 * (int(character.MotionIndex) // 16), 128, 128,
+                                      character.X - character.camera_move_x,
                                       character.Y - character.camera_move_y, 90, 90)

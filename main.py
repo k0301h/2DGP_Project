@@ -9,5 +9,6 @@ now_state.enter()
 while 1:
     now_state.draw()
     now_state.update()
+    delay(0.1)
 
 close_canvas()

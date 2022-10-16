@@ -28,6 +28,8 @@ class CHARACTER(UNIT):
     Gravity_state = False
     Attack_state = False
 
+    whip = UNIT()
+
     def Place(self):
         for index_x in range(0, 25):
             for index_y in range(0, 25):
@@ -61,7 +63,8 @@ class CHARACTER(UNIT):
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
         if self.Conflict_checking(1, self.JumpSpeed):
-            self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
+            if not self.Attack_state:
+                self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
             self.JumpSpeed -= self.Gravity
             if self.JumpSpeed > 0:
                 self.Y += self.JumpSpeed
@@ -84,14 +87,14 @@ class CHARACTER(UNIT):
             self.Y = self.Y - self.DownSpeed
             if self.Y <= 200:
                 self.camera_move_y -= self.DownSpeed
-            self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 8 + 16 * 9
+            if not self.Attack_state:
+                self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 8 + 16 * 9
             self.Can_Jump = False
             self.Gravity_state = True
         else:
             self.Can_Jump = True
             self.DownSpeed = 0
             self.Gravity_state = False
-
 
     def Motion(self):
         if self.Jump_Key_State:
@@ -100,7 +103,7 @@ class CHARACTER(UNIT):
             self.Down_Jump()
 
         if self.Action == 0:
-            if not self.Jump_Key_State and not self.Gravity_state:
+            if not self.Jump_Key_State and not self.Gravity_state and not self.Attack_state:
                 self.MotionIndex = 0
         elif self.Action == 1:
             if self.shift_on == 0:
@@ -112,7 +115,7 @@ class CHARACTER(UNIT):
                         self.X += 2
                         self.camera_move_x += 2
 
-                if not self.Jump_Key_State:
+                if not self.Jump_Key_State and not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.1) % 8
             else:
                 if self.Conflict_checking(2, 5):
@@ -122,11 +125,11 @@ class CHARACTER(UNIT):
                         self.X += 5
                         self.camera_move_x += 5
 
-                if not self.Jump_Key_State:
+                if not self.Jump_Key_State and not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 8
 
         elif self.Action == 2:
-            if self.MotionIndex < 18 and not self.Jump_Key_State:
+            if self.MotionIndex < 18 and not self.Jump_Key_State and not self.Attack_state:
                 self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 3 + 16
 
         elif self.Action == 3:
@@ -138,7 +141,7 @@ class CHARACTER(UNIT):
                         self.X -= 2
                         self.camera_move_x -= 2
 
-                if not self.Jump_Key_State:
+                if not self.Jump_Key_State and not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.1) % 8
 
             else:
@@ -149,14 +152,39 @@ class CHARACTER(UNIT):
                         self.X -= 5
                         self.camera_move_x -= 5
 
-                if not self.Jump_Key_State:
+                if not self.Jump_Key_State and not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 8
-        elif self.Action == 4:
+        if self.Attack_state:
+            print(self.MotionIndex % 16)
             if self.MotionIndex % 16 < 5:
-                self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 6 + 16 * 4
+                if self.whip.MotionIndex % 16 - 10 < 3:
+                    if self.DIRECTION == 0:
+                        self.whip.X = self.X - 45
+                        self.whip.Y = self.Y - 10
+                    elif self.DIRECTION == 1:
+                        self.whip.X = self.X + 45
+                        self.whip.Y = self.Y- 10
+                elif 3 <= self.whip.MotionIndex % 16 - 10 < 4:
+                    if self.DIRECTION == 0:
+                        self.whip.X = self.X + 20
+                        self.whip.Y = self.Y - 10
+                    elif self.DIRECTION == 1:
+                        self.whip.X = self.X - 20
+                        self.whip.Y = self.Y - 10
+                elif 4 <= self.whip.MotionIndex % 16 - 10:
+                    if self.DIRECTION == 0:
+                        self.whip.X = self.X + 45
+                        self.whip.Y = self.Y- 10
+                    elif self.DIRECTION == 1:
+                        self.whip.X = self.X - 45
+                        self.whip.Y = self.Y- 10
+
+                self.whip.MotionIndex = (self.MotionIndex + 0.2) % 16 % 6 + 16 * 12 + 10
+                self.MotionIndex = (self.MotionIndex + 0.2) % 16 % 6 + 16 * 4
             else:
                 self.Action = 0
                 self.Attack_state = False
+                self.whip.MotionIndex = 0
         self.gravity()
 
     def key_down(self):
@@ -187,7 +215,6 @@ class CHARACTER(UNIT):
                     pass
                 elif event.key == SDLK_LCTRL and self.Attack_state == False:
                     self.Attack_state = True
-                    self.Action = 4
             elif event.type == SDL_KEYUP:
                 if event.key == SDLK_RIGHT and self.Action == 1:
                     self.Action = 0
