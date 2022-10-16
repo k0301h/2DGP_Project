@@ -1,4 +1,4 @@
-from pico2d import *
+
 from characterclass import *
 from map_floor import *
 import time
@@ -78,7 +78,7 @@ def draw_character():
                                       character.Y - character.camera_move_y, 90, 90)
 
     update_canvas()
-    delay(0.013)
+    delay(0.01)
     character.key_down()
     character.Motion()
 

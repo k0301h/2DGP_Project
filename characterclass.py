@@ -17,7 +17,7 @@ class CHARACTER(UNIT):
     Money = 0
 
     Gravity = 0.3
-    JumpSpeed = 10
+    JumpSpeed = 11
     DownSpeed = 0
 
     camera_move_x = 0
@@ -37,45 +37,53 @@ class CHARACTER(UNIT):
                     self.Y = map_floor.HEIGHT - index_y * 60 - 30
 
     def Conflict_checking(self, mode, move): # mode : x,y충돌 검사 , move : 다음에 움직일 크기
-        character_index_x = int((self.X + move) // 60 - self.camera_move_x // 60)
-        character_index_y = int((map_floor.HEIGHT - (self.Y + move)) // 60 - self.camera_move_y // 60)
+        character_index_x = int((self.X + move) // 60)
+        character_index_y = int((map_floor.HEIGHT - (self.Y + move)) // 60)
 
         if mode == 1:       # Y충돌 체크
             for index_y in range(character_index_y - 2, character_index_y + 3):
-                if (not map_floor.map_floor_array[index_y][character_index_x] == 0 and not map_floor.map_floor_array[index_y][character_index_x] == 1) and \
-                        abs(self.Y + move - (map_floor.HEIGHT - index_y * 60)) <= 80:
-                    return False
+                for index_x in range(character_index_x - 1, character_index_x + 2):
+                    if 0 < index_x < 25 and 0 < index_y < 25 and\
+                            (not map_floor.map_floor_array[index_y][index_x] == 0 and not map_floor.map_floor_array[index_y][index_x] == 1) and \
+                            abs(self.Y + move - (map_floor.HEIGHT - index_y * 60)) <= 80:
+                        return False
         elif mode == 2:     # X충돌 체크
-            for index_x in range(character_index_x - 2, character_index_x + 3):
-                if (not map_floor.map_floor_array[character_index_y][index_x] == 0 and not map_floor.map_floor_array[character_index_y][index_x] == 1) and \
-                        abs(self.X + move - index_x * 60) <= 60:
-                    return False
+            for index_y in range(character_index_y - 1, character_index_y + 2):
+                for index_x in range(character_index_x - 2, character_index_x + 3):
+                    if 0 < index_x < 25 and 0 < index_y < 25 and\
+                            (not map_floor.map_floor_array[index_y][index_x] == 0 and not map_floor.map_floor_array[index_y][index_x] == 1) and \
+                            abs(self.X + move - index_x * 60) <= 60:
+                        return False
+                    print(index_x)
         elif mode == 0:
             pass
+        # print(self.X, self.Y)
         return True
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
-        self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
-        self.JumpSpeed -= self.Gravity
-        if self.JumpSpeed > 0:
-            self.Y += self.JumpSpeed
-            if self.Y <= 100:
-                self.camera_move_y -= self.JumpSpeed
+        if self.Conflict_checking(1, self.JumpSpeed):
+            self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
+            self.JumpSpeed -= self.Gravity
+            if self.JumpSpeed > 0:
+                self.Y += self.JumpSpeed
+                if self.Y <= 100:
+                    self.camera_move_y -= self.JumpSpeed
 
     def Down_Jump(self):
-        self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
-        self.JumpSpeed -= self.Gravity
-        if self.JumpSpeed > 0:
-            self.Y -= self.JumpSpeed
-            if self.Y <= 100:
-                self.camera_move_y += self.JumpSpeed
+        # self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
+        # self.JumpSpeed -= self.Gravity
+        # if self.JumpSpeed > 0:
+        #     self.Y -= self.JumpSpeed
+        #     if self.Y <= 100:
+        #         self.camera_move_y == self.JumpSpeed
 
+        pass
     def gravity(self):
         if self.Conflict_checking(1, self.DownSpeed):
-            if self.DownSpeed <= 10:
+            if self.DownSpeed <= 5:
                 self.DownSpeed += self.Gravity
             self.Y = self.Y - self.DownSpeed
-            if self.Y <= 100:
+            if self.Y <= 200:
                 self.camera_move_y -= self.DownSpeed
             self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 8 + 16 * 9
             self.Can_Jump = False
@@ -98,35 +106,51 @@ class CHARACTER(UNIT):
                 self.MotionIndex = 0
         elif self.Action == 1:
             if self.shift_on == 0:
-                if self.Conflict_checking(2, 2):
-                    self.X += 2
-                    if self.X - self.camera_move_x >= 1000:
+                if self.X - self.camera_move_x <= 1000:
+                    if self.Conflict_checking(2, 2):
+                        self.X += 2
+                elif self.X - self.camera_move_x > 1000:
+                    if self.Conflict_checking(2, 0):
+                        self.X += 2
                         self.camera_move_x += 2
+
                 if not self.Jump_Key_State:
                     self.MotionIndex = (self.MotionIndex + 0.1) % 8
             else:
                 if self.Conflict_checking(2, 5):
-                    self.X += 5
-                    if self.X - self.camera_move_x >= 1000:
+                    if self.X - self.camera_move_x <= 1000:
+                        self.X += 5
+                    elif self.X - self.camera_move_x > 1000:
+                        self.X += 5
                         self.camera_move_x += 5
+
                 if not self.Jump_Key_State:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 8
+
         elif self.Action == 2:
             if self.MotionIndex < 18 and not self.Jump_Key_State:
                 self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 3 + 16
+
         elif self.Action == 3:
             if self.shift_on == 0:
                 if self.Conflict_checking(2, -2):
-                    self.X -= 2
-                    if self.X - self.camera_move_x <= 200:
+                    if self.X - self.camera_move_x >= 200:
+                        self.X -= 2
+                    elif self.X - self.camera_move_x < 200:
+                        self.X -= 2
                         self.camera_move_x -= 2
+
                 if not self.Jump_Key_State:
                     self.MotionIndex = (self.MotionIndex + 0.1) % 8
+
             else:
                 if self.Conflict_checking(2, -5):
-                    self.X -= 5
-                    if self.X - self.camera_move_x <= 200:
+                    if self.X - self.camera_move_x >= 200:
+                        self.X -= 5
+                    elif self.X - self.camera_move_x < 200:
+                        self.X -= 5
                         self.camera_move_x -= 5
+
                 if not self.Jump_Key_State:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 8
         self.gravity()
@@ -167,6 +191,6 @@ class CHARACTER(UNIT):
                 elif event.key == SDLK_LALT and (self.Jump_Key_State or self.Down_Jump_state):
                     self.Jump_Key_State = False
                     self.Down_Jump_state = False
-                    self.JumpSpeed = 10
+                    self.JumpSpeed = 11
                 elif event.key == SDLK_LSHIFT:
                     self.shift_on = False
