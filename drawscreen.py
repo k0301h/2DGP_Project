@@ -28,18 +28,18 @@ def draw_map_floor(FLOOR_stage_I, character):
                                         index_x * 60 - character.camera_move_x,
                                         HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
                 if not index_x == 24 and map_floor_array[index_y][index_x + 1] == 0:
-                    FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 - character.camera_move_x + 30,
+                    FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 - character.camera_move_x + 27,
                                             HEIGHT - index_y * 60 - character.camera_move_y, 15, 60)
                 if not index_x == 0 and map_floor_array[index_y][index_x - 1] == 0:
-                    FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 - character.camera_move_x - 30,
+                    FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 - character.camera_move_x - 27,
                                             HEIGHT - index_y * 60 - character.camera_move_y, 15, 60)
                 #               좌우반전 필요
                 if index_y * 25 + index_x < 25 * 25 and map_floor_array[index_y + 1][index_x] == 0:
                     FLOOR_stage_I.clip_draw(640, 560, 130, 40, index_x * 60 - character.camera_move_x,
-                                            HEIGHT - index_y * 60 - character.camera_move_y - 30, 60, 20)
+                                            HEIGHT - index_y * 60 - character.camera_move_y - 27, 60, 20)
                 if index_x + index_y * 25 >= 0 and map_floor_array[index_y - 1][index_x] == 0:
                     FLOOR_stage_I.clip_draw(640, 680, 130, 40, index_x * 60 - character.camera_move_x,
-                                            HEIGHT - index_y * 60 - character.camera_move_y + 30, 60, 20)
+                                            HEIGHT - index_y * 60 - character.camera_move_y + 27, 60, 20)
 
 
 def draw_character(character, BG_stage_I, FLOOR_stage_I, character_I, character_reverse_I):

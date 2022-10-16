@@ -44,21 +44,18 @@ class CHARACTER(UNIT):
         if mode == 1:       # Y충돌 체크
             for index_y in range(character_index_y - 2, character_index_y + 3):
                 for index_x in range(character_index_x - 1, character_index_x + 2):
-                    if 0 < index_x < 25 and 0 < index_y < 25 and\
+                    print(index_x,index_y)
+                    if 0 <= index_x < 25 and 0 <= index_y < 25 and\
                             (not map_floor.map_floor_array[index_y][index_x] == 0 and not map_floor.map_floor_array[index_y][index_x] == 1) and \
-                            abs(self.Y + move - (map_floor.HEIGHT - index_y * 60)) <= 80:
+                            abs(self.Y + move - (map_floor.HEIGHT - index_y * 60)) <= 70:
                         return False
         elif mode == 2:     # X충돌 체크
             for index_y in range(character_index_y - 1, character_index_y + 2):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
-                    if 0 < index_x < 25 and 0 < index_y < 25 and\
+                    if 0 <= index_x < 25 and 0 <= index_y < 25 and\
                             (not map_floor.map_floor_array[index_y][index_x] == 0 and not map_floor.map_floor_array[index_y][index_x] == 1) and \
                             abs(self.X + move - index_x * 60) <= 60:
                         return False
-                    print(index_x)
-        elif mode == 0:
-            pass
-        # print(self.X, self.Y)
         return True
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
@@ -70,6 +67,9 @@ class CHARACTER(UNIT):
                 self.Y += self.JumpSpeed
                 if self.Y <= 100:
                     self.camera_move_y -= self.JumpSpeed
+        else:
+            self.Jump_Key_State = False
+            self.JumpSpeed = 11
 
     def Down_Jump(self):
         # self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
@@ -81,7 +81,7 @@ class CHARACTER(UNIT):
 
         pass
     def gravity(self):
-        if self.Conflict_checking(1, self.DownSpeed):
+        if self.Conflict_checking(1, -self.DownSpeed):
             if self.DownSpeed <= 5:
                 self.DownSpeed += self.Gravity
             self.Y = self.Y - self.DownSpeed
@@ -179,8 +179,8 @@ class CHARACTER(UNIT):
                         self.whip.X = self.X - 45
                         self.whip.Y = self.Y- 10
 
-                self.whip.MotionIndex = (self.MotionIndex + 0.2) % 16 % 6 + 16 * 12 + 10
-                self.MotionIndex = (self.MotionIndex + 0.2) % 16 % 6 + 16 * 4
+                self.whip.MotionIndex = (self.MotionIndex + 0.1) % 16 % 6 + 16 * 12 + 10
+                self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 6 + 16 * 4
             else:
                 self.Action = 0
                 self.Attack_state = False
