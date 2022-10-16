@@ -2,8 +2,6 @@ from Unitclass import *
 import map_floor
 from pico2d import *
 
-
-
 class CHARACTER(UNIT):
     UNIT.HP = 5
     UNIT.ATK = 1
@@ -28,6 +26,7 @@ class CHARACTER(UNIT):
     Jump_Key_State = False
     Down_Jump_state = False
     Gravity_state = False
+    Attack_state = False
 
     def Place(self):
         for index_x in range(0, 25):
@@ -95,7 +94,6 @@ class CHARACTER(UNIT):
 
 
     def Motion(self):
-
         if self.Jump_Key_State:
             self.Jump()
         elif self.Down_Jump_state:
@@ -153,6 +151,12 @@ class CHARACTER(UNIT):
 
                 if not self.Jump_Key_State:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 8
+        elif self.Action == 4:
+            if self.MotionIndex % 16 < 5:
+                self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 6 + 16 * 4
+            else:
+                self.Action = 0
+                self.Attack_state = False
         self.gravity()
 
     def key_down(self):
@@ -181,6 +185,9 @@ class CHARACTER(UNIT):
                     self.shift_on = True
                 elif event.key == SDLK_ESCAPE:
                     pass
+                elif event.key == SDLK_LCTRL and self.Attack_state == False:
+                    self.Attack_state = True
+                    self.Action = 4
             elif event.type == SDL_KEYUP:
                 if event.key == SDLK_RIGHT and self.Action == 1:
                     self.Action = 0
