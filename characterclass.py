@@ -2,6 +2,8 @@ from Unitclass import *
 from map_floor import *
 from pico2d import *
 
+
+
 class CHARACTER(UNIT):
     UNIT.HP = 5
     UNIT.ATK = 1

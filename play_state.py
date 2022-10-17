@@ -14,9 +14,9 @@ def enter():
     main_character = CHARACTER()
     main_character.Place()
     character_I = load_image('char_yellow.png')
-    character_reverse_I = load_image('r_char_yellow.png')
-    BG_stage_I = load_image('bg_cave.png')
-    FLOOR_stage_I = load_image('floor_cave.png')
+    character_reverse_I = load_image('./Textures/r_char_yellow.png')
+    BG_stage_I = load_image('./Textures/bg_cave.png')
+    FLOOR_stage_I = load_image('./Textures/floor_cave.png')
 
 def exit():
     del main_character
