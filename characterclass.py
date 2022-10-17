@@ -28,6 +28,7 @@ class CHARACTER(UNIT):
     Down_Jump_state = False
     Gravity_state = False
     Attack_state = False
+    Climb_key_state = False
 
     whip = UNIT()
 
@@ -54,10 +55,16 @@ class CHARACTER(UNIT):
             for index_y in range(character_index_y - 1, character_index_y + 2):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and\
-                            (not map_floor_array[index_y][index_x] == 0 and not map_floor_array[index_y][index_x] == 1) and \
+                            2 <= map_floor_array[index_y][index_x] <= 29 and \
                             abs(self.Y - (HEIGHT - index_y * 60)) <= 65 and abs(self.X + move - index_x * 60) <= 60:
-                        print(abs(self.X + move - index_x * 60), index_x)
                         return False
+        elif mode == 3:     # 사다리 체크
+            if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or (30 <= map_floor_array[character_index_y][character_index_x] <= 35 and \
+                    abs(self.X - character_index_x * 60) >= 40 and abs(self.Y - (HEIGHT - character_index_y * 60)) >= 40):
+                return  False
+            elif 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and not self.Action == 4:
+                self.X = character_index_x * 60
+                self.Y = HEIGHT - character_index_y * 60 - 30
         return True
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
@@ -83,7 +90,7 @@ class CHARACTER(UNIT):
 
         pass
     def gravity(self):
-        if self.Conflict_checking(1, -self.DownSpeed):
+        if self.Conflict_checking(1, -self.DownSpeed) and not self.Climb_state and not self.Action == 4:
             if self.DownSpeed <= 5:
                 self.DownSpeed += self.Gravity
             self.Y = self.Y - self.DownSpeed
@@ -91,7 +98,6 @@ class CHARACTER(UNIT):
                 self.camera_move_y -= self.DownSpeed
             if not self.Attack_state:
                 self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 8 + 16 * 9
-            self.Can_Jump = False
             self.Gravity_state = True
         else:
             self.Can_Jump = True
@@ -145,7 +151,6 @@ class CHARACTER(UNIT):
 
                 if not self.Jump_Key_State and not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.1) % 8
-
             else:
                 if self.Conflict_checking(2, -4):
                     if self.X - self.camera_move_x >= 200:
@@ -153,9 +158,13 @@ class CHARACTER(UNIT):
                     elif self.X - self.camera_move_x < 200:
                         self.X -= 4
                         self.camera_move_x -= 4
-
                 if not self.Jump_Key_State and not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 8
+        elif self.Action == 4:
+            if self.Climb_state:
+                self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
+                self.Y += 2
+
         if self.Attack_state:
             print(self.MotionIndex % 16)
             if self.MotionIndex % 16 < 5:
@@ -195,15 +204,20 @@ class CHARACTER(UNIT):
                 close_canvas()
             if event.type == SDL_KEYDOWN:
                 if event.key == SDLK_UP:
-                    pass
+                    if self.Conflict_checking(3, 0):
+                        self.Action = 4
+                        self.Climb_state = True
+                        self.Can_Jump = True
+                        self.JumpSpeed = 3
+                        self.Jump_Key_State = False
                 elif event.key == SDLK_RIGHT:
-                    if self.Action != 2:
+                    if self.Action != 2 and not self.Action == 4:
                         self.Action = 1
                         self.DIRECTION = 0
                 elif event.key == SDLK_DOWN:
                     self.Action = 2
                 elif event.key == SDLK_LEFT:
-                    if self.Action != 2:
+                    if self.Action != 2 and not self.Action == 4:
                         self.DIRECTION = 1
                         self.Action = 3
                 elif event.key == SDLK_LALT:
@@ -211,18 +225,22 @@ class CHARACTER(UNIT):
                         self. Down_Jump_state = True
                     elif not self.Jump_Key_State and self.Can_Jump:
                         self.Jump_Key_State = True
+                        self.Can_Jump = False
+                        if self.Action == 4:
+                            self.Climb_state = False
+                            self.Action = 0
                 elif event.key == SDLK_LSHIFT:
                     self.shift_on = True
                 elif event.key == SDLK_ESCAPE:
                     pass
-                elif event.key == SDLK_LCTRL and self.Attack_state == False:
+                elif event.key == SDLK_LCTRL and self.Attack_state == False and not self.Action == 4:
                     self.Attack_state = True
             elif event.type == SDL_KEYUP:
-                if event.key == SDLK_RIGHT and self.Action == 1:
+                if event.key == SDLK_RIGHT and self.Action == 1 and not self.Action == 4:
                     self.Action = 0
-                elif event.key == SDLK_DOWN and self.Action == 2:
+                elif event.key == SDLK_DOWN and self.Action == 2 and not self.Action == 4:
                     self.Action = 0
-                elif event.key == SDLK_LEFT and self.Action == 3:
+                elif event.key == SDLK_LEFT and self.Action == 3 and not self.Action == 4:
                     self.Action = 0
                 elif event.key == SDLK_LALT and (self.Jump_Key_State or self.Down_Jump_state):
                     self.Jump_Key_State = False
@@ -230,3 +248,5 @@ class CHARACTER(UNIT):
                     self.JumpSpeed = 11
                 elif event.key == SDLK_LSHIFT:
                     self.shift_on = False
+                elif event.key == SDLK_UP:
+                    self.Climb_key_state = False
