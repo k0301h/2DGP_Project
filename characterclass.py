@@ -3,7 +3,6 @@ from map_floor import *
 from pico2d import *
 
 
-
 class CHARACTER(UNIT):
     UNIT.HP = 5
     UNIT.ATK = 1
@@ -47,7 +46,7 @@ class CHARACTER(UNIT):
             for index_x in range(character_index_x - 1, character_index_x + 2):
                 for index_y in range(character_index_y - 2, character_index_y + 3):
                     if 0 <= index_x < map_size and  0 <= index_y < map_size and\
-                            (not map_floor_array[index_y][index_x] == 0 and not map_floor_array[index_y][index_x] == 1) and \
+                            2 <= map_floor_array[index_y][index_x] <= 29 and\
                             abs(self.X - index_x * 60) <= 60 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 65:
                         return False
 
