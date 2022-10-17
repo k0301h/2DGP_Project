@@ -42,19 +42,20 @@ class CHARACTER(UNIT):
         character_index_y = int((HEIGHT - (self.Y + move)) // 60)
 
         if mode == 1:       # Y충돌 체크
-            for index_y in range(character_index_y - 2, character_index_y + 3):
-                for index_x in range(character_index_x - 1, character_index_x + 2):
-                    print(index_x, index_y)
-                    if 0 <= index_x < map_size and 0 <= index_y < map_size and\
+            for index_x in range(character_index_x - 1, character_index_x + 2):
+                for index_y in range(character_index_y - 2, character_index_y + 3):
+                    if 0 <= index_x < map_size and  0 <= index_y < map_size and\
                             (not map_floor_array[index_y][index_x] == 0 and not map_floor_array[index_y][index_x] == 1) and \
-                            abs(self.Y + move - (HEIGHT - index_y * 60)) <= 70:
+                            abs(self.X - index_x * 60) <= 60 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 65:
                         return False
+
         elif mode == 2:     # X충돌 체크
             for index_y in range(character_index_y - 1, character_index_y + 2):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and\
                             (not map_floor_array[index_y][index_x] == 0 and not map_floor_array[index_y][index_x] == 1) and \
-                            abs(self.X + move - index_x * 60) <= 60:
+                            abs(self.Y - (HEIGHT - index_y * 60)) <= 65 and abs(self.X + move - index_x * 60) <= 60:
+                        print(abs(self.X + move - index_x * 60), index_x)
                         return False
         return True
 
@@ -66,7 +67,7 @@ class CHARACTER(UNIT):
             if self.JumpSpeed > 0:
                 self.Y += self.JumpSpeed
                 if self.Y <= 100:
-                    self.camera_move_y -= self.JumpSpeed
+                    self.camera_move_y += self.JumpSpeed
         else:
             self.Jump_Key_State = False
             self.JumpSpeed = 11
@@ -118,12 +119,12 @@ class CHARACTER(UNIT):
                 if not self.Jump_Key_State and not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.1) % 8
             else:
-                if self.Conflict_checking(2, 5):
+                if self.Conflict_checking(2, 4):
                     if self.X - self.camera_move_x <= 1000:
-                        self.X += 5
+                        self.X += 4
                     elif self.X - self.camera_move_x > 1000:
-                        self.X += 5
-                        self.camera_move_x += 5
+                        self.X += 4
+                        self.camera_move_x += 4
 
                 if not self.Jump_Key_State and not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 8
@@ -145,12 +146,12 @@ class CHARACTER(UNIT):
                     self.MotionIndex = (self.MotionIndex + 0.1) % 8
 
             else:
-                if self.Conflict_checking(2, -5):
+                if self.Conflict_checking(2, -4):
                     if self.X - self.camera_move_x >= 200:
-                        self.X -= 5
+                        self.X -= 4
                     elif self.X - self.camera_move_x < 200:
-                        self.X -= 5
-                        self.camera_move_x -= 5
+                        self.X -= 4
+                        self.camera_move_x -= 4
 
                 if not self.Jump_Key_State and not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 8
