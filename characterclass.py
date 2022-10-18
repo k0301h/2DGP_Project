@@ -45,7 +45,7 @@ class CHARACTER(UNIT):
         if mode == 1:       # Y충돌 체크
             for index_x in range(character_index_x - 1, character_index_x + 2):
                 for index_y in range(character_index_y - 2, character_index_y + 3):
-                    if 0 <= index_x < map_size and  0 <= index_y < map_size and\
+                    if 0 <= index_x < map_size and 0 <= index_y < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and\
                             abs(self.X - index_x * 60) <= 60 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 65:
                         return False
@@ -65,6 +65,9 @@ class CHARACTER(UNIT):
             elif 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and not self.Action == 4:
                 self.X = character_index_x * 60
                 self.Y = HEIGHT - character_index_y * 60 - 30
+        elif mode == 4:
+            if not map_floor_array[character_index_y][character_index_x] == -1:
+                return False
         return True
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
@@ -164,9 +167,12 @@ class CHARACTER(UNIT):
             if self.Climb_key_state:
                 self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
                 self.Y += 2
+        elif self.Action == 5:
+            self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 5
+            if self.MotionIndex % 16 == 5:
+                pass
 
         if self.Attack_state:
-            print(self.MotionIndex % 16)
             if self.MotionIndex % 16 < 5:
                 if self.whip.MotionIndex % 16 - 10 < 3:
                     if self.DIRECTION == 0:
@@ -190,10 +196,9 @@ class CHARACTER(UNIT):
                         self.whip.X = self.X - 45
                         self.whip.Y = self.Y- 10
 
-                self.whip.MotionIndex = (self.MotionIndex + 0.1) % 16 % 6 + 16 * 12 + 10
-                self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 6 + 16 * 4
+                self.whip.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 12 + 10
+                self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 4
             else:
-                self.Action = 0
                 self.Attack_state = False
                 self.whip.MotionIndex = 0
         self.gravity()
@@ -227,14 +232,18 @@ class CHARACTER(UNIT):
                         self.Jump_Key_State = True
                         self.Can_Jump = False
                         if self.Action == 4:
-                            self.Climb_state = False
+                            self.Climb_key_state = False
                             self.Action = 0
                 elif event.key == SDLK_LSHIFT:
                     self.shift_on = True
                 elif event.key == SDLK_ESCAPE:
                     pass
-                elif event.key == SDLK_LCTRL and self.Attack_state == False and not self.Action == 4:
+                elif event.key == SDLK_LCTRL and not self.Attack_state and not self.Action == 4:
                     self.Attack_state = True
+                elif event.key == SDLK_x:
+                    if self.Conflict_checking(4, 0):
+                        self.Action = 5
+                        self.MotionIndex = 0
             elif event.type == SDL_KEYUP:
                 if event.key == SDLK_RIGHT and self.Action == 1 and not self.Action == 4:
                     self.Action = 0
@@ -276,7 +285,7 @@ class CHARACTER(UNIT):
 
     def draw_UI(self):
         UI = load_image('./Textures/hud.png')
-        UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 65, 40, 40)
-        UI.clip_draw(140, 512 - 125, 40, 40, 90, HEIGHT - 70, 30, 30)               # 폭탄
-        UI.clip_draw(200, 512 - 125, 40, 40, 140, HEIGHT - 70, 30, 30)              # 로프
-        UI.clip_draw(270, 512 - 115, 30, 40, WIDTH - 300, HEIGHT - 70, 30, 40)      # 돈
+        UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 30, 40, 40)
+        UI.clip_draw(140, 512 - 125, 40, 40, 90, HEIGHT - 35, 30, 30)               # 폭탄
+        UI.clip_draw(200, 512 - 125, 40, 40, 140, HEIGHT - 35, 30, 30)              # 로프
+        UI.clip_draw(270, 512 - 115, 30, 40, WIDTH - 300, HEIGHT - 30, 30, 40)      # 돈

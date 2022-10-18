@@ -67,7 +67,6 @@ class MONSTER(UNIT):
 
     def draw_monster(self, monster_image):
         if self.DIRECTION == 0:
-            print("   dsa")
             monster_image.clip_draw(int(self.MotionIndex) % 4 * 130,
                                   544 - 95 * (int(self.MotionIndex) // 4 - 30),
                                   130, 95, self.X - characterclass.CHARACTER.camera_move_x + 30,
