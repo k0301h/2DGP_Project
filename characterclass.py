@@ -59,9 +59,9 @@ class CHARACTER(UNIT):
                         print(abs(self.X + move - index_x * 60))
                         return False
         elif mode == 3:     # 사다리 체크
-            if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or (30 <= map_floor_array[character_index_y][character_index_x] <= 35 and \
+            if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or (30 <= map_floor_array[character_index_y][character_index_x] <= 35 and\
                     abs(self.X - character_index_x * 60) >= 40 and abs(self.Y - (HEIGHT - character_index_y * 60)) >= 40):
-                return  False
+                return False
             elif 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and not self.Action == 4:
                 self.X = character_index_x * 60
                 self.Y = HEIGHT - character_index_y * 60 - 30
