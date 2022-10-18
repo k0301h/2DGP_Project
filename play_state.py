@@ -2,17 +2,23 @@ import pico2d
 from pico2d import *
 from drawscreen import *
 from characterclass import *
+from monsterclass import *
 
 main_character = None
+test_monster = None
 character_I = None
 character_reverse_I = None
 BG_stage_I = None
 FLOOR_stage_I = None
+test_monster_image = None
 
 def enter():
-    global main_character, character_I, character_reverse_I, BG_stage_I, FLOOR_stage_I
+    global main_character, character_I, character_reverse_I, BG_stage_I, FLOOR_stage_I, test_monster, test_monster_image
+    test_monster = MONSTER()
+    test_monster.Place()
     main_character = CHARACTER()
     main_character.Place()
+    test_monster_image = load_image('./Textures/Entities/Monsters/snake.png')
     character_I = load_image('char_yellow.png')
     character_reverse_I = load_image('./Textures/r_char_yellow.png')
     BG_stage_I = load_image('./Textures/bg_cave.png')
@@ -33,6 +39,7 @@ def draw():
     pico2d.clear_canvas()
     draw_map_floor(BG_stage_I, FLOOR_stage_I, main_character)
     main_character.draw_character(character_I, character_reverse_I)
+    test_monster.draw_monster(test_monster_image)
     main_character.draw_UI()
     pico2d.update_canvas()
 

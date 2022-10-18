@@ -57,5 +57,5 @@ map_floor_array_1 = [[2 , 3 , 4 , 5 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 
 map_floor_array = []
 
 map_floor_array.extend(map_floor_array_1)
-
+ROUND = 1
 map_floor_array
