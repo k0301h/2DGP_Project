@@ -31,8 +31,9 @@ def update():
 
 def draw():
     pico2d.clear_canvas()
-    draw_map_floor(FLOOR_stage_I, main_character)
-    draw_character(main_character, BG_stage_I, FLOOR_stage_I, character_I, character_reverse_I)
+    draw_map_floor(BG_stage_I, FLOOR_stage_I, main_character)
+    main_character.draw_character(character_I, character_reverse_I)
+    main_character.draw_UI()
     pico2d.update_canvas()
 
 def handle_events():
