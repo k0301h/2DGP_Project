@@ -76,8 +76,9 @@ class CHARACTER(UNIT):
             self.JumpSpeed -= self.Gravity
             if self.JumpSpeed > 0:
                 self.Y += self.JumpSpeed
-                if self.Y >= HEIGHT - 200:
+                if self.Y - self.camera_move_y >= HEIGHT - 200:
                     self.camera_move_y += self.JumpSpeed
+                    print(self.camera_move_y)
         else:
             self.Jump_Key_State = False
             self.JumpSpeed = 15
@@ -96,7 +97,8 @@ class CHARACTER(UNIT):
             if self.DownSpeed <= 10:
                 self.DownSpeed += self.Gravity
             self.Y = self.Y - self.DownSpeed
-            if self.Y <= 200:
+            print(self.Y)
+            if self.Y - self.camera_move_y <= 200:
                 self.camera_move_y -= self.DownSpeed
             if not self.Attack_state:
                 self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 8 + 16 * 9
