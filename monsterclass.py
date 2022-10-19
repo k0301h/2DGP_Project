@@ -36,7 +36,7 @@ class MONSTER(UNIT):
                 for index_y in range(character_index_y - 2, character_index_y + 3):
                     if 0 <= index_x < map_size and  0 <= index_y < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and\
-                            abs(self.X - index_x * 60) <= 60 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 65:
+                            abs(self.X - index_x * 60) < 60 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 65:
                         return False
 
         elif mode == 2:     # X충돌 체크
@@ -44,7 +44,7 @@ class MONSTER(UNIT):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            abs(self.Y - (HEIGHT - index_y * 60)) <= 65 and abs(self.X + move - index_x * 60) <= 60:
+                            abs(self.Y - (HEIGHT - index_y * 60)) < 65 and abs(self.X + move - index_x * 60) <= 60:
                         print(abs(self.X + move - index_x * 60))
                         return False
         return True

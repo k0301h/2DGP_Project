@@ -291,7 +291,9 @@ class CHARACTER(UNIT):
 
     def draw_UI(self):
         UI = load_image('./Textures/hud.png')
-        UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 30, 40, 40)
+        UI_count = load_image('./Textures/number.png')
+        UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 30, 40, 40)                 # 생명
+        UI_count.clip_draw(64 * (self.HP % 4), 320 - 64 * (self.HP // 4 + 1), 64, 64, 35, HEIGHT - 35, 30, 30)
         UI.clip_draw(140, 512 - 125, 40, 40, 90, HEIGHT - 35, 30, 30)               # 폭탄
         UI.clip_draw(200, 512 - 125, 40, 40, 140, HEIGHT - 35, 30, 30)              # 로프
         UI.clip_draw(270, 512 - 115, 30, 40, WIDTH - 300, HEIGHT - 30, 30, 40)      # 돈
