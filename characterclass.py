@@ -39,38 +39,42 @@ class CHARACTER(UNIT):
                     self.Y = HEIGHT - index_y * 60 - 30
 
     def Conflict_checking(self, mode, move): # mode : x,y충돌 검사 , move : 다음에 움직일 크기
-        character_index_x = int((self.X + move) // 60)
-        character_index_y = int((HEIGHT - (self.Y + move)) // 60)
-
         if mode == 1:       # Y충돌 체크
+            character_index_x = int(self.X // 60)
+            character_index_y = int((HEIGHT - (self.Y + move)) // 60)
             for index_x in range(character_index_x - 1, character_index_x + 2):
                 for index_y in range(character_index_y - 2, character_index_y + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and\
-                            abs(self.X - index_x * 60) < 60 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 65:
+                            abs(self.X - index_x * 60) <= 55 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 60:
                         return False
 
         elif mode == 2:     # X충돌 체크
+            character_index_x = int((self.X + move) // 60)
+            character_index_y = int((HEIGHT - self.Y) // 60)
             for index_y in range(character_index_y - 1, character_index_y + 2):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            abs(self.Y - (HEIGHT - index_y * 60)) < 65 and abs(self.X + move - index_x * 60) <= 60:
+                            abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55:
                         return False
         elif mode == 3:     # 사다리 체크
+            character_index_x = int(self.X // 60)
+            character_index_y = int((HEIGHT - (self.Y + move)) // 60)
             if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or (30 <= map_floor_array[character_index_y][character_index_x] <= 35 and\
-                    abs(self.X - character_index_x * 60) >= 40 and abs(self.Y - (HEIGHT - character_index_y * 60)) >= 40):
+                    abs(self.X - character_index_x * 60) > 20):
                 return False
             elif 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and not self.Action == 4:
                 self.X = character_index_x * 60
-                self.Y = HEIGHT - character_index_y * 60 - 30
         elif mode == 4:
+            character_index_x = int(self.X // 60)
+            character_index_y = int((HEIGHT - self.Y) // 60)
             if not map_floor_array[character_index_y][character_index_x] == -1:
                 return False
         return True
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
-        if self.Conflict_checking(1, self.JumpSpeed):
+        if self.Conflict_checking(1, self.JumpSpeed) and not self.Action == 4:
             if not self.Attack_state:
                 self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
             self.JumpSpeed -= self.Gravity
@@ -78,7 +82,8 @@ class CHARACTER(UNIT):
                 self.Y += self.JumpSpeed
                 if self.Y - self.camera_move_y >= HEIGHT - 200:
                     self.camera_move_y += self.JumpSpeed
-                    print(self.camera_move_y)
+        elif self.Action == 4:
+            pass
         else:
             self.Jump_Key_State = False
             self.JumpSpeed = 15
@@ -93,11 +98,10 @@ class CHARACTER(UNIT):
 
         pass
     def gravity(self):
-        if self.Conflict_checking(1, -self.DownSpeed) and not self.Climb_key_state and not self.Action == 4:
+        if self.Conflict_checking(1, -self.DownSpeed) and not self.Climb_key_state and (not self.Action == 4 or self.Jump_Key_State):
             if self.DownSpeed <= 10:
                 self.DownSpeed += self.Gravity
             self.Y = self.Y - self.DownSpeed
-            print(self.Y)
             if self.Y - self.camera_move_y <= 200:
                 self.camera_move_y -= self.DownSpeed
             if not self.Attack_state:
@@ -164,9 +168,9 @@ class CHARACTER(UNIT):
                         self.camera_move_x -= 6
                 if not self.Jump_Key_State and not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 8
-        elif self.Action == 4:
-            if self.Climb_key_state:
-                self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
+        if self.Action == 4:
+            self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
+            if self.Climb_key_state and self.Conflict_checking(3, 2):
                 self.Y += 2
         elif self.Action == 5:
             self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 5
@@ -217,13 +221,13 @@ class CHARACTER(UNIT):
                         self.JumpSpeed = 3
                         self.Jump_Key_State = False
                 elif event.key == SDLK_RIGHT:
-                    if self.Action != 2 and not self.Action == 4:
+                    if self.Action != 2 and (not self.Action == 4 or self.Jump_Key_State):
                         self.Action = 1
                         self.DIRECTION = 0
                 elif event.key == SDLK_DOWN:
                     self.Action = 2
                 elif event.key == SDLK_LEFT:
-                    if self.Action != 2 and not self.Action == 4:
+                    if self.Action != 2 and (not self.Action == 4 or self.Jump_Key_State):
                         self.DIRECTION = 1
                         self.Action = 3
                 elif event.key == SDLK_LALT:
@@ -234,23 +238,22 @@ class CHARACTER(UNIT):
                         self.Can_Jump = False
                         if self.Action == 4:
                             self.Climb_key_state = False
-                            self.Action = 0
                 elif event.key == SDLK_LSHIFT:
                     self.shift_on = True
                 elif event.key == SDLK_ESCAPE:
                     pass
-                elif event.key == SDLK_LCTRL and not self.Attack_state and not self.Action == 4:
+                elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Action == 4 or self.Jump_Key_State):
                     self.Attack_state = True
                 elif event.key == SDLK_x:
                     if self.Conflict_checking(4, 0):
                         self.Action = 5
                         self.MotionIndex = 0
             elif event.type == SDL_KEYUP:
-                if event.key == SDLK_RIGHT and self.Action == 1 and not self.Action == 4:
+                if event.key == SDLK_RIGHT and self.Action == 1 and (not self.Action == 4 or self.Jump_Key_State):
                     self.Action = 0
-                elif event.key == SDLK_DOWN and self.Action == 2 and not self.Action == 4:
+                elif event.key == SDLK_DOWN and self.Action == 2 and (not self.Action == 4 or self.Jump_Key_State):
                     self.Action = 0
-                elif event.key == SDLK_LEFT and self.Action == 3 and not self.Action == 4:
+                elif event.key == SDLK_LEFT and self.Action == 3 and (not self.Action == 4 or self.Jump_Key_State):
                     self.Action = 0
                 elif event.key == SDLK_LALT and (self.Jump_Key_State or self.Down_Jump_state):
                     self.Jump_Key_State = False
@@ -266,7 +269,7 @@ class CHARACTER(UNIT):
                                   1918 - 128 * (int(self.MotionIndex) // 16) + 50,
                                   128, 128, self.X - self.camera_move_x + 30,
                                   self.Y - self.camera_move_y - 30,
-                                  70, 70)
+                                  60, 60)
         if self.DIRECTION == 0:
             if self.Attack_state:
                 character_I.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
@@ -277,7 +280,7 @@ class CHARACTER(UNIT):
                                   1918 - 128 * (int(self.MotionIndex) // 16),
                                   128, 128, self.X - self.camera_move_x + 30,
                                   self.Y - self.camera_move_y - 30,
-                                  70, 70)
+                                  60, 60)
         elif self.DIRECTION == 1:
             if self.Attack_state:
                 character_I.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
@@ -287,7 +290,7 @@ class CHARACTER(UNIT):
             character_reverse_I.clip_draw(1918 - int(self.MotionIndex) % 16 * 128,
                                           1918 - 128 * (int(self.MotionIndex) // 16), 128, 128,
                                           self.X - self.camera_move_x + 30,
-                                          self.Y - self.camera_move_y - 30, 70, 70)
+                                          self.Y - self.camera_move_y - 30, 60, 60)
 
     def draw_UI(self):
         UI = load_image('./Textures/hud.png')
