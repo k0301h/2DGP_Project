@@ -47,16 +47,15 @@ class CHARACTER(UNIT):
                 for index_y in range(character_index_y - 2, character_index_y + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and\
-                            abs(self.X - index_x * 60) <= 60 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 65:
+                            abs(self.X - index_x * 60) < 60 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 65:
                         return False
 
         elif mode == 2:     # X충돌 체크
-            for index_y in range(character_index_y - 1, character_index_y + 1):
+            for index_y in range(character_index_y - 1, character_index_y + 2):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            abs(self.Y - (HEIGHT - index_y * 60)) <= 65 and abs(self.X + move - index_x * 60) <= 60:
-                        print(abs(self.X + move - index_x * 60))
+                            abs(self.Y - (HEIGHT - index_y * 60)) < 65 and abs(self.X + move - index_x * 60) <= 60:
                         return False
         elif mode == 3:     # 사다리 체크
             if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or (30 <= map_floor_array[character_index_y][character_index_x] <= 35 and\
@@ -77,7 +76,7 @@ class CHARACTER(UNIT):
             self.JumpSpeed -= self.Gravity
             if self.JumpSpeed > 0:
                 self.Y += self.JumpSpeed
-                if self.Y <= 100:
+                if self.Y >= HEIGHT - 200:
                     self.camera_move_y += self.JumpSpeed
         else:
             self.Jump_Key_State = False
@@ -118,10 +117,10 @@ class CHARACTER(UNIT):
                 self.MotionIndex = 0
         elif self.Action == 1:
             if self.shift_on == 0:
-                if self.X - self.camera_move_x <= 1000:
+                if self.X - self.camera_move_x <= WIDTH - 200:
                     if self.Conflict_checking(2, 3):
                         self.X += 3
-                elif self.X - self.camera_move_x > 1000:
+                elif self.X - self.camera_move_x > WIDTH - 200:
                     if self.Conflict_checking(2, 0):
                         self.X += 3
                         self.camera_move_x += 3
@@ -130,9 +129,9 @@ class CHARACTER(UNIT):
                     self.MotionIndex = (self.MotionIndex + 0.1) % 8
             else:
                 if self.Conflict_checking(2, 6):
-                    if self.X - self.camera_move_x <= 1000:
+                    if self.X - self.camera_move_x <= WIDTH - 200:
                         self.X += 6
-                    elif self.X - self.camera_move_x > 1000:
+                    elif self.X - self.camera_move_x > WIDTH - 200:
                         self.X += 6
                         self.camera_move_x += 6
 
@@ -260,7 +259,12 @@ class CHARACTER(UNIT):
                 elif event.key == SDLK_UP:
                     self.Climb_key_state = False
 
-    def draw_character(self, character_I, character_reverse_I):
+    def draw_character(self, character_I, character_reverse_I, main_character_grid):
+        main_character_grid.clip_draw(int(self.MotionIndex) % 16 * 128,
+                                  1918 - 128 * (int(self.MotionIndex) // 16) + 50,
+                                  128, 128, self.X - self.camera_move_x + 30,
+                                  self.Y - self.camera_move_y - 30,
+                                  70, 70)
         if self.DIRECTION == 0:
             if self.Attack_state:
                 character_I.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
