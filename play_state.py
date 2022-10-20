@@ -5,23 +5,27 @@ from characterclass import *
 from monsterclass import *
 
 main_character = None
-main_character_grid = None
 test_monster = None
 character_I = None
 character_reverse_I = None
+main_character_grid = None
 BG_stage_I = None
 FLOOR_stage_I = None
 test_monster_image = None
+test_monster_reverse_image = None
 test_monster_grid = None
 
 def enter():
-    global main_character, character_I, character_reverse_I, BG_stage_I, FLOOR_stage_I, test_monster, test_monster_image, main_character_grid, test_monster_grid
+    global main_character, character_I, character_reverse_I, BG_stage_I, FLOOR_stage_I, \
+        test_monster, test_monster_image, main_character_grid, test_monster_grid,\
+        test_monster_reverse_image
     test_monster = MONSTER()
     test_monster.Place()
     main_character = CHARACTER()
     main_character.Place()
     main_character_grid = load_image('./Textures/Entities/char_yellow_full_grid.png')
     test_monster_image = load_image('./Textures/Entities/Monsters/snake.png')
+    test_monster_reverse_image = load_image('./Textures/Entities/Monsters/snake_reverse.png')
     test_monster_grid = load_image('./Textures/Entities/Monsters/snake_grid.png')
     character_I = load_image('./Textures/char_yellow.png')
     character_reverse_I = load_image('./Textures/r_char_yellow.png')
@@ -44,7 +48,7 @@ def draw():
     pico2d.clear_canvas()
     draw_map_floor(BG_stage_I, FLOOR_stage_I, main_character)
     main_character.draw_character(character_I, character_reverse_I, main_character_grid)
-    test_monster.draw_monster(test_monster_image, test_monster_grid)
+    test_monster.draw_monster(main_character, test_monster_image, test_monster_reverse_image, test_monster_grid)
     main_character.draw_UI()
     pico2d.update_canvas()
 

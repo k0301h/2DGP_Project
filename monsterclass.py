@@ -1,7 +1,7 @@
-from Unitclass import *
-from map_floor import *
-from pico2d import *
-import characterclass
+# from Unitclass import *
+# from map_floor import *
+# from pico2d import *
+from characterclass import *
 
 class MONSTER(UNIT):
     monster_type = 1 # 1 == 뱀(1round)
@@ -46,6 +46,10 @@ class MONSTER(UNIT):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
                             abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55:
+                        if self.DIRECTION:
+                            self.DIRECTION = 0
+                        else:
+                            self.DIRECTION = 1
                         return False
         return True
 
@@ -61,28 +65,31 @@ class MONSTER(UNIT):
 
     def Motion(self):
         if self.Action == 0:
-            self.MotionIndex = (self.MotionIndex + 1) % 4
-            if self.Conflict_checking(2, 3):
+            self.MotionIndex = (self.MotionIndex + 0.1) % 4
+            if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
                 self.X += 3
+            elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
+                self.X -= 3
 
         self.gravity()
 
-    def draw_monster(self, monster_image, monster_grid):
+    def draw_monster(self, main_character, monster_image, monster_reverse_image, monster_grid):
         monster_grid.clip_draw(int(self.MotionIndex) % 4 * 128,
                                   544 - 128 * (int(self.MotionIndex) // 4 + 1),
-                                  128, 128, self.X - characterclass.CHARACTER.camera_move_x + 30,
-                                  self.Y - characterclass.CHARACTER.camera_move_y - 30,
+                                  128, 128, self.X - main_character.camera_move_x + 30,
+                                  self.Y - main_character.camera_move_y - 30,
                                   60, 60)
         if self.DIRECTION == 0:
+            print(main_character.camera_move_x, main_character.camera_move_y)
             monster_image.clip_draw(int(self.MotionIndex) % 4 * 128,
                                   544 - 128 * (int(self.MotionIndex) // 4 + 1),
-                                  128, 128, self.X - characterclass.CHARACTER.camera_move_x + 30,
-                                  self.Y - characterclass.CHARACTER.camera_move_y - 30,
+                                  128, 128, self.X - main_character.camera_move_x + 30,
+                                  self.Y - main_character.camera_move_y - 30,
                                   60, 60)
-        # elif self.DIRECTION == 1:
-        #     if self.Attack_state:
-        #     character_reverse_I.clip_draw(1918 - int(self.MotionIndex) % 16 * 128,
-        #                                   1918 - 128 * (int(self.MotionIndex) // 16), 128, 128,
-        #                                   self.X - self.camera_move_x + 30,
-        #                                   self.Y - self.camera_move_y - 30, 70, 70)
+        elif self.DIRECTION == 1:
+            monster_reverse_image.clip_draw(512 - (int(self.MotionIndex) % 4 + 1) * 128,
+                                  544 - 128 * (int(self.MotionIndex) // 4 + 1),
+                                  128, 128, self.X - main_character.camera_move_x + 30,
+                                  self.Y - main_character.camera_move_y - 30,
+                                  60, 60)
 
