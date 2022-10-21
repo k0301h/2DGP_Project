@@ -71,6 +71,16 @@ class CHARACTER(UNIT):
             character_index_y = int((HEIGHT - self.Y) // 60)
             if not map_floor_array[character_index_y][character_index_x] == -1:
                 return False
+        elif mode == 5:     # 매달리기
+            character_index_x = int(self.X // 60)
+            character_index_y = int((HEIGHT - (self.Y + move)) // 60)
+            for index_x in range(character_index_x - 1, character_index_x + 2):
+                for index_y in range(character_index_y - 2, character_index_y + 3):
+                    if 0 <= index_x < map_size and 0 <= index_y < map_size and\
+                            2 <= map_floor_array[index_y][index_x] <= 29 and\
+                            not 2 <= map_floor_array[index_y - 1][index_x] <= 29 and\
+                            abs(self.X - index_x * 60) <= 60 and HEIGHT - index_y * 60 + 15 <= self.Y + move <= HEIGHT - index_y * 60 + 25:
+                        return False
         return True
 
     def attack_conflict_checking(self, monster):
@@ -87,15 +97,11 @@ class CHARACTER(UNIT):
                 self.Y += self.JumpSpeed
                 if self.Y - self.camera_move_y >= HEIGHT - 200:
                     self.camera_move_y += self.JumpSpeed
-        elif self.Action == 4:
-            pass
         else:
             self.Jump_Key_State = False
             self.JumpSpeed = 15
 
     def Attack(self, monster):
-        if self.attack_conflict_checking(monster):
-            pass
         if self.MotionIndex % 16 < 5:
             if self.whip.MotionIndex % 16 - 10 < 3:
                 if self.DIRECTION == 0:
@@ -122,6 +128,8 @@ class CHARACTER(UNIT):
             self.whip.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 12 + 10
             self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 4
         else:
+            if self.attack_conflict_checking(monster):
+                monster.HP -= 1
             self.Attack_state = False
             self.whip.MotionIndex = 0
 
@@ -136,16 +144,23 @@ class CHARACTER(UNIT):
 
     def gravity(self):
         if self.Conflict_checking(1, -self.DownSpeed) and ((not self.Climb_up_key_state and not self.Climb_down_key_state) or (not self.Action == 4 or self.Jump_Key_State)):
-            if self.DownSpeed <= 10:
-                self.DownSpeed += self.Gravity
-            self.Y = self.Y - self.DownSpeed
-            if self.Y - self.camera_move_y <= 200:
-                self.camera_move_y -= self.DownSpeed
-            if not self.Attack_state:
-                self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 8 + 16 * 9
-            self.Gravity_state = True
+            if self.Gravity_state and not self.Conflict_checking(5, -self.DownSpeed):
+                self.MotionIndex = (self.MotionIndex + 0.2) % 4 % 16 + 16 * 3 + 8
+                self.Can_Jump = True
+                self.JumpSpeed = 10
+                self.DownSpeed = 0
+            else:
+                if self.DownSpeed <= 10:
+                    self.DownSpeed += self.Gravity
+                self.Y = self.Y - self.DownSpeed
+                if self.Y - self.camera_move_y <= 200:
+                    self.camera_move_y -= self.DownSpeed
+                if not self.Attack_state:
+                    self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 8 + 16 * 9
+                self.Gravity_state = True
         else:
             self.Can_Jump = True
+            self.JumpSpeed = 15
             self.DownSpeed = 0
             self.Gravity_state = False
 
@@ -315,9 +330,7 @@ class CHARACTER(UNIT):
                                           self.X - self.camera_move_x + 30,
                                           self.Y - self.camera_move_y - 30, 60, 60)
 
-    def draw_UI(self):
-        UI = load_image('./Textures/hud.png')
-        UI_count = load_image('./Textures/number.png')
+    def draw_UI(self, UI, UI_count):
         UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 30, 40, 40)                 # 생명
         UI_count.clip_draw(64 * (self.HP % 4), 320 - 64 * (self.HP // 4 + 1), 64, 64, 35, HEIGHT - 35, 30, 30)
         UI.clip_draw(140, 512 - 125, 40, 40, 90, HEIGHT - 35, 30, 30)               # 폭탄

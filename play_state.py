@@ -14,11 +14,13 @@ FLOOR_stage_I = None
 test_monster_image = None
 test_monster_reverse_image = None
 test_monster_grid = None
+UI = None
+UI_count = None
 
 def enter():
     global main_character, character_I, character_reverse_I, BG_stage_I, FLOOR_stage_I, \
         test_monster, test_monster_image, main_character_grid, test_monster_grid,\
-        test_monster_reverse_image
+        test_monster_reverse_image, UI, UI_count
 
     # character
     main_character = CHARACTER()
@@ -37,6 +39,9 @@ def enter():
     # stage image
     BG_stage_I = load_image('./Textures/bg_cave.png')
     FLOOR_stage_I = load_image('./Textures/floor_cave.png')
+    #UI
+    UI = load_image('./Textures/hud.png')
+    UI_count = load_image('./Textures/number.png')
 
 def exit():
     del main_character
@@ -52,6 +57,9 @@ def exit():
     del BG_stage_I
     del FLOOR_stage_I
 
+    del UI
+    del UI_count
+
 def update():
     main_character.key_down()
     main_character.Motion(test_monster)
@@ -62,7 +70,7 @@ def draw():
     draw_map_floor(BG_stage_I, FLOOR_stage_I, main_character)
     main_character.draw_character(character_I, character_reverse_I, main_character_grid)
     test_monster.draw_monster(main_character, test_monster_image, test_monster_reverse_image, test_monster_grid)
-    main_character.draw_UI()
+    main_character.draw_UI(UI, UI_count)
     pico2d.update_canvas()
 
 def handle_events():

@@ -79,14 +79,13 @@ class MONSTER(UNIT):
                                   128, 128, self.X - main_character.camera_move_x + 30,
                                   self.Y - main_character.camera_move_y - 30,
                                   60, 60)
-        if self.DIRECTION == 0:
-            print(main_character.camera_move_x, main_character.camera_move_y)
+        if self.DIRECTION == 0 and self.HP > 0:
             monster_image.clip_draw(int(self.MotionIndex) % 4 * 128,
                                   544 - 128 * (int(self.MotionIndex) // 4 + 1),
                                   128, 128, self.X - main_character.camera_move_x + 30,
                                   self.Y - main_character.camera_move_y - 30,
                                   60, 60)
-        elif self.DIRECTION == 1:
+        elif self.DIRECTION == 1 and self.HP > 0:
             monster_reverse_image.clip_draw(512 - (int(self.MotionIndex) % 4 + 1) * 128,
                                   544 - 128 * (int(self.MotionIndex) // 4 + 1),
                                   128, 128, self.X - main_character.camera_move_x + 30,
