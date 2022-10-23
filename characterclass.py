@@ -27,6 +27,7 @@ class CHARACTER(UNIT):
     Down_Jump_state = False
     Gravity_state = False
     Attack_state = False
+    Climb_state = False
     Climb_up_key_state = False
     Climb_down_key_state = False
 
@@ -64,7 +65,7 @@ class CHARACTER(UNIT):
             if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or (30 <= map_floor_array[character_index_y][character_index_x] <= 35 and\
                     abs(self.X - character_index_x * 60) > 20):
                 return False
-            elif 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and not self.Action == 4:
+            elif 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and not self.Climb_state:
                 self.X = character_index_x * 60
         elif mode == 4:     # 출구 체크
             character_index_x = int(self.X // 60)
@@ -89,7 +90,7 @@ class CHARACTER(UNIT):
         return False
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
-        if self.Conflict_checking(1, self.JumpSpeed) and not self.Action == 4:
+        if self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state:
             if not self.Attack_state:
                 self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
             self.JumpSpeed -= self.Gravity
@@ -143,7 +144,7 @@ class CHARACTER(UNIT):
         pass
 
     def gravity(self):
-        if self.Conflict_checking(1, -self.DownSpeed) and ((not self.Climb_up_key_state and not self.Climb_down_key_state) or (not self.Action == 4 or self.Jump_Key_State)):
+        if self.Conflict_checking(1, -self.DownSpeed) and not self.Climb_state:
             if self.Gravity_state and not self.Conflict_checking(5, -self.DownSpeed):
                 self.MotionIndex = (self.MotionIndex + 0.2) % 4 % 16 + 16 * 3 + 8
                 self.Can_Jump = True
@@ -170,69 +171,71 @@ class CHARACTER(UNIT):
         elif self.Down_Jump_state:
             self.Down_Jump()
 
-        if self.Action == 0:
-            if not self.Jump_Key_State and not self.Gravity_state and not self.Attack_state:
-                self.MotionIndex = 0
-        elif self.Action == 1:
-            if self.shift_on == 0:
-                if self.X - self.camera_move_x <= WIDTH - 200:
-                    if self.Conflict_checking(2, 3):
-                        self.X += 3
-                elif self.X - self.camera_move_x > WIDTH - 200:
-                    if self.Conflict_checking(2, 0):
-                        self.X += 3
-                        self.camera_move_x += 3
-
-                if not self.Jump_Key_State and not self.Attack_state:
-                    self.MotionIndex = (self.MotionIndex + 0.1) % 8
-            else:
-                if self.Conflict_checking(2, 6):
-                    if self.X - self.camera_move_x <= WIDTH - 200:
-                        self.X += 6
-                    elif self.X - self.camera_move_x > WIDTH - 200:
-                        self.X += 6
-                        self.camera_move_x += 6
-
-                if not self.Jump_Key_State and not self.Attack_state:
-                    self.MotionIndex = (self.MotionIndex + 0.3) % 8
-
-        elif self.Action == 2:
-            if self.MotionIndex < 18 and not self.Jump_Key_State and not self.Attack_state:
-                self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 3 + 16
-
-        elif self.Action == 3:
-            if self.shift_on == 0:
-                if self.Conflict_checking(2, -3):
-                    if self.X - self.camera_move_x >= 200:
-                        self.X -= 3
-                    elif self.X - self.camera_move_x < 200:
-                        self.X -= 3
-                        self.camera_move_x -= 3
-
-                if not self.Jump_Key_State and not self.Attack_state:
-                    self.MotionIndex = (self.MotionIndex + 0.1) % 8
-            else:
-                if self.Conflict_checking(2, -6):
-                    if self.X - self.camera_move_x >= 200:
-                        self.X -= 6
-                    elif self.X - self.camera_move_x < 200:
-                        self.X -= 6
-                        self.camera_move_x -= 6
-                if not self.Jump_Key_State and not self.Attack_state:
-                    self.MotionIndex = (self.MotionIndex + 0.3) % 8
-        if self.Action == 4:
-            self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
+        if self.Climb_state:
             if self.Climb_up_key_state and self.Conflict_checking(3, 2):
                 self.Y += 2
+                self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
             elif self.Climb_down_key_state and self.Conflict_checking(3, -2):
                 self.Y -= 2
-        elif self.Action == 5:
-            self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 5
-            if self.MotionIndex % 16 == 5:
-                pass
+                self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
+        else:
+            if self.Action == 0:
+                if not self.Jump_Key_State and not self.Gravity_state and not self.Attack_state:
+                    self.MotionIndex = 0
+            elif self.Action == 1:
+                if self.shift_on == 0:
+                    if self.X - self.camera_move_x <= WIDTH - 200:
+                        if self.Conflict_checking(2, 3):
+                            self.X += 3
+                    elif self.X - self.camera_move_x > WIDTH - 200:
+                        if self.Conflict_checking(2, 0):
+                            self.X += 3
+                            self.camera_move_x += 3
 
-        if self.Attack_state:
-            self.Attack(monster)
+                    if not self.Jump_Key_State and not self.Attack_state:
+                        self.MotionIndex = (self.MotionIndex + 0.1) % 8
+                else:
+                    if self.Conflict_checking(2, 6):
+                        if self.X - self.camera_move_x <= WIDTH - 200:
+                            self.X += 6
+                        elif self.X - self.camera_move_x > WIDTH - 200:
+                            self.X += 6
+                            self.camera_move_x += 6
+
+                    if not self.Jump_Key_State and not self.Attack_state:
+                        self.MotionIndex = (self.MotionIndex + 0.3) % 8
+
+            elif self.Action == 2:
+                if self.MotionIndex < 18 and not self.Jump_Key_State and not self.Attack_state:
+                    self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 3 + 16
+
+            elif self.Action == 3:
+                if self.shift_on == 0:
+                    if self.Conflict_checking(2, -3):
+                        if self.X - self.camera_move_x >= 200:
+                            self.X -= 3
+                        elif self.X - self.camera_move_x < 200:
+                            self.X -= 3
+                            self.camera_move_x -= 3
+
+                    if not self.Jump_Key_State and not self.Attack_state:
+                        self.MotionIndex = (self.MotionIndex + 0.1) % 8
+                else:
+                    if self.Conflict_checking(2, -6):
+                        if self.X - self.camera_move_x >= 200:
+                            self.X -= 6
+                        elif self.X - self.camera_move_x < 200:
+                            self.X -= 6
+                            self.camera_move_x -= 6
+                    if not self.Jump_Key_State and not self.Attack_state:
+                        self.MotionIndex = (self.MotionIndex + 0.3) % 8
+            elif self.Action == 5:
+                self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 5
+                if self.MotionIndex % 16 == 5:
+                    pass
+
+            if self.Attack_state:
+                self.Attack(monster)
 
         self.gravity()
 
@@ -243,17 +246,17 @@ class CHARACTER(UNIT):
             if event.type == SDL_KEYDOWN:
                 if event.key == SDLK_UP:
                     if self.Conflict_checking(3, 0):
-                        self.Action = 4
                         self.Climb_up_key_state = True
+                        self.Climb_state = True
                         self.Can_Jump = True
                         self.JumpSpeed = 3
                         self.Jump_Key_State = False
                 elif event.key == SDLK_RIGHT:
-                    if self.Action != 2 and (not self.Action == 4 or self.Jump_Key_State):
+                    if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State):
                         self.Action = 1
                         self.DIRECTION = 0
                 elif event.key == SDLK_DOWN:
-                    if self.Conflict_checking(3, 0) and self.Action == 4:
+                    if self.Conflict_checking(3, 0) and self.Climb_state:
                         self.Climb_down_key_state = True
                         self.Can_Jump = True
                         self.JumpSpeed = 3
@@ -261,7 +264,7 @@ class CHARACTER(UNIT):
                     else:
                         self.Action = 2
                 elif event.key == SDLK_LEFT:
-                    if self.Action != 2 and (not self.Action == 4 or self.Jump_Key_State):
+                    if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State):
                         self.DIRECTION = 1
                         self.Action = 3
                 elif event.key == SDLK_LALT:
@@ -270,26 +273,26 @@ class CHARACTER(UNIT):
                     elif not self.Jump_Key_State and self.Can_Jump:
                         self.Jump_Key_State = True
                         self.Can_Jump = False
-                        if self.Action == 4:
-                            self.Climb_up_key_state = False
+                        if not self.Climb_down_key_state and not self.Climb_up_key_state:
+                            self.Climb_state = False
                 elif event.key == SDLK_LSHIFT:
                     self.shift_on = True
                 elif event.key == SDLK_ESCAPE:
                     pass
-                elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Action == 4 or self.Jump_Key_State):
+                elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State):
                     self.Attack_state = True
                 elif event.key == SDLK_x:
                     if self.Conflict_checking(4, 0):
                         self.Action = 5
                         self.MotionIndex = 0
             elif event.type == SDL_KEYUP:
-                if event.key == SDLK_RIGHT and self.Action == 1 and (not self.Action == 4 or self.Jump_Key_State):
+                if event.key == SDLK_RIGHT and self.Action == 1 and (not self.Climb_state or self.Jump_Key_State):
                     self.Action = 0
-                elif event.key == SDLK_DOWN and self.Action == 2 and (not self.Action == 4 or self.Jump_Key_State):
+                elif event.key == SDLK_DOWN and self.Action == 2 and (not self.Climb_state or self.Jump_Key_State):
                     self.Action = 0
                 elif event.key == SDLK_DOWN:
                     self.Climb_down_key_state = False
-                elif event.key == SDLK_LEFT and self.Action == 3 and (not self.Action == 4 or self.Jump_Key_State):
+                elif event.key == SDLK_LEFT and self.Action == 3 and (not self.Climb_state or self.Jump_Key_State):
                     self.Action = 0
                 elif event.key == SDLK_LALT and (self.Jump_Key_State or self.Down_Jump_state):
                     self.Jump_Key_State = False
