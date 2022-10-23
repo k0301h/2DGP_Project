@@ -280,6 +280,7 @@ class CHARACTER(UNIT):
                 elif event.key == SDLK_ESCAPE:
                     pass
                 elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State):
+                    self.MotionIndex = 0
                     self.Attack_state = True
                 elif event.key == SDLK_x:
                     if self.Conflict_checking(4, 0):
