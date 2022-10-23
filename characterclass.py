@@ -72,7 +72,7 @@ class CHARACTER(UNIT):
             character_index_y = int((HEIGHT - self.Y) // 60)
             if not map_floor_array[character_index_y][character_index_x] == -1:
                 return False
-        elif mode == 5:     # 매달리기
+        elif mode == 5:     # 블럭에 매달리기
             character_index_x = int(self.X // 60)
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
             for index_x in range(character_index_x - 1, character_index_x + 2):
@@ -80,6 +80,7 @@ class CHARACTER(UNIT):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and\
                             not 2 <= map_floor_array[index_y - 1][index_x] <= 29 and\
+                            not 2 <= map_floor_array[index_y + 1][character_index_x] <= 29 and\
                             abs(self.X - index_x * 60) <= 60 and HEIGHT - index_y * 60 + 15 <= self.Y + move <= HEIGHT - index_y * 60 + 25:
                         return False
         return True
