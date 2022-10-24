@@ -14,6 +14,8 @@ class CHARACTER(UNIT):
     RopeCount = 4
     Money = 0
 
+    hnadle = None
+
     Gravity = 0.5
     JumpSpeed = 15
     DownSpeed = 0
@@ -241,7 +243,7 @@ class CHARACTER(UNIT):
         self.gravity()
 
     def key_down(self):
-        for event in get_events():
+        for event in self.handle:
             if event.type == SDL_QUIT:
                 close_canvas()
             if event.type == SDL_KEYDOWN:

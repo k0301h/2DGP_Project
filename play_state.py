@@ -61,7 +61,6 @@ def exit():
     del UI_count
 
 def update():
-    main_character.key_down()
     main_character.Motion(test_monster)
     if test_monster.HP > 0:
         test_monster.Motion()
@@ -76,12 +75,15 @@ def draw():
     pico2d.update_canvas()
 
 def handle_events():
-    for event in get_events():
+    handle = get_events()
+    main_character.handle = handle
+    for event in handle:
         if event.type == SDL_QUIT:
             close_canvas()
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 close_canvas()
+    main_character.key_down()
 
 def pause(): pass
 
