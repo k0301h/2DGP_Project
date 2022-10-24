@@ -63,13 +63,15 @@ def exit():
 def update():
     main_character.key_down()
     main_character.Motion(test_monster)
-    test_monster.Motion()
+    if test_monster.HP > 0:
+        test_monster.Motion()
 
 def draw():
     pico2d.clear_canvas()
     draw_map_floor(BG_stage_I, FLOOR_stage_I, main_character)
     main_character.draw_character(character_I, character_reverse_I, main_character_grid)
-    test_monster.draw_monster(main_character, test_monster_image, test_monster_reverse_image, test_monster_grid)
+    if test_monster.HP > 0:
+        test_monster.draw_monster(main_character, test_monster_image, test_monster_reverse_image, test_monster_grid)
     main_character.draw_UI(UI, UI_count)
     pico2d.update_canvas()
 

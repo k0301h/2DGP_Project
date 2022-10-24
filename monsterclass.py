@@ -24,8 +24,8 @@ class MONSTER(UNIT):
     Attack_state = False
 
     def Place(self):
-        self.X = 200
-        self.Y = 200
+        self.X = 120
+        self.Y = 0
 
     def Conflict_checking(self, mode, move): # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         if mode == 1:  # Y충돌 체크

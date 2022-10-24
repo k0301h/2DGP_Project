@@ -36,6 +36,10 @@ def draw_map_floor(BG_stage_I, FLOOR_stage_I, character):
                 FLOOR_stage_I.clip_draw(128 * 4, 1410 - 128 * (map_floor_array[index_y][index_x] - 30)
                                         , 128, 128, index_x * 60 - character.camera_move_x + 30,
                                         HEIGHT - index_y * 60 - character.camera_move_y - 30, 60, 60)
+            elif 36 <= map_floor_array[index_y][index_x] <= 39:
+                FLOOR_stage_I.clip_draw(128 * (map_floor_array[index_y][index_x] - 31), 1410 - 1155
+                                        , 128, 128, index_x * 60 - character.camera_move_x + 30,
+                                        HEIGHT - index_y * 60 - character.camera_move_y - 30, 60, 60)
             else:
                 FLOOR_stage_I.clip_draw(128 * ((map_floor_array[index_y][index_x] - 2) % 4),
                                         1410 - 128 * ((map_floor_array[index_y][index_x] - 2) // 4), 128, 128,
