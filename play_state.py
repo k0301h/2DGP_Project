@@ -62,8 +62,7 @@ def exit():
 
 def update():
     main_character.Motion(test_monster)
-    if test_monster.HP > 0:
-        test_monster.Motion()
+    test_monster.Motion()
 
 def draw():
     pico2d.clear_canvas()

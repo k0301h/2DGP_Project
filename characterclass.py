@@ -312,30 +312,30 @@ class CHARACTER(UNIT):
     def draw_character(self, character_I, character_reverse_I, main_character_grid):
         main_character_grid.clip_draw(int(self.MotionIndex) % 16 * 128,
                                   1918 - 128 * (int(self.MotionIndex) // 16) + 50,
-                                  128, 128, self.X - self.camera_move_x + 30,
-                                  self.Y - self.camera_move_y - 30,
+                                  128, 128, self.X - self.camera_move_x,
+                                  self.Y - self.camera_move_y,
                                   60, 60)
         if self.DIRECTION == 0:
             if self.Attack_state:
                 character_I.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
                                       1918 - 128 * (int(self.whip.MotionIndex) // 16),
-                                      128, 128, self.whip.X - self.camera_move_x + 30,
-                                      self.whip.Y - self.camera_move_y - 30, 60, 60)
+                                      128, 128, self.whip.X - self.camera_move_x,
+                                      self.whip.Y - self.camera_move_y, 60, 60)
             character_I.clip_draw(int(self.MotionIndex) % 16 * 128,
                                   1918 - 128 * (int(self.MotionIndex) // 16),
-                                  128, 128, self.X - self.camera_move_x + 30,
-                                  self.Y - self.camera_move_y - 30,
+                                  128, 128, self.X - self.camera_move_x,
+                                  self.Y - self.camera_move_y,
                                   60, 60)
         elif self.DIRECTION == 1:
             if self.Attack_state:
                 character_I.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
                                       1918 - 128 * (int(self.whip.MotionIndex) // 16),
-                                      128, 128, self.whip.X - self.camera_move_x + 30,
-                                      self.whip.Y - self.camera_move_y - 30, 60, 60)
+                                      128, 128, self.whip.X - self.camera_move_x,
+                                      self.whip.Y - self.camera_move_y, 60, 60)
             character_reverse_I.clip_draw(1918 - int(self.MotionIndex) % 16 * 128,
                                           1918 - 128 * (int(self.MotionIndex) // 16), 128, 128,
-                                          self.X - self.camera_move_x + 30,
-                                          self.Y - self.camera_move_y - 30, 60, 60)
+                                          self.X - self.camera_move_x,
+                                          self.Y - self.camera_move_y, 60, 60)
 
     def draw_UI(self, UI, UI_count):
         UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 30, 40, 40)                 # 생명

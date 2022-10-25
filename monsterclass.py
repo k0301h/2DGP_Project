@@ -24,8 +24,8 @@ class MONSTER(UNIT):
     Attack_state = False
 
     def Place(self):
-        self.X = 120
-        self.Y = 0
+        self.X = 300
+        self.Y = 100
 
     def Conflict_checking(self, mode, move): # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         if mode == 1:  # Y충돌 체크
@@ -92,3 +92,7 @@ class MONSTER(UNIT):
                                   self.Y - main_character.camera_move_y - 30,
                                   60, 60)
 
+
+monster_list = []
+
+snake = []
