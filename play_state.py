@@ -71,7 +71,7 @@ def exit():
 def update():
     for monster in monster_list_1:
         # main_character.Motion(monster)
-        monster.Motion()
+        monster.Motion(main_character)
     main_character.Motion(monster_list_1)
     # test_monster.Motion()
 

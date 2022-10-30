@@ -1,5 +1,6 @@
 from characterclass import *
 import random
+import math
 
 class Snake(UNIT):
     # UNIT.HP = 2
@@ -54,7 +55,17 @@ class Snake(UNIT):
                             self.DIRECTION = 0
                         else:
                             self.DIRECTION = 1
+        elif mode == 3:  # 캐릭터 여기서 move는 캐릭터의 위치
+            if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 120:
+                self.Action = 1
         return True
+
+    def attack(self, character):
+        if self.MotionIndex < 11.9:
+            self.MotionIndex = (self.MotionIndex + 0.1) % 8 + 4
+            print(self.MotionIndex)
+        else:
+            self.Action = 0
 
     def gravity(self):
         if self.Conflict_checking(1, -self.DownSpeed):
@@ -66,13 +77,16 @@ class Snake(UNIT):
             self.DownSpeed = 0
             self.Gravity_state = False
 
-    def Motion(self):
+    def Motion(self, character):
         if self.Action == 0:
             self.MotionIndex = (self.MotionIndex + 0.1) % 4
             if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
                 self.X += 3
             elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
                 self.X -= 3
+            self.Conflict_checking(3, character)
+        elif self.Action == 1:
+            self.attack(character)
 
         self.gravity()
 
