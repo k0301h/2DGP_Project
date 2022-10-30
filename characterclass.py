@@ -19,6 +19,7 @@ class CHARACTER(UNIT):
     Gravity = 0.5
     JumpSpeed = 15
     DownSpeed = 0
+    Down_Distance = 0
 
     camera_move_x = 0
     camera_move_y = 0
@@ -154,18 +155,22 @@ class CHARACTER(UNIT):
                 self.JumpSpeed = 10
                 self.DownSpeed = 0
             else:
-                if self.DownSpeed <= 10:
+                if self.DownSpeed <= 20:
                     self.DownSpeed += self.Gravity
                 self.Y = self.Y - self.DownSpeed
+                self.Down_Distance += self.DownSpeed
                 if self.Y - self.camera_move_y <= 200:
                     self.camera_move_y -= self.DownSpeed
                 if not self.Attack_state:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 8 + 16 * 9
                 self.Gravity_state = True
         else:
+            if self.Down_Distance >= 600:
+                self.HP -= 1
             self.Can_Jump = True
             self.JumpSpeed = 15
             self.DownSpeed = 0
+            self.Down_Distance = 0
             self.Gravity_state = False
 
     def Motion(self, monster):
