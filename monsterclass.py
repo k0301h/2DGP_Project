@@ -3,8 +3,7 @@
 # from pico2d import *
 from characterclass import *
 
-class MONSTER(UNIT):
-    monster_type = 1 # 1 == 뱀(1round)
+class Snake(UNIT):
     UNIT.HP = 2
     UNIT.ATK = 1
     UNIT.Action = 0
@@ -12,22 +11,28 @@ class MONSTER(UNIT):
     UNIT.X = 400
     UNIT.Y = 400
     UNIT.DIRECTION = 0
-    BombCount = 4
-    RopeCount = 4
-    Money = 0
 
     Gravity = 0.5
     JumpSpeed = 10
     DownSpeed = 0
+    Image = None
+    rImage = None
+    grid_image = None
 
     Gravity_state = False
     Attack_state = False
+
+    def __init__(self):
+        if Snake.Image == None:
+            Snake.Image = load_image('./Textures/Entities/Monsters/snake.png')
+        if Snake.rImage == None:
+            Snake.rImage = load_image('./Textures/Entities/Monsters/snake_reverse.png')
 
     def Place(self):
         self.X = 300
         self.Y = 100
 
-    def Conflict_checking(self, mode, move): # mode : x,y충돌 검사 , move : 다음에 움직일 크기
+    def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         if mode == 1:  # Y충돌 체크
             character_index_x = int(self.X // 60)
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
@@ -45,12 +50,14 @@ class MONSTER(UNIT):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55:
+                            (abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55)\
+                            or map_floor_array[character_index_y + 1][character_index_x + 1] == 0:
                         if self.DIRECTION:
                             self.DIRECTION = 0
+                            print(self.DIRECTION)
                         else:
                             self.DIRECTION = 1
-                        return False
+                            print(self.DIRECTION)
         return True
 
     def gravity(self):
@@ -73,25 +80,24 @@ class MONSTER(UNIT):
 
         self.gravity()
 
-    def draw_monster(self, main_character, monster_image, monster_reverse_image, monster_grid):
+    def draw_monster(self, main_character, monster_grid):
         monster_grid.clip_draw(int(self.MotionIndex) % 4 * 128,
-                                  544 - 128 * (int(self.MotionIndex) // 4 + 1),
-                                  128, 128, self.X - main_character.camera_move_x + 30,
-                                  self.Y - main_character.camera_move_y - 30,
-                                  60, 60)
+                               544 - 128 * (int(self.MotionIndex) // 4 + 1),
+                               128, 128, self.X - main_character.camera_move_x,
+                               self.Y - main_character.camera_move_y,
+                               60, 60)
         if self.DIRECTION == 0 and self.HP > 0:
-            monster_image.clip_draw(int(self.MotionIndex) % 4 * 128,
-                                  544 - 128 * (int(self.MotionIndex) // 4 + 1),
-                                  128, 128, self.X - main_character.camera_move_x + 30,
-                                  self.Y - main_character.camera_move_y - 30,
-                                  60, 60)
+            self.Image.clip_draw(int(self.MotionIndex) % 4 * 128,
+                                    544 - 128 * (int(self.MotionIndex) // 4 + 1),
+                                    128, 128, self.X - main_character.camera_move_x,
+                                    self.Y - main_character.camera_move_y,
+                                    60, 60)
         elif self.DIRECTION == 1 and self.HP > 0:
-            monster_reverse_image.clip_draw(512 - (int(self.MotionIndex) % 4 + 1) * 128,
-                                  544 - 128 * (int(self.MotionIndex) // 4 + 1),
-                                  128, 128, self.X - main_character.camera_move_x + 30,
-                                  self.Y - main_character.camera_move_y - 30,
-                                  60, 60)
-
+            self.rImage.clip_draw(512 - (int(self.MotionIndex) % 4 + 1) * 128,
+                                            544 - 128 * (int(self.MotionIndex) // 4 + 1),
+                                            128, 128, self.X - main_character.camera_move_x,
+                                            self.Y - main_character.camera_move_y,
+                                            60, 60)
 
 monster_list = []
 

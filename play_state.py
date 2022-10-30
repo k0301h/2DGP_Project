@@ -26,7 +26,7 @@ def enter():
     main_character = CHARACTER()
     main_character.Place()
     # monster
-    test_monster = MONSTER()
+    test_monster = Snake()
     test_monster.Place()
     # character image
     character_I = load_image('./Textures/char_yellow.png')
@@ -69,7 +69,7 @@ def draw():
     draw_map_floor(BG_stage_I, FLOOR_stage_I, main_character)
     main_character.draw_character(character_I, character_reverse_I, main_character_grid)
     if test_monster.HP > 0:
-        test_monster.draw_monster(main_character, test_monster_image, test_monster_reverse_image, test_monster_grid)
+        test_monster.draw_monster(main_character, test_monster_grid)
     main_character.draw_UI(UI, UI_count)
     pico2d.update_canvas()
 

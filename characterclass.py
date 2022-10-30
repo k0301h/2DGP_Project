@@ -32,6 +32,7 @@ class CHARACTER(UNIT):
     Climb_state = False
     Climb_up_key_state = False
     Climb_down_key_state = False
+    Attack_key_state = False
 
     whip = UNIT()
 
@@ -107,6 +108,9 @@ class CHARACTER(UNIT):
 
     def Attack(self, monster):
         if self.MotionIndex % 16 < 5:
+            self.Attack_state = True
+            self.whip.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 12 + 10
+            self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 4
             if self.whip.MotionIndex % 16 - 10 < 3:
                 if self.DIRECTION == 0:
                     self.whip.X = self.X - 45
@@ -128,14 +132,12 @@ class CHARACTER(UNIT):
                 elif self.DIRECTION == 1:
                     self.whip.X = self.X - 45
                     self.whip.Y = self.Y - 10
-
-            self.whip.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 12 + 10
-            self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 4
         else:
             if self.attack_conflict_checking(monster):
                 monster.HP -= 1
             self.Attack_state = False
-            self.whip.MotionIndex = 0
+            self.Attack_key_state = False
+            self.whip.MotionIndex = 16 * 12 + 10
 
     def Down_Jump(self):
         # self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
@@ -237,7 +239,7 @@ class CHARACTER(UNIT):
                 if self.MotionIndex % 16 == 5:
                     pass
 
-            if self.Attack_state:
+            if self.Attack_key_state:
                 self.Attack(monster)
 
         self.gravity()
@@ -284,7 +286,7 @@ class CHARACTER(UNIT):
                     pass
                 elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State):
                     self.MotionIndex = 0
-                    self.Attack_state = True
+                    self.Attack_key_state = True
                 elif event.key == SDLK_x:
                     if self.Conflict_checking(4, 0):
                         self.Action = 5
@@ -314,7 +316,7 @@ class CHARACTER(UNIT):
                                   1918 - 128 * (int(self.MotionIndex) // 16) + 50,
                                   128, 128, self.X - self.camera_move_x,
                                   self.Y - self.camera_move_y,
-                                  60, 60)
+                                  50, 60)
         if self.DIRECTION == 0:
             if self.Attack_state:
                 character_I.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
