@@ -109,8 +109,6 @@ class CHARACTER(UNIT):
     def Attack(self, monster):
         if self.MotionIndex % 16 < 5:
             self.Attack_state = True
-            self.whip.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 12 + 10
-            self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 4
             if self.whip.MotionIndex % 16 - 10 < 3:
                 if self.DIRECTION == 0:
                     self.whip.X = self.X - 45
@@ -240,7 +238,10 @@ class CHARACTER(UNIT):
                     pass
 
             if self.Attack_key_state:
-                self.Attack(monster)
+                for i in range(0, len(monster)):
+                    self.Attack(monster[i])
+                self.whip.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 12 + 10
+                self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 4
 
         self.gravity()
 
@@ -287,6 +288,13 @@ class CHARACTER(UNIT):
                 elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State):
                     self.MotionIndex = 0
                     self.Attack_key_state = True
+                    # 공격시 채찍 위치 오류 완화
+                    if self.DIRECTION == 0:
+                        self.whip.X = self.X - 45
+                        self.whip.Y = self.Y - 10
+                    elif self.DIRECTION == 1:
+                        self.whip.X = self.X + 45
+                        self.whip.Y = self.Y - 10
                 elif event.key == SDLK_x:
                     if self.Conflict_checking(4, 0):
                         self.Action = 5

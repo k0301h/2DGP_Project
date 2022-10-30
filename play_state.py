@@ -16,6 +16,7 @@ test_monster_reverse_image = None
 test_monster_grid = None
 UI = None
 UI_count = None
+monster_list_1 = [Snake() for i in range(10)]
 
 def enter():
     global main_character, character_I, character_reverse_I, BG_stage_I, FLOOR_stage_I, \
@@ -26,8 +27,15 @@ def enter():
     main_character = CHARACTER()
     main_character.Place()
     # monster
-    test_monster = Snake()
-    test_monster.Place()
+    # test_monster = Snake()
+    # test_monster_image = load_image('./Textures/Entities/Monsters/snake.png')
+    # test_monster_reverse_image = load_image('./Textures/Entities/Monsters/snake.png')
+    if Snake.Image == None:
+        Snake.Image = load_image('./Textures/Entities/Monsters/snake.png')
+    if Snake.rImage == None:
+        Snake.rImage = load_image('./Textures/Entities/Monsters/snake_reverse.png')
+    for monster in monster_list_1:
+        monster.Place()
     # character image
     character_I = load_image('./Textures/char_yellow.png')
     character_reverse_I = load_image('./Textures/r_char_yellow.png')
@@ -61,15 +69,20 @@ def exit():
     del UI_count
 
 def update():
-    main_character.Motion(test_monster)
-    test_monster.Motion()
+    for monster in monster_list_1:
+        # main_character.Motion(monster)
+        monster.Motion()
+    main_character.Motion(monster_list_1)
+    # test_monster.Motion()
 
 def draw():
     pico2d.clear_canvas()
     draw_map_floor(BG_stage_I, FLOOR_stage_I, main_character)
     main_character.draw_character(character_I, character_reverse_I, main_character_grid)
-    if test_monster.HP > 0:
-        test_monster.draw_monster(main_character, test_monster_grid)
+    for monster in monster_list_1:
+        if monster.HP > 0:
+            monster.draw_monster(main_character, test_monster_grid)
+        # test_monster.draw_monster(main_character, test_monster_grid)
     main_character.draw_UI(UI, UI_count)
     pico2d.update_canvas()
 

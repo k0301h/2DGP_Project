@@ -1,16 +1,14 @@
-# from Unitclass import *
-# from map_floor import *
-# from pico2d import *
 from characterclass import *
+import random
 
 class Snake(UNIT):
-    UNIT.HP = 2
-    UNIT.ATK = 1
-    UNIT.Action = 0
-    UNIT.MotionIndex = 0
-    UNIT.X = 400
-    UNIT.Y = 400
-    UNIT.DIRECTION = 0
+    # UNIT.HP = 2
+    # UNIT.ATK = 1
+    # UNIT.Action = 0
+    # UNIT.MotionIndex = 0
+    # UNIT.X = 400
+    # UNIT.Y = 400
+    # UNIT.DIRECTION = 0
 
     Gravity = 0.5
     JumpSpeed = 10
@@ -22,15 +20,15 @@ class Snake(UNIT):
     Gravity_state = False
     Attack_state = False
 
-    def __init__(self):
-        if Snake.Image == None:
-            Snake.Image = load_image('./Textures/Entities/Monsters/snake.png')
-        if Snake.rImage == None:
-            Snake.rImage = load_image('./Textures/Entities/Monsters/snake_reverse.png')
+    # def __init__(self):
+        # if Snake.Image == None:
+        #     Snake.Image = load_image('./Textures/Entities/Monsters/snake.png')
+        # if Snake.rImage == None:
+        #     Snake.rImage = load_image('./Textures/Entities/Monsters/snake_reverse.png')
 
     def Place(self):
-        self.X = 300
-        self.Y = 100
+        self.X, self.Y = random.randint(200, 700), 100
+        self.DIRECTION = random.randint(0, 1)
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         if mode == 1:  # Y충돌 체크
@@ -54,10 +52,8 @@ class Snake(UNIT):
                             or map_floor_array[character_index_y + 1][character_index_x + 1] == 0:
                         if self.DIRECTION:
                             self.DIRECTION = 0
-                            print(self.DIRECTION)
                         else:
                             self.DIRECTION = 1
-                            print(self.DIRECTION)
         return True
 
     def gravity(self):
@@ -98,7 +94,3 @@ class Snake(UNIT):
                                             128, 128, self.X - main_character.camera_move_x,
                                             self.Y - main_character.camera_move_y,
                                             60, 60)
-
-monster_list = []
-
-snake = []
