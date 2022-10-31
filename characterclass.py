@@ -14,7 +14,7 @@ class CHARACTER(UNIT):
     RopeCount = 4
     Money = 0
 
-    hnadle = None
+    # hnadle = None
 
     Gravity = 0.5
     JumpSpeed = 15
@@ -34,8 +34,10 @@ class CHARACTER(UNIT):
     Climb_up_key_state = False
     Climb_down_key_state = False
     Attack_key_state = False
+    Stun_state = False
 
     whip = UNIT()
+    stun = UNIT()
 
     def Place(self):
         for index_x in range(0, map_size):
@@ -150,7 +152,10 @@ class CHARACTER(UNIT):
     def gravity(self):
         if self.Conflict_checking(1, -self.DownSpeed) and not self.Climb_state:
             if self.Gravity_state and not self.Conflict_checking(5, -self.DownSpeed):
-                self.MotionIndex = (self.MotionIndex + 0.2) % 4 % 16 + 16 * 3 + 8
+                if self.MotionIndex <= 58:
+                    self.MotionIndex = (self.MotionIndex + 0.2) % 3 % 16 + 16 * 3 + 8
+                elif self.MotionIndex > 58:
+                    self.MotionIndex = 59
                 self.Can_Jump = True
                 self.JumpSpeed = 10
                 self.DownSpeed = 0
@@ -167,88 +172,101 @@ class CHARACTER(UNIT):
         else:
             if self.Down_Distance >= 600:
                 self.HP -= 1
+                self.MotionIndex = 9
+                self.stun.MotionIndex = 16 * 13
+                self.Stun_state = True
             self.Can_Jump = True
             self.JumpSpeed = 15
             self.DownSpeed = 0
             self.Down_Distance = 0
             self.Gravity_state = False
 
-    def Motion(self, monster):
-        if self.Jump_Key_State:
-            self.Jump()
-        elif self.Down_Jump_state:
-            self.Down_Jump()
-
-        if self.Climb_state:
-            if self.Climb_up_key_state and self.Conflict_checking(3, 2):
-                self.Y += 2
-                self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
-            elif self.Climb_down_key_state and self.Conflict_checking(3, -2):
-                self.Y -= 2
-                self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
+    def Stun(self):
+        if self.stun.MotionIndex <= 16 * 13 + 10.9:
+            self.stun.MotionIndex = (self.stun.MotionIndex + 0.2) % 11 + 16 * 13
+            # self.MotionIndex = 9
         else:
-            if self.Action == 0:
-                if not self.Jump_Key_State and not self.Gravity_state and not self.Attack_state:
-                    self.MotionIndex = 0
-            elif self.Action == 1:
-                if self.shift_on == 0:
-                    if self.X - self.camera_move_x <= WIDTH - 200:
-                        if self.Conflict_checking(2, 3):
-                            self.X += 3
-                    elif self.X - self.camera_move_x > WIDTH - 200:
-                        if self.Conflict_checking(2, 0):
-                            self.X += 3
-                            self.camera_move_x += 3
+            self.Stun_state = False
 
-                    if not self.Jump_Key_State and not self.Attack_state:
-                        self.MotionIndex = (self.MotionIndex + 0.1) % 8
-                else:
-                    if self.Conflict_checking(2, 6):
+    def Motion(self, monster):
+        if self.Stun_state:
+            self.Stun()
+        else:
+            if self.Jump_Key_State:
+                self.Jump()
+            elif self.Down_Jump_state:
+                self.Down_Jump()
+
+            if self.Climb_state:
+                if self.Climb_up_key_state and self.Conflict_checking(3, 2):
+                    self.Y += 2
+                    self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
+                elif self.Climb_down_key_state and self.Conflict_checking(3, -2):
+                    self.Y -= 2
+                    self.MotionIndex = (self.MotionIndex + 0.1) % 6 + 16 * 6
+            else:
+                if self.Action == 0:
+                    if not self.Jump_Key_State and not self.Gravity_state and not self.Attack_state:
+                        self.MotionIndex = 0
+                elif self.Action == 1:
+                    if self.shift_on == 0:
                         if self.X - self.camera_move_x <= WIDTH - 200:
-                            self.X += 6
+                            if self.Conflict_checking(2, 3):
+                                self.X += 3
                         elif self.X - self.camera_move_x > WIDTH - 200:
-                            self.X += 6
-                            self.camera_move_x += 6
+                            if self.Conflict_checking(2, 0):
+                                self.X += 3
+                                self.camera_move_x += 3
 
-                    if not self.Jump_Key_State and not self.Attack_state:
-                        self.MotionIndex = (self.MotionIndex + 0.3) % 8
+                        if not self.Jump_Key_State and not self.Attack_state:
+                            self.MotionIndex = (self.MotionIndex + 0.1) % 8
+                    else:
+                        if self.Conflict_checking(2, 6):
+                            if self.X - self.camera_move_x <= WIDTH - 200:
+                                self.X += 6
+                            elif self.X - self.camera_move_x > WIDTH - 200:
+                                self.X += 6
+                                self.camera_move_x += 6
 
-            elif self.Action == 2:
-                if self.MotionIndex < 18 and not self.Jump_Key_State and not self.Attack_state:
-                    self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 3 + 16
+                        if not self.Jump_Key_State and not self.Attack_state:
+                            self.MotionIndex = (self.MotionIndex + 0.3) % 8
 
-            elif self.Action == 3:
-                if self.shift_on == 0:
-                    if self.Conflict_checking(2, -3):
-                        if self.X - self.camera_move_x >= 200:
-                            self.X -= 3
-                        elif self.X - self.camera_move_x < 200:
-                            self.X -= 3
-                            self.camera_move_x -= 3
+                elif self.Action == 2:
+                    if self.MotionIndex < 18 and not self.Jump_Key_State and not self.Attack_state:
+                        self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 3 + 16
 
-                    if not self.Jump_Key_State and not self.Attack_state:
-                        self.MotionIndex = (self.MotionIndex + 0.1) % 8
-                else:
-                    if self.Conflict_checking(2, -6):
-                        if self.X - self.camera_move_x >= 200:
-                            self.X -= 6
-                        elif self.X - self.camera_move_x < 200:
-                            self.X -= 6
-                            self.camera_move_x -= 6
-                    if not self.Jump_Key_State and not self.Attack_state:
-                        self.MotionIndex = (self.MotionIndex + 0.3) % 8
-            elif self.Action == 5:
-                self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 5
-                if self.MotionIndex % 16 == 5:
-                    pass
+                elif self.Action == 3:
+                    if self.shift_on == 0:
+                        if self.Conflict_checking(2, -3):
+                            if self.X - self.camera_move_x >= 200:
+                                self.X -= 3
+                            elif self.X - self.camera_move_x < 200:
+                                self.X -= 3
+                                self.camera_move_x -= 3
 
-            if self.Attack_key_state:
-                for i in range(0, len(monster)):
-                    self.Attack(monster[i])
-                self.whip.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 12 + 10
-                self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 4
+                        if not self.Jump_Key_State and not self.Attack_state:
+                            self.MotionIndex = (self.MotionIndex + 0.1) % 8
+                    else:
+                        if self.Conflict_checking(2, -6):
+                            if self.X - self.camera_move_x >= 200:
+                                self.X -= 6
+                            elif self.X - self.camera_move_x < 200:
+                                self.X -= 6
+                                self.camera_move_x -= 6
+                        if not self.Jump_Key_State and not self.Attack_state:
+                            self.MotionIndex = (self.MotionIndex + 0.3) % 8
+                elif self.Action == 5:
+                    self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 5
+                    if self.MotionIndex % 16 == 5:
+                        pass
 
-        self.gravity()
+                if self.Attack_key_state:
+                    for i in range(0, len(monster)):
+                        self.Attack(monster[i])
+                    self.whip.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 12 + 10
+                    self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 4
+
+            self.gravity()
 
     def key_down(self):
         for event in self.handle:
@@ -330,6 +348,11 @@ class CHARACTER(UNIT):
                                   128, 128, self.X - self.camera_move_x,
                                   self.Y - self.camera_move_y,
                                   50, 60)
+        if self.Stun_state and self.MotionIndex == 9:
+            character_I.clip_draw(int(self.stun.MotionIndex) % 16 * 128,
+                              1918 - 128 * (int(self.stun.MotionIndex) // 16),
+                              128, 128, self.X - self.camera_move_x,
+                              self.Y - self.camera_move_y + 10, 60, 60)
         if self.DIRECTION == 0:
             if self.Attack_state:
                 character_I.clip_draw(int(self.whip.MotionIndex) % 16 * 128,

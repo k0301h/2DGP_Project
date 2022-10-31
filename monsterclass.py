@@ -56,7 +56,7 @@ class Snake(UNIT):
                         else:
                             self.DIRECTION = 1
         elif mode == 3:  # 캐릭터 여기서 move는 캐릭터의 위치
-            if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 120:
+            if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 90:
                 self.Action = 1
                 self.MotionIndex = 4
                 if self.X > move.X:
@@ -67,7 +67,9 @@ class Snake(UNIT):
 
     def attack(self, character):
         if self.MotionIndex < 11.9:
-            pass
+            if  math.sqrt((self.X - character.X) ** 2 + (self.Y - character.Y) ** 2) < 60:
+                # character.Stun_state = True
+                character.HP -= 1
         else:
             self.Action = 0
 
