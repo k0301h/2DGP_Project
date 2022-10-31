@@ -3,13 +3,13 @@ import random
 import math
 
 class Snake(UNIT):
-    # UNIT.HP = 2
-    # UNIT.ATK = 1
-    # UNIT.Action = 0
-    # UNIT.MotionIndex = 0
-    # UNIT.X = 400
-    # UNIT.Y = 400
-    # UNIT.DIRECTION = 0
+    UNIT.HP = 2
+    UNIT.ATK = 1
+    UNIT.Action = 0
+    UNIT.MotionIndex = 0
+    UNIT.X = 400
+    UNIT.Y = 400
+    UNIT.DIRECTION = 0
 
     Gravity = 0.5
     JumpSpeed = 10
@@ -28,7 +28,7 @@ class Snake(UNIT):
         #     Snake.rImage = load_image('./Textures/Entities/Monsters/snake_reverse.png')
 
     def Place(self):
-        self.X, self.Y = random.randint(200, 700), 100
+        self.X, self.Y = random.randint(200, 700), -150
         self.DIRECTION = random.randint(0, 1)
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
@@ -58,12 +58,16 @@ class Snake(UNIT):
         elif mode == 3:  # 캐릭터 여기서 move는 캐릭터의 위치
             if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 120:
                 self.Action = 1
+                self.MotionIndex = 4
+                if self.X > move.X:
+                    self.DIRECTION = 1
+                elif self.X < move.X:
+                    self.DIRECTION = 0
         return True
 
     def attack(self, character):
         if self.MotionIndex < 11.9:
-            self.MotionIndex = (self.MotionIndex + 0.1) % 8 + 4
-            print(self.MotionIndex)
+            pass
         else:
             self.Action = 0
 
@@ -87,11 +91,12 @@ class Snake(UNIT):
             self.Conflict_checking(3, character)
         elif self.Action == 1:
             self.attack(character)
+            self.MotionIndex = (self.MotionIndex + 0.15) % 12
 
         self.gravity()
 
-    def draw_monster(self, main_character, monster_grid):
-        monster_grid.clip_draw(int(self.MotionIndex) % 4 * 128,
+    def draw_monster(self, main_character):
+        self.grid_image.clip_draw(int(self.MotionIndex) % 4 * 128,
                                544 - 128 * (int(self.MotionIndex) // 4 + 1),
                                128, 128, self.X - main_character.camera_move_x,
                                self.Y - main_character.camera_move_y,

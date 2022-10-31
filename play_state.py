@@ -34,6 +34,8 @@ def enter():
         Snake.Image = load_image('./Textures/Entities/Monsters/snake.png')
     if Snake.rImage == None:
         Snake.rImage = load_image('./Textures/Entities/Monsters/snake_reverse.png')
+    if Snake.grid_image == None:
+        Snake.grid_image = load_image('./Textures/Entities/Monsters/snake_grid.png')
     for monster in monster_list_1:
         monster.Place()
     # character image
@@ -81,7 +83,7 @@ def draw():
     main_character.draw_character(character_I, character_reverse_I, main_character_grid)
     for monster in monster_list_1:
         if monster.HP > 0:
-            monster.draw_monster(main_character, test_monster_grid)
+            monster.draw_monster(main_character)
         # test_monster.draw_monster(main_character, test_monster_grid)
     main_character.draw_UI(UI, UI_count)
     pico2d.update_canvas()

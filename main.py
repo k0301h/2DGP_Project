@@ -10,6 +10,6 @@ while 1:
     now_state.draw()
     now_state.update()
     now_state.handle_events()
-    delay(0.015)
+    delay(0.01)
 
 close_canvas()
