@@ -1,15 +1,19 @@
-from Unitclass import *
 from map_floor import *
 from pico2d import *
 
-class CHARACTER(UNIT):
-    UNIT.HP = 5
-    UNIT.ATK = 1
-    UNIT.Action = 0
-    UNIT.MotionIndex = 0
-    UNIT.X = 400
-    UNIT.Y = 400
-    UNIT.DIRECTION = 0
+class SUB():
+    MotionIndex = 0
+    X = 400
+    Y = 400
+
+class CHARACTER():
+    HP = 5
+    ATK = 1
+    Action = 0
+    MotionIndex = 0
+    X = 400
+    Y = 400
+    DIRECTION = 0
     BombCount = 4
     RopeCount = 4
     Money = 0
@@ -36,8 +40,8 @@ class CHARACTER(UNIT):
     Attack_key_state = False
     Stun_state = False
 
-    whip = UNIT()
-    stun = UNIT()
+    whip = SUB()
+    stun = SUB()
 
     def Place(self):
         for index_x in range(0, map_size):
@@ -166,7 +170,7 @@ class CHARACTER(UNIT):
                 self.Down_Distance += self.DownSpeed
                 if self.Y - self.camera_move_y <= 200:
                     self.camera_move_y -= self.DownSpeed
-                if not self.Attack_state:
+                if not self.Attack_state and not self.Stun_state:
                     self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 8 + 16 * 9
                 self.Gravity_state = True
         else:
@@ -184,7 +188,6 @@ class CHARACTER(UNIT):
     def Stun(self):
         if self.stun.MotionIndex <= 16 * 13 + 10.9:
             self.stun.MotionIndex = (self.stun.MotionIndex + 0.2) % 11 + 16 * 13
-            # self.MotionIndex = 9
         else:
             self.Stun_state = False
 
@@ -266,7 +269,7 @@ class CHARACTER(UNIT):
                     self.whip.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 12 + 10
                     self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 4
 
-            self.gravity()
+        self.gravity()
 
     def key_down(self):
         for event in self.handle:

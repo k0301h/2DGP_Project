@@ -2,17 +2,16 @@ from characterclass import *
 import random
 import math
 
-class Snake(UNIT):
-    UNIT.HP = 2
-    UNIT.ATK = 1
-    UNIT.Action = 0
-    UNIT.MotionIndex = 0
-    UNIT.X = 400
-    UNIT.Y = 400
-    UNIT.DIRECTION = 0
+class Snake():
+    HP = 2
+    ATK = 1
+    Action = 0
+    MotionIndex = 0
+    X = 400
+    Y = 400
+    DIRECTION = 0
 
     Gravity = 0.5
-    JumpSpeed = 10
     DownSpeed = 0
     Image = None
     rImage = None
@@ -56,7 +55,7 @@ class Snake(UNIT):
                         else:
                             self.DIRECTION = 1
         elif mode == 3:  # 캐릭터 여기서 move는 캐릭터의 위치
-            if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 90:
+            if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 80:
                 self.Action = 1
                 self.MotionIndex = 4
                 if self.X > move.X:
@@ -69,7 +68,7 @@ class Snake(UNIT):
         if self.MotionIndex < 11.9:
             if  math.sqrt((self.X - character.X) ** 2 + (self.Y - character.Y) ** 2) < 60:
                 # character.Stun_state = True
-                character.HP -= 1
+                character.HP -= self.ATK
         else:
             self.Action = 0
 
@@ -86,16 +85,109 @@ class Snake(UNIT):
     def Motion(self, character):
         if self.Action == 0:
             self.MotionIndex = (self.MotionIndex + 0.1) % 4
+            self.Conflict_checking(3, character)
             if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
                 self.X += 3
             elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
                 self.X -= 3
-            self.Conflict_checking(3, character)
         elif self.Action == 1:
             self.attack(character)
             self.MotionIndex = (self.MotionIndex + 0.15) % 12
 
         self.gravity()
+
+    def draw_monster(self, main_character):
+        self.grid_image.clip_draw(int(self.MotionIndex) % 4 * 128,
+                               544 - 128 * (int(self.MotionIndex) // 4 + 1),
+                               128, 128, self.X - main_character.camera_move_x,
+                               self.Y - main_character.camera_move_y,
+                               60, 60)
+        if self.DIRECTION == 0 and self.HP > 0:
+            self.Image.clip_draw(int(self.MotionIndex) % 4 * 128,
+                                    544 - 128 * (int(self.MotionIndex) // 4 + 1),
+                                    128, 128, self.X - main_character.camera_move_x,
+                                    self.Y - main_character.camera_move_y,
+                                    60, 60)
+        elif self.DIRECTION == 1 and self.HP > 0:
+            self.rImage.clip_draw(512 - (int(self.MotionIndex) % 4 + 1) * 128,
+                                            544 - 128 * (int(self.MotionIndex) // 4 + 1),
+                                            128, 128, self.X - main_character.camera_move_x,
+                                            self.Y - main_character.camera_move_y,
+                                            60, 60)
+
+
+class Bat():
+    HP = 1
+    ATK = 1
+    Action = 0
+    MotionIndex = 0
+    X = 400
+    Y = 400
+    DIRECTION = 0
+
+    Image = None
+    rImage = None
+    grid_image = None
+
+    Attack_state = False
+
+    def Place(self):
+        self.X, self.Y = random.randint(200, 700), -150
+        self.DIRECTION = random.randint(0, 1)
+
+    def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
+        if mode == 1:  # Y충돌 체크
+            character_index_x = int(self.X // 60)
+            character_index_y = int((HEIGHT - (self.Y + move)) // 60)
+            for index_x in range(character_index_x - 1, character_index_x + 2):
+                for index_y in range(character_index_y - 2, character_index_y + 3):
+                    if 0 <= index_x < map_size and 0 <= index_y < map_size and \
+                            2 <= map_floor_array[index_y][index_x] <= 29 and \
+                            abs(self.X - index_x * 60) <= 55 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 60:
+                        return False
+
+        elif mode == 2:  # X충돌 체크
+            character_index_x = int((self.X + move) // 60)
+            character_index_y = int((HEIGHT - self.Y) // 60)
+            for index_y in range(character_index_y - 1, character_index_y + 2):
+                for index_x in range(character_index_x - 2, character_index_x + 3):
+                    if 0 <= index_x < map_size and 0 <= index_y < map_size and \
+                            2 <= map_floor_array[index_y][index_x] <= 29 and \
+                            (abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55)\
+                            or map_floor_array[character_index_y + 1][character_index_x + 1] == 0:
+                        if self.DIRECTION:
+                            self.DIRECTION = 0
+                        else:
+                            self.DIRECTION = 1
+        elif mode == 3:  # 캐릭터 여기서 move는 캐릭터의 위치
+            if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 90:
+                self.Action = 1
+                self.MotionIndex = 4
+                if self.X > move.X:
+                    self.DIRECTION = 1
+                elif self.X < move.X:
+                    self.DIRECTION = 0
+        return True
+
+    def attack(self, character):
+        if self.MotionIndex < 11.9:
+            if  math.sqrt((self.X - character.X) ** 2 + (self.Y - character.Y) ** 2) < 60:
+                # character.Stun_state = True
+                character.HP -= self.ATK
+        else:
+            self.Action = 0
+
+    def Motion(self, character):
+        if self.Action == 0:
+            self.MotionIndex = (self.MotionIndex + 0.1) % 4
+            self.Conflict_checking(3, character)
+            if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
+                self.X += 3
+            elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
+                self.X -= 3
+        elif self.Action == 1:
+            self.attack(character)
+            self.MotionIndex = (self.MotionIndex + 0.15) % 12
 
     def draw_monster(self, main_character):
         self.grid_image.clip_draw(int(self.MotionIndex) % 4 * 128,
