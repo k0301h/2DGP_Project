@@ -236,7 +236,7 @@ class CHARACTER():
 
                 elif self.Action == 2:
                     if self.MotionIndex < 18 and not self.Jump_Key_State and not self.Attack_state:
-                        self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 3 + 16
+                        self.MotionIndex = (self.MotionIndex + 0.25) % 16 % 3 + 16
 
                 elif self.Action == 3:
                     if self.shift_on == 0:
@@ -284,7 +284,7 @@ class CHARACTER():
                         self.JumpSpeed = 3
                         self.Jump_Key_State = False
                 elif event.key == SDLK_RIGHT:
-                    if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State):
+                    if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State) and not self.Stun_state:
                         self.Action = 1
                         self.DIRECTION = 0
                 elif event.key == SDLK_DOWN:
@@ -296,7 +296,7 @@ class CHARACTER():
                     else:
                         self.Action = 2
                 elif event.key == SDLK_LEFT:
-                    if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State):
+                    if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State) and not self.Stun_state:
                         self.DIRECTION = 1
                         self.Action = 3
                 elif event.key == SDLK_LALT:
