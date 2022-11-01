@@ -17,8 +17,10 @@ test_monster_grid = None
 UI = None
 UI_count = None
 monster_list_1 = [Snake() for i in range(10)]
-monster_list_1.append(Bat())
+monster_list_2 = [Bat() for i in range(5)]
+monster_list_3 = [HORNED_LIZARD for i in range(3)]
 
+monster_list_1 += monster_list_2 + monster_list_3
 def enter():
     global main_character, character_I, character_reverse_I, BG_stage_I, FLOOR_stage_I, \
         test_monster, test_monster_image, main_character_grid, test_monster_grid,\
