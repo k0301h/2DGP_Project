@@ -244,20 +244,20 @@ class Horned_Lizard():
     rImage = None
     grid_image = None
 
+    Jump_state = False
     Gravity_state = False
     Attack_state = False
 
     def __init__(self):
         if Horned_Lizard.Image == None:
-            Bat.Image = load_image('./Textures/Entities/Monsters/horned_lizard.png')
-        # if Horned_Lizard.rImage == None:
-            # Horned_Lizard.rImage = load_image('./Textures/Entities/Monsters/bat_reverse.png')
+            Horned_Lizard.Image = load_image('./Textures/Entities/Monsters/horned_lizard.png')
+        if Horned_Lizard.rImage == None:
+            Horned_Lizard.rImage = load_image('./Textures/Entities/Monsters/horned_lizard_reverse.png')
         if Horned_Lizard.grid_image == None:
             Horned_Lizard.grid_image = load_image('./Textures/Entities/Monsters/horned_lizard_grid.png')
 
     def Place(self):
-        self.X, self.Y = random.randint(200, 700), -150
-        self.DIRECTION = random.randint(0, 1)
+        self.X, self.Y = random.randint(200, 700), 600
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         if mode == 1:  # Y충돌 체크
@@ -277,8 +277,7 @@ class Horned_Lizard():
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            (abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55)\
-                            or map_floor_array[character_index_y + 1][character_index_x + 1] == 0:
+                            (abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55):
                         if self.DIRECTION:
                             self.DIRECTION = 0
                         else:
@@ -314,32 +313,33 @@ class Horned_Lizard():
     def Motion(self, character):
         if self.Action == 0:
             self.MotionIndex = (self.MotionIndex + 0.1) % 7
-            self.Conflict_checking(3, character)
+            # self.Conflict_checking(3, character)
             if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
                 self.X += 3
             elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
                 self.X -= 3
-        elif self.Action == 1:
-            self.attack(character)
-            self.MotionIndex = (self.MotionIndex + 0.15) % 12
+        # elif self.Action == 1:
+            # self.attack(character)
+            # self.MotionIndex = (self.MotionIndex + 0.15) % 12
 
         self.gravity()
 
     def draw_monster(self, main_character):
         self.grid_image.clip_draw(int(self.MotionIndex) % 5 * 128,
-                               544 - 128 * (int(self.MotionIndex) // 5 + 1),
+                               800 - 128 * (int(self.MotionIndex) // 5 + 1),
                                128, 128, self.X - main_character.camera_move_x,
                                self.Y - main_character.camera_move_y,
                                60, 60)
+        print(self.MotionIndex)
         if self.DIRECTION == 0 and self.HP > 0:
             self.Image.clip_draw(int(self.MotionIndex) % 5 * 128,
-                                    544 - 128 * (int(self.MotionIndex) // 5 + 1),
+                                    800 - 128 * (int(self.MotionIndex) // 5 + 1),
                                     128, 128, self.X - main_character.camera_move_x,
                                     self.Y - main_character.camera_move_y,
                                     60, 60)
         elif self.DIRECTION == 1 and self.HP > 0:
-            self.rImage.clip_draw(512 - (int(self.MotionIndex) % 5 + 1) * 128,
-                                            544 - 128 * (int(self.MotionIndex) // 5 + 1),
+            self.rImage.clip_draw(640 - (int(self.MotionIndex) % 5 + 1) * 128,
+                                            800 - 128 * (int(self.MotionIndex) // 5 + 1),
                                             128, 128, self.X - main_character.camera_move_x,
                                             self.Y - main_character.camera_move_y,
                                             60, 60)

@@ -1,8 +1,8 @@
-# WIDTH = 1920
-# HEIGHT = 1080
-
-WIDTH = 1280
-HEIGHT = 730
+WIDTH = 1920
+HEIGHT = 1080
+#
+# WIDTH = 1280
+# HEIGHT = 730
 
 map_size = 50
 
