@@ -31,20 +31,6 @@ def enter():
     # test_monster = Snake()
     # test_monster_image = load_image('./Textures/Entities/Monsters/snake.png')
     # test_monster_reverse_image = load_image('./Textures/Entities/Monsters/snake.png')
-    if Snake.Image == None:
-        Snake.Image = load_image('./Textures/Entities/Monsters/snake.png')
-    if Snake.rImage == None:
-        Snake.rImage = load_image('./Textures/Entities/Monsters/snake_reverse.png')
-    if Snake.grid_image == None:
-        Snake.grid_image = load_image('./Textures/Entities/Monsters/snake_grid.png')
-
-    if Bat.Image == None:
-        Bat.Image = load_image('./Textures/Entities/Monsters/bat.png')
-    if Bat.rImage == None:
-        Bat.rImage = load_image('./Textures/Entities/Monsters/bat_reverse.png')
-    if Bat.grid_image == None:
-        Bat.grid_image = load_image('./Textures/Entities/Monsters/bat_grid.png')
-
     for monster in monster_list_1:
         monster.Place()
     # character image

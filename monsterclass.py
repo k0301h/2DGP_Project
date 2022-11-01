@@ -20,11 +20,13 @@ class Snake():
     Gravity_state = False
     Attack_state = False
 
-    # def __init__(self):
-        # if Snake.Image == None:
-        #     Snake.Image = load_image('./Textures/Entities/Monsters/snake.png')
-        # if Snake.rImage == None:
-        #     Snake.rImage = load_image('./Textures/Entities/Monsters/snake_reverse.png')
+    def __init__(self):
+        if Snake.Image == None:
+            Snake.Image = load_image('./Textures/Entities/Monsters/snake.png')
+        if Snake.rImage == None:
+            Snake.rImage = load_image('./Textures/Entities/Monsters/snake_reverse.png')
+        if Snake.grid_image == None:
+           Snake.grid_image = load_image('./Textures/Entities/Monsters/snake_grid.png')
 
     def Place(self):
         self.X, self.Y = random.randint(200, 700), -150
@@ -130,6 +132,14 @@ class Bat():
     grid_image = None
 
     Attack_state = False
+
+    def __init__(self):
+        if Bat.Image == None:
+            Bat.Image = load_image('./Textures/Entities/Monsters/bat.png')
+        if Bat.rImage == None:
+            Bat.rImage = load_image('./Textures/Entities/Monsters/bat_reverse.png')
+        if Bat.grid_image == None:
+            Bat.grid_image = load_image('./Textures/Entities/Monsters/bat_grid.png')
 
     def Place(self):
         self.X, self.Y = random.randint(200, 700), -150

@@ -1,8 +1,10 @@
 from drawscreen import *
-import play_state
+
 from pico2d import *
 
 open_canvas(WIDTH, HEIGHT)
+
+import play_state
 
 now_state = play_state
 now_state.enter()
