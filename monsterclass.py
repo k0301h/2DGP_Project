@@ -95,6 +95,11 @@ class Snake():
         elif self.Action == 1:
             self.attack(character)
             self.MotionIndex = (self.MotionIndex + 0.15) % 12
+            if not (self.X - 10 <= character.X <= self.X + 10):
+                if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
+                    self.X += 3
+                elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
+                    self.X -= 3
 
         self.gravity()
 
@@ -194,19 +199,18 @@ class Bat():
                 self.DIRECTION = 1
             elif self.X < character.X:
                 self.DIRECTION = 0
-            if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
-                self.X += 3
-            elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
-                self.X -= 3
+            if not (self.X - 10 <= character.X <= self.X + 10):
+                if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
+                    self.X += 3
+                elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
+                    self.X -= 3
             self.attack(character)
             if self.Motion_dir == 0:
                 self.MotionIndex = self.MotionIndex + 0.3
-                print(self.MotionIndex)
                 if self.MotionIndex >= 11.6:
                     self.Motion_dir = 1
             elif self.Motion_dir == 1:
                 self.MotionIndex = self.MotionIndex - 0.3
-                print(self.MotionIndex)
                 if self.MotionIndex <= 6.4:
                     self.Motion_dir = 0
 
@@ -239,6 +243,7 @@ class Horned_Lizard():
     DIRECTION = 0
 
     Gravity = 0.5
+    JumpSpeed = 15
     DownSpeed = 0
     Image = None
     rImage = None
@@ -277,28 +282,38 @@ class Horned_Lizard():
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            (abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55):
+                            (abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55)\
+                            and not self.Attack_state:
                         if self.DIRECTION:
                             self.DIRECTION = 0
                         else:
                             self.DIRECTION = 1
         elif mode == 3:  # 캐릭터 여기서 move는 캐릭터의 위치
-            if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 80:
-                self.Action = 1
-                self.MotionIndex = 8
+            if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 240:
+                self.Jump_state = False
                 if self.X > move.X:
                     self.DIRECTION = 1
                 elif self.X < move.X:
                     self.DIRECTION = 0
+                return False
         return True
 
     def attack(self, character):
-        if self.MotionIndex < 11.9:
-            if  math.sqrt((self.X - character.X) ** 2 + (self.Y - character.Y) ** 2) < 60:
-                # character.Stun_state = True
-                character.HP -= self.ATK
-        else:
+        if math.sqrt((self.X - character.X) ** 2 + (self.Y - character.Y) ** 2) < 60:
+            # character.Stun_state = True
+            character.HP -= self.ATK
+        if self.Conflict_checking(3, character):
             self.Action = 0
+            self.Jump_state = False
+
+    def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
+        if self.Conflict_checking(1, self.JumpSpeed) and not self.Jump_state:
+            self.JumpSpeed -= self.Gravity
+            if self.JumpSpeed > 0:
+                self.Y += self.JumpSpeed
+        else:
+            self.JumpSpeed = 15
+            self.Jump_state = True
 
     def gravity(self):
         if self.Conflict_checking(1, -self.DownSpeed):
@@ -309,18 +324,30 @@ class Horned_Lizard():
         else:
             self.DownSpeed = 0
             self.Gravity_state = False
+            self.Jump_state = False
 
     def Motion(self, character):
         if self.Action == 0:
             self.MotionIndex = (self.MotionIndex + 0.1) % 7
-            # self.Conflict_checking(3, character)
+            if not self.Conflict_checking(3, character):
+                self.Action = 1
+                self.MotionIndex = 8
+                self.Jump_state = True
             if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
                 self.X += 3
             elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
                 self.X -= 3
-        # elif self.Action == 1:
-            # self.attack(character)
-            # self.MotionIndex = (self.MotionIndex + 0.15) % 12
+        elif self.Action == 1:
+            self.attack(character)
+            self.Jump()
+            self.MotionIndex = (self.MotionIndex + 0.2)
+            if self.MotionIndex >= 13:
+                self.MotionIndex = 10
+            if not (self.X - 10 <= character.X <= self.X + 10):
+                if self.Conflict_checking(2, 4) and self.DIRECTION == 0:
+                    self.X += 4
+                elif self.Conflict_checking(2, -4) and self.DIRECTION == 1:
+                    self.X -= 4
 
         self.gravity()
 
@@ -330,7 +357,6 @@ class Horned_Lizard():
                                128, 128, self.X - main_character.camera_move_x,
                                self.Y - main_character.camera_move_y,
                                60, 60)
-        print(self.MotionIndex)
         if self.DIRECTION == 0 and self.HP > 0:
             self.Image.clip_draw(int(self.MotionIndex) % 5 * 128,
                                     800 - 128 * (int(self.MotionIndex) // 5 + 1),
