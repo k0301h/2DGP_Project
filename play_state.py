@@ -16,17 +16,7 @@ test_monster_reverse_image = None
 test_monster_grid = None
 UI = None
 UI_count = None
-monster_list = []
-monster_list_1 = [Snake() for i in range(27)]
-monster_list_2 = [Bat() for i in range(5)]
-# monster_list_3 = [Horned_Lizard for i in range(3)]
 
-monster_place = [[17, 2], [40, 1], [38, 7], [18, 16], [10, 17], [38, 12], [33, 18], [40, 15],
-                 [8, 17], [22, 23], [29, 21], [29, 24], [39, 26], [11, 30], [17, 28], [4, 41],
-                 [5, 44], [13, 47], [18, 46], [27, 44], [32, 46], [26, 44], [31, 45], [32, 47],
-                 [43, 48], [43, 33], [46, 39]]
-
-monster_list += monster_list_1
 def enter():
     global main_character, character_I, character_reverse_I, BG_stage_I, FLOOR_stage_I, \
         test_monster, test_monster_image, main_character_grid, test_monster_grid,\

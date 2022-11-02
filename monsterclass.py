@@ -54,7 +54,7 @@ class Snake():
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
                             (abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55)\
                             or map_floor_array[character_index_y + 1][character_index_x + 1] == 0\
-                            or map_floor_array[character_index_y + 1][character_index_x - 1] == 0:
+                            or map_floor_array[character_index_y + 1][character_index_x] == 0:
                         if self.DIRECTION:
                             self.DIRECTION = 0
                         else:
@@ -372,3 +372,15 @@ class Horned_Lizard():
                                             128, 128, self.X - main_character.camera_move_x,
                                             self.Y - main_character.camera_move_y,
                                             60, 60)
+
+monster_place = [[17, 2], [40, 1], [38, 7], [18, 16], [10, 17], [38, 12], [33, 18], [40, 15],
+                 [8, 22], [22, 23], [29, 21], [29, 25], [39, 26], [11, 30], [17, 28], [4, 41],
+                 [5, 44], [13, 47], [18, 46], [27, 44], [32, 46], [26, 44], [31, 45], [32, 47],
+                 [43, 48], [43, 33], [46, 39]]
+
+monster_list = []
+monster_list_1 = [Snake() for i in range(27)]
+monster_list_2 = [Bat() for i in range(5)]
+monster_list_3 = [Horned_Lizard for i in range(3)]
+
+monster_list += monster_list_1
