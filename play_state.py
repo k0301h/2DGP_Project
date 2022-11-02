@@ -16,12 +16,17 @@ test_monster_reverse_image = None
 test_monster_grid = None
 UI = None
 UI_count = None
-monster_list_1 = [Snake() for i in range(10)]
+monster_list = []
+monster_list_1 = [Snake() for i in range(27)]
 monster_list_2 = [Bat() for i in range(5)]
 # monster_list_3 = [Horned_Lizard for i in range(3)]
 
-monster_list_1 += monster_list_2
-monster_list_1.append(Horned_Lizard())
+monster_place = [[17, 2], [40, 1], [38, 7], [18, 16], [10, 17], [38, 12], [33, 18], [40, 15],
+                 [8, 17], [22, 23], [29, 21], [29, 24], [39, 26], [11, 30], [17, 28], [4, 41],
+                 [5, 44], [13, 47], [18, 46], [27, 44], [32, 46], [26, 44], [31, 45], [32, 47],
+                 [43, 48], [43, 33], [46, 39]]
+
+monster_list += monster_list_1
 def enter():
     global main_character, character_I, character_reverse_I, BG_stage_I, FLOOR_stage_I, \
         test_monster, test_monster_image, main_character_grid, test_monster_grid,\
@@ -34,8 +39,10 @@ def enter():
     # test_monster = Snake()
     # test_monster_image = load_image('./Textures/Entities/Monsters/snake.png')
     # test_monster_reverse_image = load_image('./Textures/Entities/Monsters/snake.png')
-    for monster in monster_list_1:
-        monster.Place()
+    count = 0
+    for monster in monster_list:
+        monster.Place(monster_place[count][0], monster_place[count][1])
+        count += 1
     # character image
     character_I = load_image('./Textures/char_yellow.png')
     character_reverse_I = load_image('./Textures/r_char_yellow.png')
@@ -69,17 +76,17 @@ def exit():
     del UI_count
 
 def update():
-    for monster in monster_list_1:
+    for monster in monster_list:
         # main_character.Motion(monster)
         monster.Motion(main_character)
-    main_character.Motion(monster_list_1)
+    main_character.Motion(monster_list)
     # test_monster.Motion()
 
 def draw():
     pico2d.clear_canvas()
     draw_map_floor(BG_stage_I, FLOOR_stage_I, main_character)
     main_character.draw_character(character_I, character_reverse_I, main_character_grid)
-    for monster in monster_list_1:
+    for monster in monster_list:
         if monster.HP > 0:
             monster.draw_monster(main_character)
         # test_monster.draw_monster(main_character, test_monster_grid)

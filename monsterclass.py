@@ -28,8 +28,8 @@ class Snake():
         if Snake.grid_image == None:
            Snake.grid_image = load_image('./Textures/Entities/Monsters/snake_grid.png')
 
-    def Place(self):
-        self.X, self.Y = random.randint(200, 700), -300
+    def Place(self, index_x, index_y):
+        self.X, self.Y = index_x * 60, HEIGHT - index_y * 60
         self.DIRECTION = random.randint(0, 1)
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
@@ -40,7 +40,7 @@ class Snake():
                 for index_y in range(character_index_y - 2, character_index_y + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            abs(self.X - index_x * 60) <= 55 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 60:
+                            abs(self.X - index_x * 60) <= 55 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 58:
                         return False
 
         elif mode == 2:  # X충돌 체크
@@ -52,7 +52,7 @@ class Snake():
                     if 0 <= index_x < map_size and 0 <= index_y < map_size\
                         and character_index_y + 1 < map_size and character_index_x + 1 < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            (abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55)\
+                            (abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55)\
                             or map_floor_array[character_index_y + 1][character_index_x + 1] == 0\
                             or map_floor_array[character_index_y + 1][character_index_x - 1] == 0:
                         if self.DIRECTION:
@@ -103,7 +103,8 @@ class Snake():
                     self.X += 3
                 elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
                     self.X -= 3
-
+        # if self.HP <= 0:
+        #     del self
         self.gravity()
 
     def draw_monster(self, main_character):
@@ -162,7 +163,7 @@ class Bat():
                 for index_y in range(character_index_y - 2, character_index_y + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            abs(self.X - index_x * 60) <= 55 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 60:
+                            abs(self.X - index_x * 60) <= 55 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 58:
                         return False
 
         elif mode == 2:  # X충돌 체크
@@ -172,7 +173,7 @@ class Bat():
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            (abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55):
+                            (abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55):
                         return False
         elif mode == 3:  # 캐릭터 여기서 move는 캐릭터의 위치
             if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 90:
@@ -275,7 +276,7 @@ class Horned_Lizard():
                 for index_y in range(character_index_y - 2, character_index_y + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            abs(self.X - index_x * 60) <= 55 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 60:
+                            abs(self.X - index_x * 60) <= 55 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 58:
                         return False
 
         elif mode == 2:  # X충돌 체크
@@ -285,7 +286,7 @@ class Horned_Lizard():
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            (abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55):
+                            (abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55):
                         if self.DIRECTION:
                             self.DIRECTION = 0
                         else:
