@@ -87,7 +87,7 @@ class CHARACTER():
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
             for index_x in range(character_index_x - 1, character_index_x + 2):
                 for index_y in range(character_index_y - 2, character_index_y + 3):
-                    if 0 <= index_x < map_size and 0 <= index_y < map_size and\
+                    if 0 <= index_x < map_size - 1 and 0 <= index_y < map_size - 1 and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and\
                             not 2 <= map_floor_array[index_y - 1][index_x] <= 29 and\
                             not 2 <= map_floor_array[index_y + 1][character_index_x] <= 29 and\

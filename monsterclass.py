@@ -29,7 +29,7 @@ class Snake():
            Snake.grid_image = load_image('./Textures/Entities/Monsters/snake_grid.png')
 
     def Place(self):
-        self.X, self.Y = random.randint(200, 700), 150
+        self.X, self.Y = random.randint(200, 700), -300
         self.DIRECTION = random.randint(0, 1)
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
@@ -49,10 +49,12 @@ class Snake():
             print(character_index_y, character_index_x)
             for index_y in range(character_index_y - 1, character_index_y + 2):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
-                    if 0 <= index_x < map_size - 1 and 0 <= index_y < map_size - 1 and \
+                    if 0 <= index_x < map_size and 0 <= index_y < map_size\
+                        and character_index_y + 1 < map_size and character_index_x + 1 < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
                             (abs(self.Y - (HEIGHT - index_y * 60)) < 60 and abs(self.X + move - index_x * 60) <= 55)\
-                            or map_floor_array[character_index_y + 1][character_index_x + 1] == 0:
+                            or map_floor_array[character_index_y + 1][character_index_x + 1] == 0\
+                            or map_floor_array[character_index_y + 1][character_index_x - 1] == 0:
                         if self.DIRECTION:
                             self.DIRECTION = 0
                         else:
@@ -263,7 +265,7 @@ class Horned_Lizard():
             Horned_Lizard.grid_image = load_image('./Textures/Entities/Monsters/horned_lizard_grid.png')
 
     def Place(self):
-        self.X, self.Y = random.randint(200, 700), 600
+        self.X, self.Y = random.randint(200, 700), 300
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         if mode == 1:  # Y충돌 체크

@@ -52,7 +52,7 @@ def draw_map_floor(BG_stage_I, FLOOR_stage_I, character):
                     FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 - character.camera_move_x - 27,
                                             HEIGHT - index_y * 60 - character.camera_move_y, 15, 60)
                 #               좌우반전 필요
-                if index_y * map_size + index_x < map_size * map_size and not 2 <= map_floor_array[index_y + 1][index_x] <= 29:
+                if index_y * map_size + index_x < map_size * map_size and index_y + 1 < map_size and not 2 <= map_floor_array[index_y + 1][index_x] <= 29:
                     FLOOR_stage_I.clip_draw(640, 560, 130, 40, index_x * 60 - character.camera_move_x,
                                             HEIGHT - index_y * 60 - character.camera_move_y - 27, 60, 20)
                 if index_x + index_y * map_size >= 0 and not 2 <= map_floor_array[index_y - 1][index_x] <= 29:
