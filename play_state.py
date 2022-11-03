@@ -31,12 +31,13 @@ def enter():
     # test_monster_reverse_image = load_image('./Textures/Entities/Monsters/snake.png')
     count = 0
     for monster in monster_list:
+        print(monster_place[count])
         monster.Place(monster_place[count][0], monster_place[count][1])
         count += 1
     # character image
-    character_I = load_image('./Textures/char_yellow.png')
-    character_reverse_I = load_image('./Textures/r_char_yellow.png')
-    main_character_grid = load_image('./Textures/Entities/char_yellow_full_grid.png')
+    # character_I = load_image('./Textures/char_yellow.png')
+    # character_reverse_I = load_image('./Textures/r_char_yellow.png')
+    # main_character_grid = load_image('./Textures/Entities/char_yellow_full_grid.png')
     # monster image
     test_monster_image = load_image('./Textures/Entities/Monsters/snake.png')
     test_monster_reverse_image = load_image('./Textures/Entities/Monsters/snake_reverse.png')
@@ -74,8 +75,8 @@ def update():
 
 def draw():
     pico2d.clear_canvas()
-    draw_map_floor(BG_stage_I, FLOOR_stage_I, main_character)
-    main_character.draw_character(character_I, character_reverse_I, main_character_grid)
+    draw_map_floor(BG_stage_I, FLOOR_stage_I, main_character)       # depth == 2
+    main_character.draw()
     for monster in monster_list:
         if monster.HP > 0:
             monster.draw_monster(main_character)

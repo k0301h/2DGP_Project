@@ -41,8 +41,17 @@ class CHARACTER():
     Stun_state = False
     Hanging_state = False
 
+    image = None
+    grid_image = None
+
     whip = SUB()
     stun = SUB()
+
+    def __init__(self):
+        if CHARACTER.image == None:
+            CHARACTER.image = load_image('./Textures/char_yellow.png')
+        if CHARACTER.grid_image == None:
+            CHARACTER.grid_image = load_image('./Textures/Entities/char_yellow_full_grid.png')
 
     def Place(self):
         for index_x in range(0, map_size):
@@ -350,38 +359,39 @@ class CHARACTER():
                 elif event.key == SDLK_UP:
                     self.Climb_up_key_state = False
 
-    def draw_character(self, character_I, character_reverse_I, main_character_grid):
-        main_character_grid.clip_draw(int(self.MotionIndex) % 16 * 128,
+    def draw(self):
+        self.grid_image.clip_draw(int(self.MotionIndex) % 16 * 128,
                                   1918 - 128 * (int(self.MotionIndex) // 16) + 50,
                                   128, 128, self.X - self.camera_move_x,
                                   self.Y - self.camera_move_y,
                                   50, 60)
         if self.Stun_state and self.MotionIndex == 9:
-            character_I.clip_draw(int(self.stun.MotionIndex) % 16 * 128,
+            self.image.clip_draw(int(self.stun.MotionIndex) % 16 * 128,
                               1918 - 128 * (int(self.stun.MotionIndex) // 16),
                               128, 128, self.X - self.camera_move_x,
                               self.Y - self.camera_move_y + 10, 60, 60)
         if self.DIRECTION == 0:
             if self.Attack_state:
-                character_I.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
+                self.image.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
                                       1918 - 128 * (int(self.whip.MotionIndex) // 16),
                                       128, 128, self.whip.X - self.camera_move_x,
                                       self.whip.Y - self.camera_move_y, 60, 60)
-            character_I.clip_draw(int(self.MotionIndex) % 16 * 128,
+            self.image.clip_draw(int(self.MotionIndex) % 16 * 128,
                                   1918 - 128 * (int(self.MotionIndex) // 16),
                                   128, 128, self.X - self.camera_move_x,
                                   self.Y - self.camera_move_y,
                                   60, 60)
         elif self.DIRECTION == 1:
             if self.Attack_state:
-                character_I.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
+                self.image.clip_composite_draw(int(self.whip.MotionIndex) % 16 * 128,
                                       1918 - 128 * (int(self.whip.MotionIndex) // 16),
-                                      128, 128, self.whip.X - self.camera_move_x,
+                                      128, 128, 0, 'h', self.whip.X - self.camera_move_x,
                                       self.whip.Y - self.camera_move_y, 60, 60)
-            character_reverse_I.clip_draw(1918 - int(self.MotionIndex) % 16 * 128,
-                                          1918 - 128 * (int(self.MotionIndex) // 16), 128, 128,
-                                          self.X - self.camera_move_x,
-                                          self.Y - self.camera_move_y, 60, 60)
+            self.image.clip_composite_draw(int(self.MotionIndex) % 16 * 128,
+                                  1918 - 128 * (int(self.MotionIndex) // 16),
+                                  128, 128, 0, 'h', self.X - self.camera_move_x,
+                                  self.Y - self.camera_move_y,
+                                  60, 60)
 
     def draw_UI(self, UI, UI_count):
         UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 30, 40, 40)                 # 생명

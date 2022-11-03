@@ -150,8 +150,8 @@ class Bat():
         if Bat.grid_image == None:
             Bat.grid_image = load_image('./Textures/Entities/Monsters/bat_grid.png')
 
-    def Place(self):
-        self.X, self.Y = 200, 400
+    def Place(self, index_x, index_y):
+        self.X, self.Y = index_x * 60, HEIGHT - index_y * 60
         self.DIRECTION = random.randint(0, 1)
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
@@ -252,6 +252,8 @@ class Horned_Lizard():
     rImage = None
     grid_image = None
 
+    timer = 0
+
     Jump_state = False
     Gravity_state = False
     Attack_state = False
@@ -264,8 +266,9 @@ class Horned_Lizard():
         if Horned_Lizard.grid_image == None:
             Horned_Lizard.grid_image = load_image('./Textures/Entities/Monsters/horned_lizard_grid.png')
 
-    def Place(self):
-        self.X, self.Y = random.randint(200, 700), 300
+    def Place(self, index_x, index_y):
+        self.X, self.Y = index_x * 60, HEIGHT - index_y * 60
+        self.DIRECTION = random.randint(0,1)
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         if mode == 1:  # Y충돌 체크
@@ -283,9 +286,12 @@ class Horned_Lizard():
             character_index_y = int((HEIGHT - self.Y) // 60)
             for index_y in range(character_index_y - 1, character_index_y + 2):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
-                    if 0 <= index_x < map_size and 0 <= index_y < map_size and \
+                    if 0 <= index_x < map_size and 0 <= index_y < map_size \
+                            and character_index_y + 1 < map_size and character_index_x + 1 < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
-                            (abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55):
+                            (abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55) \
+                            or (map_floor_array[character_index_y + 1][character_index_x + 1] == 0 and 2 <= map_floor_array[character_index_y + 1][character_index_x] <= 29  \
+                            or map_floor_array[character_index_y + 1][character_index_x] == 0 and 2 <= map_floor_array[character_index_y + 1][character_index_x + 1] <= 29):
                         if self.DIRECTION:
                             self.DIRECTION = 0
                         else:
@@ -306,16 +312,16 @@ class Horned_Lizard():
             character.HP -= self.ATK
         if self.Conflict_checking(3, character):
             self.Action = 0
-            self.Jump_state = False
 
-    def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
+    def Jump(self):
         if self.Conflict_checking(1, self.JumpSpeed) and not self.Jump_state:
             self.JumpSpeed -= self.Gravity
             if self.JumpSpeed > 0:
                 self.Y += self.JumpSpeed
         else:
-            self.JumpSpeed = 15
+            # self.JumpSpeed = 15
             self.Jump_state = True
+            self.Action = 0
 
     def gravity(self):
         if self.Conflict_checking(1, -self.DownSpeed):
@@ -325,26 +331,28 @@ class Horned_Lizard():
             self.Gravity_state = True
         else:
             self.DownSpeed = 0
+            self.JumpSpeed = 15
             self.Gravity_state = False
             self.Jump_state = False
 
     def Motion(self, character):
         if self.Action == 0:
             self.MotionIndex = (self.MotionIndex + 0.1) % 7
-            if not self.Conflict_checking(3, character):
-                self.Action = 1
-                self.MotionIndex = 8
-                self.Jump_state = True
             if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
                 self.X += 3
             elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
                 self.X -= 3
+            if not self.Conflict_checking(3, character):
+                self.Action = 1
+                self.MotionIndex = 8
+                self.Jump_state = False
         elif self.Action == 1:
             self.attack(character)
             self.Jump()
             self.MotionIndex = (self.MotionIndex + 0.2)
             if self.MotionIndex >= 13:
                 self.MotionIndex = 10
+                self.Action = 0
             if not (self.X - 10 <= character.X <= self.X + 10):
                 if self.Conflict_checking(2, 4) and self.DIRECTION == 0:
                     self.X += 4
@@ -378,8 +386,10 @@ monster_place = [[17, 2], [40, 1], [38, 7], [18, 16], [10, 17], [38, 12], [33, 1
                  [43, 48], [43, 33], [46, 39]]
 
 monster_list = []
-monster_list_1 = [Snake() for i in range(27)]
-monster_list_2 = [Bat() for i in range(5)]
-monster_list_3 = [Horned_Lizard for i in range(3)]
+monster_list_3 = [Snake() for i in range(10)]
+monster_list_2 = [Bat() for i in range(10)]
+monster_list_1 = [Horned_Lizard() for i in range(7)]
 
-monster_list += monster_list_1
+monster_list += monster_list_1 + monster_list_2 + monster_list_3
+
+print(monster_list)
