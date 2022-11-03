@@ -46,7 +46,6 @@ class Snake():
         elif mode == 2:  # X충돌 체크
             character_index_x = int((self.X + move) // 60)
             character_index_y = int((HEIGHT - self.Y) // 60)
-            print(character_index_y, character_index_x)
             for index_y in range(character_index_y - 1, character_index_y + 2):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size\

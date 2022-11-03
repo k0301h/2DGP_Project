@@ -39,6 +39,7 @@ class CHARACTER():
     Climb_down_key_state = False
     Attack_key_state = False
     Stun_state = False
+    Hanging_state = False
 
     whip = SUB()
     stun = SUB()
@@ -101,7 +102,7 @@ class CHARACTER():
         return False
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
-        if self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state:
+        if self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
             if not self.Attack_state:
                 self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
             self.JumpSpeed -= self.Gravity
@@ -156,13 +157,15 @@ class CHARACTER():
     def gravity(self):
         if self.Conflict_checking(1, -self.DownSpeed) and not self.Climb_state:
             if self.Gravity_state and not self.Conflict_checking(5, -self.DownSpeed):
-                if self.MotionIndex <= 58:
-                    self.MotionIndex = (self.MotionIndex + 0.2) % 3 % 16 + 16 * 3 + 8
-                elif self.MotionIndex > 58:
-                    self.MotionIndex = 59
+                # if self.MotionIndex <= 58:
+                #     self.MotionIndex = (self.MotionIndex + 0.1) % 3 % 16 + 16 * 3 + 8
+                # elif self.MotionIndex > 58:
+                self.Hanging_state = True
                 self.Can_Jump = True
+                self.MotionIndex = 59
                 self.JumpSpeed = 10
                 self.DownSpeed = 0
+                self.Down_Distance = 0
             else:
                 if self.DownSpeed <= 20:
                     self.DownSpeed += self.Gravity
@@ -184,6 +187,7 @@ class CHARACTER():
             self.DownSpeed = 0
             self.Down_Distance = 0
             self.Gravity_state = False
+            self.Hanging_state = False
 
     def Stun(self):
         if self.stun.MotionIndex <= 16 * 13 + 10.9:
@@ -305,6 +309,7 @@ class CHARACTER():
                     elif not self.Jump_Key_State and self.Can_Jump:
                         self.Jump_Key_State = True
                         self.Can_Jump = False
+                        self.Hanging_state = False
                         if not self.Climb_down_key_state and not self.Climb_up_key_state:
                             self.Climb_state = False
                 elif event.key == SDLK_LSHIFT:
