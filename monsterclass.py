@@ -298,11 +298,6 @@ class Horned_Lizard():
                             self.DIRECTION = 1
         elif mode == 3:  # 캐릭터 여기서 move는 캐릭터의 위치
             if math.sqrt((self.X - move.X) ** 2 + (self.Y - move.Y) ** 2) <= 240:
-                self.Jump_state = False
-                if self.X > move.X:
-                    self.DIRECTION = 1
-                elif self.X < move.X:
-                    self.DIRECTION = 0
                 return False
         return True
 
@@ -310,8 +305,8 @@ class Horned_Lizard():
         if math.sqrt((self.X - character.X) ** 2 + (self.Y - character.Y) ** 2) < 60:
             # character.Stun_state = True
             character.HP -= self.ATK
-        if self.Conflict_checking(3, character):
-            self.Action = 0
+        # if self.Conflict_checking(3, character):
+        #     self.Action = 0
 
     def Jump(self):
         if self.Conflict_checking(1, self.JumpSpeed) and not self.Jump_state:
@@ -319,9 +314,7 @@ class Horned_Lizard():
             if self.JumpSpeed > 0:
                 self.Y += self.JumpSpeed
         else:
-            # self.JumpSpeed = 15
             self.Jump_state = True
-            self.Action = 0
 
     def gravity(self):
         if self.Conflict_checking(1, -self.DownSpeed):
@@ -330,6 +323,7 @@ class Horned_Lizard():
             self.Y = self.Y - self.DownSpeed
             self.Gravity_state = True
         else:
+            self.timer += 1
             self.DownSpeed = 0
             self.JumpSpeed = 15
             self.Gravity_state = False
@@ -346,13 +340,20 @@ class Horned_Lizard():
                 self.Action = 1
                 self.MotionIndex = 8
                 self.Jump_state = False
+                if self.X > character.X:
+                    self.DIRECTION = 1
+                elif self.X < character.X:
+                    self.DIRECTION = 0
         elif self.Action == 1:
+            print(self.timer)
+            if self.timer >= 3:
+                self.Action = 0
+                self.timer = 0
             self.attack(character)
             self.Jump()
             self.MotionIndex = (self.MotionIndex + 0.2)
             if self.MotionIndex >= 13:
                 self.MotionIndex = 10
-                self.Action = 0
             if not (self.X - 10 <= character.X <= self.X + 10):
                 if self.Conflict_checking(2, 4) and self.DIRECTION == 0:
                     self.X += 4

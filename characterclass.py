@@ -103,6 +103,8 @@ class CHARACTER():
                             not 2 <= map_floor_array[index_y + 1][character_index_x] <= 29 and\
                             abs(self.X - index_x * 60) <= 60 and HEIGHT - index_y * 60 + 15 <= self.Y + move <= HEIGHT - index_y * 60 + 25:
                         return False
+        elif mode == 6:     # 뼈 장애물ㄴ
+            pass  
         return True
 
     def attack_conflict_checking(self, monster):
