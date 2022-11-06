@@ -5,6 +5,11 @@ import threading
 start = 0
 end = 0
 
+if ROUND == 0:
+    map_floor_array += map_tutorial
+elif ROUND == 1:
+    map_floor_array += map_floor_array_1
+
 def start_time():
     global start
     start = time.time()
@@ -14,13 +19,19 @@ def end_timer():
     end = time.time()
 
 # 느낌만 구현 나중에 맵 구체적으로 계획후 배열 제작
-def draw_map_floor(BG_stage_I, FLOOR_stage_I, character):
+def draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, character):
     BG_stage_I.draw(320, 320)
     BG_stage_I.draw(320, 960)
     BG_stage_I.draw(960, 320)
     BG_stage_I.draw(960, 960)
     BG_stage_I.draw(1600, 320)
     BG_stage_I.draw(1600, 960)
+
+    if ROUND == 0:
+        Deco_tutorial_I.clip_draw(0, 1024 - 255, 510, 255, 13 * 60 - character.camera_move_x,
+                                  HEIGHT - 3 * 60 - character.camera_move_y, 300, 150)
+        Deco_tutorial_I.clip_draw(510, 1024 - 255, 510, 255, 22 * 60 - character.camera_move_x,
+                                  HEIGHT - 5 * 60 - character.camera_move_y, 300, 150)
 
     for index_x in range(0, map_size):
         for index_y in range(0, map_size):

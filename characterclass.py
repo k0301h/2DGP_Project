@@ -167,7 +167,7 @@ class CHARACTER():
 
     def gravity(self):
         if self.Conflict_checking(1, -self.DownSpeed) and not self.Climb_state:
-            if self.Gravity_state and not self.Conflict_checking(5, -self.DownSpeed):
+            if self.Gravity_state and not self.Conflict_checking(5, -self.DownSpeed) and not self.Jump_Key_State:
                 # if self.MotionIndex <= 58:
                 #     self.MotionIndex = (self.MotionIndex + 0.1) % 3 % 16 + 16 * 3 + 8
                 # elif self.MotionIndex > 58:
@@ -287,9 +287,8 @@ class CHARACTER():
         self.gravity()
 
     def key_down(self):
+        global ROUND
         for event in self.handle:
-            if event.type == SDL_QUIT:
-                close_canvas()
             if event.type == SDL_KEYDOWN:
                 if event.key == SDLK_UP:
                     if self.Conflict_checking(3, 0):
@@ -325,7 +324,10 @@ class CHARACTER():
                             self.Climb_state = False
                 elif event.key == SDLK_LSHIFT:
                     self.shift_on = True
-                elif event.key == SDLK_ESCAPE:
+                elif event.key == SDLK_b:
+                    print(ROUND)
+                    ROUND = 1
+                    print(ROUND)
                     pass
                 elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State):
                     self.MotionIndex = 0
