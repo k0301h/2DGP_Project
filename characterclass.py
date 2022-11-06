@@ -93,17 +93,26 @@ class CHARACTER():
             if not map_floor_array[character_index_y][character_index_x] == -1:
                 return False
         elif mode == 5:     # 블럭에 매달리기
-            character_index_x = int(self.X // 60)
+            character_index_x = int((self.X + 30) // 60)
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
-            for index_x in range(character_index_x - 1, character_index_x + 2):
-                for index_y in range(character_index_y - 2, character_index_y + 3):
-                    if 0 <= index_x < map_size - 1 and 0 <= index_y < map_size - 1 and\
-                            2 <= map_floor_array[index_y][index_x] <= 29 and\
-                            not 2 <= map_floor_array[index_y - 1][index_x] <= 29 and\
-                            not 2 <= map_floor_array[index_y + 1][character_index_x] <= 29 and\
-                            abs(self.X - index_x * 60) <= 60 and HEIGHT - index_y * 60 + 15 <= self.Y + move <= HEIGHT - index_y * 60 + 25:
-                        return False
-        elif mode == 6:     # 뼈 장애물ㄴ
+            for index_x in range(character_index_x - 2, character_index_x + 2):
+                for index_y in range(character_index_y - 1, character_index_y + 2):
+                    if self.DIRECTION == 0:
+                        if 0 <= index_x < map_size - 1 and 0 <= index_y < map_size - 1 and\
+                                2 <= map_floor_array[index_y][index_x] <= 29 and\
+                                not 2 <= map_floor_array[index_y - 1][index_x] <= 29 and\
+                                not 2 <= map_floor_array[index_y + 1][character_index_x] <= 29 and\
+                                index_x * 60 - self.X <= 60 and HEIGHT - index_y * 60 + 15 <= self.Y + move <= HEIGHT - index_y * 60 + 25:
+                            return False
+                    elif self.DIRECTION == 1:
+                        if 0 <= index_x < map_size - 1 and 0 <= index_y < map_size - 1 and \
+                                2 <= map_floor_array[index_y][index_x] <= 29 and \
+                                not 2 <= map_floor_array[index_y - 1][index_x] <= 29 and \
+                                not 2 <= map_floor_array[index_y + 1][character_index_x] <= 29 and \
+                                self.X - index_x * 60 <= 60 and HEIGHT - index_y * 60 + 15 <= self.Y + move <= HEIGHT - index_y * 60 + 25:
+                            return False
+
+        elif mode == 6:     # 뼈 장애물
             pass  
         return True
 
