@@ -25,6 +25,8 @@ class CHARACTER():
     DownSpeed = 0
     Down_Distance = 0
 
+    timer = 0
+
     camera_move_x = 0
     camera_move_y = 0
 
@@ -112,8 +114,12 @@ class CHARACTER():
                                 0 < self.X - index_x * 60 <= 60 and HEIGHT - index_y * 60 + 15 <= self.Y + move <= HEIGHT - index_y * 60 + 25:
                             return False
 
-        elif mode == 6:     # 뼈 장애물
-            pass  
+        elif mode == 6:     # 뼈 장애물(위에서 아래로 적용)
+            character_index_x = int((self.X + 30) // 60)
+            character_index_y = int((HEIGHT - (self.Y + move)) // 60)
+            if 36 <= map_floor_array[character_index_y + 1][character_index_x] <= 38 or \
+                36 <= map_floor_array[character_index_y][character_index_x] <= 38:
+                return False
         return True
 
     def attack_conflict_checking(self, monster):
@@ -124,7 +130,7 @@ class CHARACTER():
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
         if self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
             if not self.Attack_state:
-                self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 8 + 16 * 9
+                self.MotionIndex = (self.MotionIndex + 0.2) % 16 % 8 + 16 * 9
             self.JumpSpeed -= self.Gravity
             if self.JumpSpeed > 0:
                 self.Y += self.JumpSpeed
@@ -186,6 +192,13 @@ class CHARACTER():
                 self.JumpSpeed = 10
                 self.DownSpeed = 0
                 self.Down_Distance = 0
+            elif not self.Conflict_checking(6, -self.DownSpeed):
+                self.Stun_state = True
+                self.HP = 0
+                self.MotionIndex = 9
+                if self.timer <= 40:
+                    self.Y -= 1
+                    self.timer += 1
             else:
                 if self.DownSpeed <= 20:
                     self.DownSpeed += self.Gravity
@@ -194,7 +207,8 @@ class CHARACTER():
                 if self.Y - self.camera_move_y <= 200:
                     self.camera_move_y -= self.DownSpeed
                 if not self.Attack_state and not self.Stun_state:
-                    self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 8 + 16 * 9
+                    # self.MotionIndex = (self.MotionIndex) % 16 % 4 % 6 + 16 * 11 + 4
+                    self.MotionIndex = (self.MotionIndex + 0.2) % 16 % 8 + 16 * 9
                 self.Gravity_state = True
         else:
             if self.Down_Distance >= 600:
@@ -217,7 +231,8 @@ class CHARACTER():
 
     def Motion(self, monster):
         if self.Stun_state:
-            self.Stun()
+            if self.timer == 0: # 가시 장애물에 안걸렸을 때
+                self.Stun()
         else:
             if self.Jump_Key_State:
                 self.Jump()
@@ -378,7 +393,7 @@ class CHARACTER():
                                   128, 128, self.X - self.camera_move_x,
                                   self.Y - self.camera_move_y,
                                   50, 60)
-        if self.Stun_state and self.MotionIndex == 9:
+        if self.Stun_state and self.MotionIndex == 9 and self.timer == 0:
             self.image.clip_draw(int(self.stun.MotionIndex) % 16 * 128,
                               1918 - 128 * (int(self.stun.MotionIndex) // 16),
                               128, 128, self.X - self.camera_move_x,

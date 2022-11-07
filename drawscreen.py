@@ -51,6 +51,11 @@ def draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, character):
                 FLOOR_stage_I.clip_draw(128 * (map_floor_array[index_y][index_x] - 31), 1410 - 1155
                                         , 128, 128, index_x * 60 - character.camera_move_x,
                                         HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
+                if index_x * 60 - 30 <= character.X <= index_x * 60 + 30 and\
+                    index_y * 60 + 120 <= character.Y <= index_y * 60 + 175:
+                    FLOOR_stage_I.clip_draw(128 * (map_floor_array[index_y][index_x] - 31), 1410 - 1282
+                                            , 128, 128, index_x * 60 - character.camera_move_x,
+                                            HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
             else:
                 FLOOR_stage_I.clip_draw(128 * ((map_floor_array[index_y][index_x] - 2) % 4),
                                         1410 - 128 * ((map_floor_array[index_y][index_x] - 2) // 4), 128, 128,
@@ -60,12 +65,12 @@ def draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, character):
                     FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 - character.camera_move_x + 27,
                                             HEIGHT - index_y * 60 - character.camera_move_y, 15, 60)
                 if not index_x == 0 and not 2 <= map_floor_array[index_y][index_x - 1] <= 29:
-                    FLOOR_stage_I.clip_draw(687, 765, 30, 130, index_x * 60 - character.camera_move_x - 27,
+                    FLOOR_stage_I.clip_composite_draw(687, 765, 30, 130, 0, 'h',index_x * 60 - character.camera_move_x - 30,
                                             HEIGHT - index_y * 60 - character.camera_move_y, 15, 60)
                 #               좌우반전 필요
                 if index_y * map_size + index_x < map_size * map_size and index_y + 1 < map_size and not 2 <= map_floor_array[index_y + 1][index_x] <= 29:
                     FLOOR_stage_I.clip_draw(640, 560, 130, 40, index_x * 60 - character.camera_move_x,
                                             HEIGHT - index_y * 60 - character.camera_move_y - 27, 60, 20)
                 if index_x + index_y * map_size >= 0 and not 2 <= map_floor_array[index_y - 1][index_x] <= 29:
-                    FLOOR_stage_I.clip_draw(640, 680, 130, 40, index_x * 60 - character.camera_move_x,
+                    FLOOR_stage_I.clip_draw(640, 680, 130, 40,index_x * 60 - character.camera_move_x,
                                             HEIGHT - index_y * 60 - character.camera_move_y + 27, 60, 20)
