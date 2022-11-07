@@ -345,7 +345,6 @@ class Horned_Lizard():
                 elif self.X < character.X:
                     self.DIRECTION = 0
         elif self.Action == 1:
-            print(self.timer)
             if self.timer >= 3:
                 self.Action = 0
                 self.timer = 0
@@ -392,5 +391,3 @@ monster_list_2 = [Bat() for i in range(10)]
 monster_list_1 = [Horned_Lizard() for i in range(7)]
 
 monster_list += monster_list_1 + monster_list_2 + monster_list_3
-
-print(monster_list)

@@ -349,9 +349,7 @@ class CHARACTER():
                 elif event.key == SDLK_LSHIFT:
                     self.shift_on = True
                 elif event.key == SDLK_b:
-                    print(ROUND)
                     ROUND = 1
-                    print(ROUND)
                     pass
                 elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State):
                     self.MotionIndex = 0
