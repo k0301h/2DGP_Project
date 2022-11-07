@@ -4,10 +4,12 @@ import play_state
 import game_framework
 from map_floor import WIDTH, HEIGHT
 
+main_image0 = None
 main_image1 = None
 main_image2 = None
 
 sub_back_image0 = None
+
 sub_image0 = None
 sub_image1 = None
 sub_image2 = None
@@ -24,7 +26,8 @@ game_start = False
 
 def enter():
     print('enter title_state')
-    global main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, sub_image4, select_image
+    global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, sub_image4, select_image
+    main_image0 = load_image('./Textures/hud_controller_buttons.png')
     main_image1 = load_image('./Textures/menu_title.png')
     main_image2 = load_image('./Textures/menu_titlegal.png')
 
@@ -42,8 +45,9 @@ def enter():
 
 def exit():
     print('exit title_state')
-    global main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, sub_image4, select_image
+    global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, sub_image4, select_image
 
+    del main_image0
     del main_image1
     del main_image2
 
@@ -71,6 +75,7 @@ def draw():
     if not game_start:
         main_image1.clip_draw(0, 0, 1920, 1080, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
         main_image2.clip_draw(0, 0, 1024, 1024, WIDTH / 3, HEIGHT / 3, HEIGHT, HEIGHT)
+        main_image0.clip_draw(126, 0, 130, 130, (7 * WIDTH) / 11, HEIGHT / 5, HEIGHT / 20, HEIGHT / 20)
     elif game_start:
         sub_back_image0.clip_draw(0, 0, 512, 512, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
         sub_image0.clip_draw(0, 0, 1024, 256, WIDTH / 2, HEIGHT / 5, (2 * WIDTH) / 3, HEIGHT / 4)

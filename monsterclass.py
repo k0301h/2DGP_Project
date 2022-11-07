@@ -52,8 +52,8 @@ class Snake():
                         and character_index_y + 1 < map_size and character_index_x + 1 < map_size and\
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
                             (abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55)\
-                            or map_floor_array[character_index_y + 1][character_index_x + 1] == 0\
-                            or map_floor_array[character_index_y + 1][character_index_x] == 0:
+                            or not 2 <= map_floor_array[character_index_y + 1][character_index_x + 1] <= 29\
+                            or not 2 <= map_floor_array[character_index_y + 1][character_index_x] <= 29:
                         if self.DIRECTION:
                             self.DIRECTION = 0
                         else:
@@ -380,14 +380,13 @@ class Horned_Lizard():
                                             self.Y - main_character.camera_move_y,
                                             60, 60)
 
-monster_place = [[17, 2], [40, 1], [38, 7], [18, 16], [10, 17], [38, 12], [33, 18], [40, 15],
-                 [8, 22], [22, 23], [29, 21], [29, 25], [39, 26], [11, 30], [17, 28], [4, 41],
-                 [5, 44], [13, 47], [18, 46], [27, 44], [32, 46], [26, 44], [31, 45], [32, 47],
-                 [43, 48], [43, 33], [46, 39]]
+monster_place = [[33, 18], [22, 23], [4, 41], [31, 45], # lizard
+                 [17, 2], [40, 1], [40, 15], [18, 16], [29, 21], [29, 25], [17, 28], [43, 32], [5, 44], [26, 44], [12, 47], [32, 47],   # bat
+                 [38, 7], [10, 17], [38, 12], [8, 22], [39, 26], [11, 30], [16, 39], [17, 46], [43, 48]]                                # snake
 
 monster_list = []
-monster_list_3 = [Snake() for i in range(10)]
-monster_list_2 = [Bat() for i in range(10)]
-monster_list_1 = [Horned_Lizard() for i in range(7)]
+monster_list_3 = [Snake() for i in range(9)]
+monster_list_2 = [Bat() for i in range(12)]
+monster_list_1 = [Horned_Lizard() for i in range(4)]
 
 monster_list += monster_list_1 + monster_list_2 + monster_list_3
