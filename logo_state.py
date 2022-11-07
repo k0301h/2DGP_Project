@@ -36,13 +36,19 @@ def update():
 def draw():
     pico2d.clear_canvas()
     if timer <= 2.5:
-        image1.clip_draw(0, 0,1920, 1080, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
+        image1.clip_draw(0, 0, 1920, 1080, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
     else:
-        image2.clip_draw(0, 0,1920, 1080, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
+        image2.clip_draw(0, 0, 1920, 1080, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
     pico2d.update_canvas()
 
 def handle_events():
-    pass
+    handle = get_events()
+    for event in handle:
+        if event.type == SDL_QUIT:
+            close_canvas()
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_ESCAPE:
+                close_canvas()
 
 def pause(): pass
 
