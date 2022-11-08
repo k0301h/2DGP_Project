@@ -4,6 +4,7 @@ import play_state
 import game_framework
 from map_floor import WIDTH, HEIGHT
 
+image0 = None
 image1 = None
 image2 = None
 
@@ -12,13 +13,17 @@ timer = 0
 
 def enter():
     print('enter title_state')
-    global image1, image2
-    image1 = load_image('./Textures/journal_top_gameover.png')
-    image2 = load_image('./Textures/splash1.png')
+    global image0, image1, image2
+    image0 = load_image('./Textures/base_skynight.png')
+    image1 = load_image('./Textures/journal_pageflip.png')
+    image2 = load_image('./Textures/journal_top_gameover.png')
+
 
 def exit():
     print('exit title_state')
-    global image1, image2
+    global image0, image1, image2
+
+    del image0
     del image1
     del image2
 
@@ -36,7 +41,10 @@ def update():
 
 def draw():
     pico2d.clear_canvas()
-    image1.clip_draw(0, 0, 2048, 1028, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
+    image0.clip_draw(0, 0, 512, 512, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT * 2)
+    image1.clip_draw(0, 0, 2048, 1024, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
+
+    image2.clip_draw(0, 0, 2048, 1024, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
     pico2d.update_canvas()
 
 def handle_events():

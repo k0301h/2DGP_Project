@@ -56,7 +56,6 @@ def update():
     main_character.Motion(monster_list)
 
     if main_character.HP <= 0:
-        print(timer)
         timer += 0.05
         delay(0.01)
     if timer >= 3:
@@ -64,10 +63,8 @@ def update():
         main_character.HP = 5
         game_framework.change_state(gameover_state)
 
-def draw():
-    # print('draw play_state')
-    pico2d.clear_canvas()
-    draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, main_character)       # depth == 2
+def drawworld():
+    draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, main_character)  # depth == 2
     main_character.draw()
     if ROUND >= 1:
         for monster in monster_list:
@@ -75,6 +72,11 @@ def draw():
                 monster.draw_monster(main_character)
     main_character.draw_UI(UI, UI_count)
     delay(0.015)
+
+def draw():
+    # print('draw play_state')
+    pico2d.clear_canvas()
+    drawworld()
     pico2d.update_canvas()
 
 def handle_events():
