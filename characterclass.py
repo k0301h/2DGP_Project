@@ -233,7 +233,12 @@ class CHARACTER():
         if self.Stun_state:
             if self.timer == 0: # 가시 장애물에 안걸렸을 때
                 self.Stun()
+            else:
+                self.MotionIndex = 9
         else:
+            if self.HP <= 0:
+                self.Stun_state = True
+
             if self.Jump_Key_State:
                 self.Jump()
             elif self.Down_Jump_state:

@@ -25,12 +25,15 @@ main_door_image = None
 select_menu_x = WIDTH / 2
 select_menu_y = HEIGHT / 2
 
-running = True
+running = False
 game_start = False
 
 radian = 0
 move = 2
 end_move = 0
+end_move_y = 0
+rotation_finish = False
+select_move = HEIGHT / 10
 
 def enter():
     print('enter title_state')
@@ -81,16 +84,32 @@ def exit():
 
 def update():
     # print('update title_state')
-    global running, radian, move, end_move
+    global running, radian, move, end_move, rotation_finish, end_move_y, select_move
 
     if radian <= 6.28 and game_start:
         radian += 0.06
-        delay(0.03)
+        delay(0.02)
         move = -move
+        if radian >= 6.28:
+            rotation_finish = True
+    elif rotation_finish:
+        delay(0.5)
+        rotation_finish = False
     elif end_move <= HEIGHT * 3 / 5 and game_start:
         end_move += HEIGHT / 100
-        delay(0.06)
+        delay(0.03)
         move = -move
+        if end_move >= HEIGHT * 3 / 5:
+            rotation_finish = True
+    elif end_move_y <= HEIGHT * 3 / 5 and game_start:
+        end_move_y += HEIGHT / 80
+        delay(0.03)
+        move = -move
+        if end_move_y >= HEIGHT * 3 / 5:
+            running = True
+    elif running:
+        select_move -= 1
+        select_move = clamp(0, select_move, 100)
 
 def draw():
     # print('draw title_state')
@@ -103,25 +122,26 @@ def draw():
         sub_back_image0.clip_draw(0, 0, 512, 512, WIDTH / 2 + move, HEIGHT / 2, WIDTH, HEIGHT)
         sub_image0.clip_draw(0, 0, 1024, 256, WIDTH / 2 + move, HEIGHT / 5, (2 * WIDTH) / 3, HEIGHT / 4)
 
-        select_image.clip_draw(895, 1280 - 730, 360, 55, select_menu_x - WIDTH / 6, select_menu_y, 210, 30)
-        select_image.clip_composite_draw(895, 1280 - 730, 360, 55, 0, 'h', select_menu_x + WIDTH / 6, select_menu_y,
+        if running:
+            select_image.clip_draw(895, 1280 - 730, 360, 55, select_menu_x - WIDTH / 6 - select_move, select_menu_y, 210, 30)
+            select_image.clip_composite_draw(895, 1280 - 730, 360, 55, 0, 'h', select_menu_x + WIDTH / 6 + select_move, select_menu_y,
                                          210, 30)
         sub_image1.clip_draw(0, 0, 1024, 1024, WIDTH / 2 + move, HEIGHT / 2, HEIGHT, HEIGHT)
 
         if end_move < HEIGHT:
-            main_body_image.clip_composite_draw(0, 0, 512, 512, 0, '', WIDTH / 2 + move, HEIGHT / 2 - HEIGHT / 5 - end_move,
+            main_body_image.clip_composite_draw(0, 0, 512, 512, 0, '', WIDTH / 2 + move, HEIGHT / 2 - HEIGHT / 5 - end_move_y,
                                                 HEIGHT / 2, HEIGHT / 2)
-            if radian < 6.28:
-                main_door_image.clip_composite_draw(0, 0, 1024, 1024, radian / 2, '', WIDTH / 2 + move, HEIGHT / 2 - end_move, HEIGHT * 6 / 7,
+            if radian <= 6.28:
+                main_door_image.clip_composite_draw(0, 0, 1024, 1024, radian / 2, 'h', WIDTH / 2 + move, HEIGHT / 2 - end_move, HEIGHT * 6 / 7,
                                                     HEIGHT * 6 / 7)
             else:
-                main_door_image.clip_composite_draw(0, 0, 512, 1024, radian / 2, '', WIDTH / 2 + move + end_move + HEIGHT * 2 / 9,
+                main_door_image.clip_composite_draw(0, 0, 512, 1024, radian / 2, 'h', WIDTH / 2 + move - end_move - HEIGHT * 3 / 14,
                                                     HEIGHT / 2, HEIGHT * 3 / 7,
                                                     HEIGHT * 6 / 7)
-                main_door_image.clip_composite_draw(512, 0, 512, 1024, radian / 2, '', WIDTH / 2 + move - end_move - HEIGHT * 2 / 9,
+                main_door_image.clip_composite_draw(512, 0, 512, 1024, radian / 2, 'h', WIDTH / 2 + move + end_move + HEIGHT * 3 / 14,
                                                     HEIGHT / 2, HEIGHT * 3 / 7,
                                                     HEIGHT * 6 / 7)
-            main_head_image.clip_composite_draw(0, 0, 512, 512, -radian, '', WIDTH / 2 + move, HEIGHT / 2 - end_move, HEIGHT / 2,
+            main_head_image.clip_composite_draw(0, 0, 512, 512, -radian, '', WIDTH / 2 + move, HEIGHT / 2 - end_move_y, HEIGHT / 2 - move,
                                                 HEIGHT / 2)
 
         sub_image2.clip_draw(0, 0, 1280, 1080, WIDTH / 2 + move, HEIGHT / 2, (4 * HEIGHT) / 3 , HEIGHT)
@@ -134,7 +154,7 @@ def draw():
 
 def handle_events():
     handle = get_events()
-    global game_start, select_menu_y
+    global game_start, select_menu_y, select_move
     for event in handle:
         if event.type == SDL_QUIT:
             close_canvas()
@@ -151,9 +171,11 @@ def handle_events():
                 game_start = True
             elif event.key == SDLK_UP:
                 select_menu_y += HEIGHT // 10
+                select_move = 100
                 select_menu_y = clamp(HEIGHT / 2 - HEIGHT / 10, select_menu_y, HEIGHT / 2 + HEIGHT / 10)
             elif event.key == SDLK_DOWN:
                 select_menu_y -= HEIGHT // 10
+                select_move = 100
                 select_menu_y = clamp(HEIGHT / 2 - HEIGHT / 10, select_menu_y, HEIGHT / 2 + HEIGHT / 10)
             elif event.key == SDLK_SPACE:
                 pass
