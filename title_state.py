@@ -17,19 +17,31 @@ sub_image3 = None
 sub_image4 = None
 
 select_image = None
+
+main_body_image = None
+main_head_image = None
+main_door_image = None
+
 select_menu_x = WIDTH / 2
 select_menu_y = HEIGHT / 2
 
 running = True
 game_start = False
 
+radian = 0
+
 
 def enter():
     print('enter title_state')
-    global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, sub_image4, select_image
+    global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
+        sub_image4, select_image, main_body_image, main_head_image, main_door_image
     main_image0 = load_image('./Textures/hud_controller_buttons.png')
     main_image1 = load_image('./Textures/menu_title.png')
     main_image2 = load_image('./Textures/menu_titlegal.png')
+
+    main_body_image = load_image('./Textures/main_body.png')
+    main_head_image = load_image('./Textures/main_head.png')
+    main_door_image = load_image('./Textures/main_door.png')
 
     sub_back_image0 = load_image('./Textures/base_skynight.png')
 
@@ -45,11 +57,15 @@ def enter():
 
 def exit():
     print('exit title_state')
-    global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, sub_image4, select_image
-
+    global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
+        sub_image4, select_image, main_body_image, main_head_image, main_door_image
     del main_image0
     del main_image1
     del main_image2
+
+    del main_head_image
+    del main_body_image
+    del main_door_image
 
     del sub_back_image0
 
@@ -64,9 +80,11 @@ def exit():
 
 def update():
     # print('update title_state')
-    global running
-    # running = False
-    # game_framework.change_state(play_state)
+    global running, radian
+
+    if radian <= 6.28 and game_start:
+        radian += 0.03
+        delay(0.03)
 
 
 def draw():
@@ -91,7 +109,9 @@ def draw():
         sub_image4.clip_draw(0, 0, 512, 1080, HEIGHT / 4, HEIGHT / 2, HEIGHT / 2, HEIGHT)
         sub_image4.clip_draw(512, 0, 512, 1080, WIDTH - HEIGHT / 4, HEIGHT / 2, HEIGHT / 2, HEIGHT)
 
-
+        main_body_image.clip_composite_draw(0, 0, 512, 512, 0, '', WIDTH / 2, HEIGHT / 2 - HEIGHT / 5, HEIGHT / 2, HEIGHT / 2)
+        main_door_image.clip_composite_draw(0, 0, 1024, 1024, radian / 2, '', WIDTH / 2, HEIGHT / 2, HEIGHT / 2, HEIGHT / 2)
+        main_head_image.clip_composite_draw(0, 0, 512, 512, -radian, '', WIDTH / 2, HEIGHT / 2, HEIGHT / 4, HEIGHT / 4)
     pico2d.update_canvas()
 
 def handle_events():
@@ -104,13 +124,19 @@ def handle_events():
             if event.key == SDLK_ESCAPE:
                 close_canvas()
             elif event.key == SDLK_RETURN:
-                if game_start and select_menu_y == HEIGHT / 2:
+                if game_start and select_menu_y == HEIGHT / 2 + HEIGHT / 10:
                     game_framework.change_state(play_state)
+                elif game_start and select_menu_y == HEIGHT / 2:
+                    pass
+                elif game_start and select_menu_y == HEIGHT / 2 - HEIGHT / 10:
+                    game_framework.quit()
                 game_start = True
             elif event.key == SDLK_UP:
-                select_menu_y += 100
+                select_menu_y += HEIGHT // 10
+                select_menu_y = clamp(HEIGHT / 2 - HEIGHT / 10, select_menu_y, HEIGHT / 2 + HEIGHT / 10)
             elif event.key == SDLK_DOWN:
-                select_menu_y -= 100
+                select_menu_y -= HEIGHT // 10
+                select_menu_y = clamp(HEIGHT / 2 - HEIGHT / 10, select_menu_y, HEIGHT / 2 + HEIGHT / 10)
             elif event.key == SDLK_SPACE:
                 pass
 

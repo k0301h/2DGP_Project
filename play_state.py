@@ -61,7 +61,7 @@ def draw():
             if monster.HP > 0:
                 monster.draw_monster(main_character)
     main_character.draw_UI(UI, UI_count)
-    delay(0.015)
+    # delay(0.015)
     pico2d.update_canvas()
 
 def handle_events():
