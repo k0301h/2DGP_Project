@@ -1,5 +1,5 @@
 from pico2d import *
-import title_state
+import play_state
 
 import game_framework
 from map_floor import WIDTH, HEIGHT
@@ -14,7 +14,7 @@ def enter():
     print('enter title_state')
     global image1, image2
     image1 = load_image('./Textures/journal_top_gameover.png')
-    # image2 = load_image('./Textures/splash1.png')
+    image2 = load_image('./Textures/splash1.png')
 
 def exit():
     print('exit title_state')
@@ -47,6 +47,8 @@ def handle_events():
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 close_canvas()
+            elif event.key == SDLK_RETURN:
+                game_framework.change_state(play_state)
 
 def pause(): pass
 
