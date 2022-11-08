@@ -2,6 +2,8 @@ from pico2d import *
 from drawscreen import *
 from characterclass import *
 from monsterclass import *
+import gameover_state
+import game_framework
 
 main_character = None
 BG_stage_I = None
@@ -9,6 +11,8 @@ Deco_tutorial_I = None
 FLOOR_stage_I = None
 UI = None
 UI_count = None
+
+timer = 0
 
 def enter():
     print("enter play_state")
@@ -44,12 +48,19 @@ def exit():
     del UI_count
 
 def update():
+    global timer
     print('update play_state')
     if ROUND >= 1:
         for monster in monster_list:
             monster.Motion(main_character)
-
     main_character.Motion(monster_list)
+
+    if main_character.HP <= 0:
+        print(timer)
+        timer += 0.1
+        delay(0.01)
+    if timer >= 3:
+        game_framework.change_state(gameover_state)
 
 def draw():
     print('draw play_state')
