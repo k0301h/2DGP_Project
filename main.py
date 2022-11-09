@@ -8,7 +8,7 @@ import logo_state
 import title_state
 import play_state
 
-game_framework.run(title_state)
+game_framework.run(play_state)
 pico2d.close_canvas()
 
 

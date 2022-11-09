@@ -73,16 +73,16 @@ def update():
         game_framework.push_state(gameover_state)
 
 def draw_world():
-    draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, trap_I, main_character, main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT)  # depth == 2
-    print(main_character.Y - HEIGHT, main_character.Y + HEIGHT)
+    draw_background(BG_stage_I)
+    draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap_I, main_character, main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT)  # depth == 2 // main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT
     main_character.draw()
     if ROUND >= 1:
         for monster in monster_list:
             if monster.HP > 0:
                 monster.draw_monster(main_character)
     main_character.draw_UI(UI, UI_count)
-    if mode == 1:
-        delay(0.015)
+    # if mode == 1:
+    delay(0.015)
 
 def draw():
     # print('draw play_state')

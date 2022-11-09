@@ -26,7 +26,7 @@ class CHARACTER():
     Down_Distance = 0
 
     timer = 0
-    scale = 40
+    scale = 0 # 40
 
     camera_move_x = 0
     camera_move_y = 0
@@ -63,7 +63,7 @@ class CHARACTER():
                 if map_floor_array[index_y][index_x] == 1:
                     self.X = index_x * 60
                     self.Y = HEIGHT - index_y * 60 - 59
-                    self.enter_walking = True
+                    self.enter_walking = False
                     self.camera_move_x = 0
                     self.camera_move_y = 0
 
@@ -426,7 +426,6 @@ class CHARACTER():
                                   128, 128, self.X - self.camera_move_x,
                                   self.Y - self.camera_move_y - self.scale / 2,
                                   60 - self.scale, 60 - self.scale)
-            print(self.scale)
         elif self.DIRECTION == 1:
             if self.Attack_state:
                 self.image.clip_composite_draw(int(self.whip.MotionIndex) % 16 * 128,

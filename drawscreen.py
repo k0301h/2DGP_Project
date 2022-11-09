@@ -18,8 +18,7 @@ def end_timer():
     global end
     end = time.time()
 
-# 느낌만 구현 나중에 맵 구체적으로 계획후 배열 제작
-def draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, trap_I, character, range_l = 0, range_r = WIDTH, range_b = 0, range_t = HEIGHT):
+def draw_background(BG_stage_I):
     BG_stage_I.draw(320, 320)
     BG_stage_I.draw(320, 960)
     BG_stage_I.draw(960, 320)
@@ -27,6 +26,8 @@ def draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, trap_I, character
     BG_stage_I.draw(1600, 320)
     BG_stage_I.draw(1600, 960)
 
+# 느낌만 구현 나중에 맵 구체적으로 계획후 배열 제작
+def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap_I, character, range_l = 0, range_r = WIDTH, range_b = 0, range_t = HEIGHT):
     if ROUND == 0:
         Deco_tutorial_I.clip_draw(0, 1024 - 255, 510, 255, 13 * 60 - character.camera_move_x,
                                   HEIGHT - 3 * 60 - character.camera_move_y, 300, 150)

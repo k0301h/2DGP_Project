@@ -1,4 +1,4 @@
-mode = 2
+mode = 1
 
 if mode == 1:
     WIDTH = 1920

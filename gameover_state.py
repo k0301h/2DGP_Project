@@ -16,9 +16,13 @@ def enter():
     print('enter title_state')
     global image0, image1, image2
     image0 = load_image('./Textures/base_skynight.png')
-    image1 = load_image('./Textures/journal_pageflip.png')
+    image1 = load_image('./Textures/journal_back.png')
     image2 = load_image('./Textures/journal_top_gameover.png')
 
+    play_state.main_character.camera_move_x += (play_state.main_character.X - play_state.main_character.camera_move_x - WIDTH // 4)
+    print(play_state.main_character.camera_move_y, (play_state.main_character.Y - play_state.main_character.camera_move_y - HEIGHT * 2 // 3))
+    play_state.main_character.camera_move_y += (play_state.main_character.Y - play_state.main_character.camera_move_y - HEIGHT * 2 // 3)
+    print(play_state.main_character.camera_move_y)
 
 def exit():
     print('exit title_state')
@@ -29,6 +33,7 @@ def exit():
     del image2
 
     play_state.main_character.Place()
+    play_state.main_character.Stun_state = False
     # monster
     play_state.count = 0
     if ROUND >= 1:
@@ -53,10 +58,9 @@ def update():
 
 def draw():
     pico2d.clear_canvas()
-    image0.clip_draw(0, 0, 512, 512, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT * 2)
-    image1.clip_draw(0, 0, 2048, 1024, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
-    # play_state.main_character.draw()
     play_state.draw_world()
+    image0.clip_draw(0, 0, 512, 512, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT * 3 / 2)
+    image1.clip_draw(0, 0, 2048, 1024, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
     image2.clip_draw(0, 0, 2048, 1024, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
     pico2d.update_canvas()
 
