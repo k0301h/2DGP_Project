@@ -33,7 +33,7 @@ def enter():
     BG_stage_I = load_image('./Textures/bg_cave.png')
     FLOOR_stage_I = load_image('./Textures/floor_cave.png')
     Deco_tutorial_I = load_image('./Textures/deco_tutorial.png')
-    trap = Arrow_Trap()
+    trap = [Arrow_Trap() for _ in range(2)]
     #UI
     UI = load_image('./Textures/hud.png')
     UI_count = load_image('./Textures/number.png')

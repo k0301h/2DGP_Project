@@ -33,7 +33,7 @@ def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0,
                                   HEIGHT - 3 * 60 - character.camera_move_y, 300, 150)
         Deco_tutorial_I.clip_draw(510, 1024 - 255, 510, 255, 22 * 60 - character.camera_move_x,
                                   HEIGHT - 5 * 60 - character.camera_move_y, 300, 150)
-
+    count = 0
     for index_x in range(0, map_size):
         for index_y in range(0, map_size):
             if range_b - 30 <= HEIGHT - index_y * 60 <= range_t + 30 and\
@@ -60,11 +60,15 @@ def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0,
                                                 , 128, 128, index_x * 60 - character.camera_move_x,
                                                 HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
                 elif 40 == map_floor_array[index_y][index_x]:
-                    trap.image.clip_composite_draw(0, 1600 - 160, 160, 160, 0, '', index_x * 60 - character.camera_move_x,
-                                                HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
+                    trap[count].index_x = index_x
+                    trap[count].index_y = index_y
+                    trap[count].image.clip_composite_draw(0, 1600 - 160, 160, 160, 0, '',index_x * 60 - character.camera_move_x, HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
+                    count += 1
                 elif 41 == map_floor_array[index_y][index_x]:
-                    trap.image.clip_composite_draw(0, 1600 - 160, 160, 160, 0, 'h', index_x * 60 - character.camera_move_x,
-                                                HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
+                    trap[count].index_x = index_x
+                    trap[count].index_y = index_y
+                    trap[count].image.clip_composite_draw(0, 1600 - 160, 160, 160, 0, 'h', index_x * 60 - character.camera_move_x, HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
+                    count += 1
                 else:
                     FLOOR_stage_I.clip_draw(128 * ((map_floor_array[index_y][index_x] - 2) % 4),
                                             1410 - 128 * ((map_floor_array[index_y][index_x] - 2) // 4), 128, 128,
