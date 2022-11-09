@@ -27,7 +27,7 @@ def draw_background(BG_stage_I):
     BG_stage_I.draw(1600, 960)
 
 # 느낌만 구현 나중에 맵 구체적으로 계획후 배열 제작
-def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap_I, character, range_l = 0, range_r = WIDTH, range_b = 0, range_t = HEIGHT):
+def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0, range_r = WIDTH, range_b = 0, range_t = HEIGHT):
     if ROUND == 0:
         Deco_tutorial_I.clip_draw(0, 1024 - 255, 510, 255, 13 * 60 - character.camera_move_x,
                                   HEIGHT - 3 * 60 - character.camera_move_y, 300, 150)
@@ -60,10 +60,10 @@ def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap_I, character, range_l = 
                                                 , 128, 128, index_x * 60 - character.camera_move_x,
                                                 HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
                 elif 40 == map_floor_array[index_y][index_x]:
-                    trap_I.clip_composite_draw(0, 1600 - 160, 160, 160, 0, '', index_x * 60 - character.camera_move_x,
+                    trap.image.clip_composite_draw(0, 1600 - 160, 160, 160, 0, '', index_x * 60 - character.camera_move_x,
                                                 HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
                 elif 41 == map_floor_array[index_y][index_x]:
-                    trap_I.clip_composite_draw(0, 1600 - 160, 160, 160, 0, 'h', index_x * 60 - character.camera_move_x,
+                    trap.image.clip_composite_draw(0, 1600 - 160, 160, 160, 0, 'h', index_x * 60 - character.camera_move_x,
                                                 HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
                 else:
                     FLOOR_stage_I.clip_draw(128 * ((map_floor_array[index_y][index_x] - 2) % 4),

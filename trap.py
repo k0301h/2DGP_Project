@@ -1,3 +1,4 @@
+import pico2d
 
 class Arrow_Trap:
     X = 0
@@ -6,5 +7,5 @@ class Arrow_Trap:
     image = None
 
     def __init__(self):
-        # Arrow_Trap.image = load
-        pass
+        if Arrow_Trap.image == None:
+            Arrow_Trap.image = pico2d.load_image('./Textures/journal_entry_traps.png')
