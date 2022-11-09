@@ -152,6 +152,7 @@ class Bat():
 
     def Place(self, index_x, index_y):
         self.X, self.Y = index_x * 60, HEIGHT - index_y * 60
+        self.Action = 0
         self.DIRECTION = random.randint(0, 1)
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기

@@ -29,6 +29,9 @@ def exit():
 
 
 def update():
+    # play_state.main_character.camera_move_x = clamp(200, play_state.main_character.X - play_state.main_character.camera_move_x, 300 )
+    # print(play_state.main_character.X - play_state.main_character.camera_move_x)
+
     # global timer, running
     # if timer > 5.0:
     #     timer = 0
@@ -43,7 +46,7 @@ def draw():
     pico2d.clear_canvas()
     image0.clip_draw(0, 0, 512, 512, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT * 2)
     image1.clip_draw(0, 0, 2048, 1024, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
-
+    play_state.main_character.draw()
     image2.clip_draw(0, 0, 2048, 1024, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
     pico2d.update_canvas()
 
@@ -56,7 +59,8 @@ def handle_events():
             if event.key == SDLK_ESCAPE:
                 close_canvas()
             elif event.key == SDLK_RETURN:
-                game_framework.change_state(play_state)
+                # game_framework.change_state(play_state)
+                game_framework.pop_state()
 
 def pause(): pass
 

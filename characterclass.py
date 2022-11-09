@@ -64,6 +64,7 @@ class CHARACTER():
                     self.X = index_x * 60
                     self.Y = HEIGHT - index_y * 60 - 59
                     self.enter_walking = True
+                    self.camera_move_x = 0
 
     def Conflict_checking(self, mode, move): # mode : 충돌체크 유형 , move : 다음에 움직일 크기
         if mode == 1:       # Y충돌 체크

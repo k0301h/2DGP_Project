@@ -69,7 +69,8 @@ def update():
     if timer >= 3:
         timer = 0
         main_character.HP = 5
-        game_framework.change_state(gameover_state)
+        # game_framework.change_state(gameover_state)
+        game_framework.push_state(gameover_state)
 
 def draw_world():
     draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, trap_I, main_character)  # depth == 2
