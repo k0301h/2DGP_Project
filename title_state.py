@@ -160,10 +160,10 @@ def handle_events():
     global game_start, select_menu_y, select_move
     for event in handle:
         if event.type == SDL_QUIT:
-            close_canvas()
+            game_framework.quit()
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
-                close_canvas()
+                game_framework.quit()
             elif event.key == SDLK_RETURN:
                 if game_start and select_menu_y == HEIGHT / 2 + HEIGHT / 10:
                     game_framework.change_state(play_state)

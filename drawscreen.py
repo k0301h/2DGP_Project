@@ -35,8 +35,8 @@ def draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, trap_I, character
 
     for index_x in range(0, map_size):
         for index_y in range(0, map_size):
-            if range_b - 30 <= index_y * 60 - character.camera_move_y <= range_t + 30 and\
-                    range_l - 30 <= index_x * 60 - character.camera_move_x <= range_r + 30:
+            if range_b - 30 <= HEIGHT - index_y * 60 <= range_t + 30 and\
+                    range_l - 30 <= index_x * 60  - character.camera_move_x <= range_r + 30:
                 if map_floor_array[index_y][index_x] == 0:
                     pass
                 elif map_floor_array[index_y][index_x] == 1:

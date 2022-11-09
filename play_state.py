@@ -73,7 +73,8 @@ def update():
         game_framework.push_state(gameover_state)
 
 def draw_world():
-    draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, trap_I, main_character)  # depth == 2
+    draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, trap_I, main_character, main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT)  # depth == 2
+    print(main_character.Y - HEIGHT, main_character.Y + HEIGHT)
     main_character.draw()
     if ROUND >= 1:
         for monster in monster_list:
@@ -94,10 +95,10 @@ def handle_events():
     main_character.handle = handle
     for event in handle:
         if event.type == SDL_QUIT:
-            close_canvas()
+            game_framework.quit()
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
-                close_canvas()
+                game_framework.quit()
     main_character.key_down()
 
 def pause(): pass

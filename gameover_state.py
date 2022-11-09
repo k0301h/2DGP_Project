@@ -1,8 +1,9 @@
 from pico2d import *
 import play_state
-
+from monsterclass import monster_place
 import game_framework
-from map_floor import WIDTH, HEIGHT
+from map_floor import WIDTH, HEIGHT, ROUND
+
 
 image0 = None
 image1 = None
@@ -27,6 +28,14 @@ def exit():
     del image1
     del image2
 
+    play_state.main_character.Place()
+    # monster
+    play_state.count = 0
+    if ROUND >= 1:
+        for play_state.monster in play_state.monster_list:
+            play_state.monster.Place(monster_place[play_state.count][0], monster_place[play_state.count][1])
+            play_state.count += 1
+
 
 def update():
     # play_state.main_character.camera_move_x = clamp(200, play_state.main_character.X - play_state.main_character.camera_move_x, 300 )
@@ -46,7 +55,8 @@ def draw():
     pico2d.clear_canvas()
     image0.clip_draw(0, 0, 512, 512, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT * 2)
     image1.clip_draw(0, 0, 2048, 1024, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
-    play_state.main_character.draw()
+    # play_state.main_character.draw()
+    play_state.draw_world()
     image2.clip_draw(0, 0, 2048, 1024, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
     pico2d.update_canvas()
 
