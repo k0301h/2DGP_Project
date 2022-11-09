@@ -62,7 +62,7 @@ class CHARACTER():
             for index_y in range(0, map_size):
                 if map_floor_array[index_y][index_x] == 1:
                     self.X = index_x * 60
-                    self.Y = HEIGHT - index_y * 60 - 30
+                    self.Y = HEIGHT - index_y * 60 - 59
                     self.enter_walking = True
 
     def Conflict_checking(self, mode, move): # mode : 충돌체크 유형 , move : 다음에 움직일 크기
@@ -71,8 +71,8 @@ class CHARACTER():
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
             for index_x in range(character_index_x - 1, character_index_x + 2):
                 for index_y in range(character_index_y - 2, character_index_y + 3):
-                    if 0 <= index_x < map_size and 0 <= index_y < map_size and\
-                            2 <= map_floor_array[index_y][index_x] <= 29 and\
+                    if 0 <= index_x < map_size and 0 <= index_y < map_size and \
+                            (2 <= map_floor_array[index_y][index_x] <= 29 or 40 <= map_floor_array[index_y][index_x] <= 41) and\
                             abs(self.X - index_x * 60) <= 55 and abs(self.Y + move - (HEIGHT - index_y * 60)) <= 58:
                         return False
         elif mode == 2:     # X충돌 체크
@@ -81,7 +81,7 @@ class CHARACTER():
             for index_y in range(character_index_y - 1, character_index_y + 2):
                 for index_x in range(character_index_x - 2, character_index_x + 3):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size and\
-                            2 <= map_floor_array[index_y][index_x] <= 29 and \
+                            (2 <= map_floor_array[index_y][index_x] <= 29 or 40 <= map_floor_array[index_y][index_x] <= 41) and \
                             abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55:
                         return False
         elif mode == 3:     # 사다리 체크
@@ -103,17 +103,18 @@ class CHARACTER():
             for index_x in range(character_index_x - 2, character_index_x + 2):
                 for index_y in range(character_index_y - 1, character_index_y + 2):
                     if self.DIRECTION == 0:
-                        if 0 <= index_x < map_size - 1 and 0 <= index_y < map_size - 1 and\
-                                2 <= map_floor_array[index_y][index_x] <= 29 and\
-                                not 2 <= map_floor_array[index_y - 1][index_x] <= 29 and\
-                                not 2 <= map_floor_array[index_y + 1][character_index_x] <= 29 and\
+                        if 0 <= index_x < map_size - 1 and 0 <= index_y < map_size - 1 and \
+                                (2 <= map_floor_array[index_y][index_x] <= 29 or 40 <= map_floor_array[index_y][
+                                    index_x] <= 41) and\
+                                not (2 <= map_floor_array[index_y - 1][index_x] <= 29 or 40 <= map_floor_array[index_y - 1][index_x] <= 41)  and\
+                                not (2 <= map_floor_array[index_y + 1][character_index_x] <= 29 or 40 <= map_floor_array[index_y + 1][character_index_x] <= 41) and\
                                 0 < index_x * 60 - self.X <= 60 and HEIGHT - index_y * 60 + 15 <= self.Y + move <= HEIGHT - index_y * 60 + 25:
                             return False
                     elif self.DIRECTION == 1:
                         if 0 <= index_x < map_size - 1 and 0 <= index_y < map_size - 1 and \
-                                2 <= map_floor_array[index_y][index_x] <= 29 and \
-                                not 2 <= map_floor_array[index_y - 1][index_x] <= 29 and \
-                                not 2 <= map_floor_array[index_y + 1][character_index_x] <= 29 and \
+                                (2 <= map_floor_array[index_y][index_x] <= 29 or 40 <= map_floor_array[index_y][index_x] <= 41) and \
+                                not (2 <= map_floor_array[index_y - 1][index_x] <= 29 or 40 <= map_floor_array[index_y - 1][index_x] <= 41) and \
+                                not (2 <= map_floor_array[index_y + 1][character_index_x] <= 29 or 40 <= map_floor_array[index_y + 1][character_index_x] <= 41)and \
                                 0 < self.X - index_x * 60 <= 60 and HEIGHT - index_y * 60 + 15 <= self.Y + move <= HEIGHT - index_y * 60 + 25:
                             return False
 
@@ -433,8 +434,8 @@ class CHARACTER():
             self.image.clip_composite_draw(int(self.MotionIndex) % 16 * 128,
                                   1918 - 128 * (int(self.MotionIndex) // 16),
                                   128, 128, 0, 'h', self.X - self.camera_move_x,
-                                  self.Y - self.camera_move_y,
-                                  60, 60)
+                                           self.Y - self.camera_move_y - self.scale / 2,
+                                           60 - self.scale, 60 - self.scale)
 
     def draw_UI(self, UI, UI_count):
         UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 30, 40, 40)                 # 생명

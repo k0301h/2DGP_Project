@@ -19,7 +19,7 @@ def end_timer():
     end = time.time()
 
 # 느낌만 구현 나중에 맵 구체적으로 계획후 배열 제작
-def draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, character):
+def draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, trap_I, character):
     BG_stage_I.draw(320, 320)
     BG_stage_I.draw(320, 960)
     BG_stage_I.draw(960, 320)
@@ -55,6 +55,12 @@ def draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, character):
                     index_y * 60 + 120 <= character.Y <= index_y * 60 + 175:
                     FLOOR_stage_I.clip_draw(128 * (map_floor_array[index_y][index_x] - 31), 1410 - 1282
                                             , 128, 128, index_x * 60 - character.camera_move_x,
+                                            HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
+            elif 40 == map_floor_array[index_y][index_x]:
+                trap_I.clip_composite_draw(0, 1600 - 160, 160, 160, 0, '', index_x * 60 - character.camera_move_x,
+                                            HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
+            elif 41 == map_floor_array[index_y][index_x]:
+                trap_I.clip_composite_draw(0, 1600 - 160, 160, 160, 0, 'h', index_x * 60 - character.camera_move_x,
                                             HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
             else:
                 FLOOR_stage_I.clip_draw(128 * ((map_floor_array[index_y][index_x] - 2) % 4),

@@ -102,8 +102,8 @@ class Snake():
                     self.X += 3
                 elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
                     self.X -= 3
-        # if self.HP <= 0:
-        #     del self
+        if self.HP <= 0:
+            del self
         self.gravity()
 
     def draw_monster(self, main_character):

@@ -9,6 +9,7 @@ main_character = None
 BG_stage_I = None
 Deco_tutorial_I = None
 FLOOR_stage_I = None
+trap_I = None
 UI = None
 UI_count = None
 
@@ -16,7 +17,7 @@ timer = 0
 
 def enter():
     print("enter play_state")
-    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I
+    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I, trap_I
 
     # character
     main_character = CHARACTER()
@@ -31,18 +32,21 @@ def enter():
     BG_stage_I = load_image('./Textures/bg_cave.png')
     FLOOR_stage_I = load_image('./Textures/floor_cave.png')
     Deco_tutorial_I = load_image('./Textures/deco_tutorial.png')
+    trap_I = load_image('./Textures/journal_entry_traps.png')
     #UI
     UI = load_image('./Textures/hud.png')
     UI_count = load_image('./Textures/number.png')
 
 def exit():
     print('exit play_state')
-    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count
+    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, trap_I, Deco_tutorial_I
 
     del main_character
 
+    del Deco_tutorial_I
     del BG_stage_I
     del FLOOR_stage_I
+    del trap_I
 
     del UI
     del UI_count
@@ -52,7 +56,11 @@ def update():
     # print('update play_state')
     if ROUND >= 1:
         for monster in monster_list:
-            monster.Motion(main_character)
+            if monster.HP <= 0:
+                monster_list.remove(monster)
+                del monster
+            else:
+                monster.Motion(main_character)
     main_character.Motion(monster_list)
 
     if main_character.HP <= 0:
@@ -63,8 +71,8 @@ def update():
         main_character.HP = 5
         game_framework.change_state(gameover_state)
 
-def drawworld():
-    draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, main_character)  # depth == 2
+def draw_world():
+    draw_map_floor(BG_stage_I, FLOOR_stage_I, Deco_tutorial_I, trap_I, main_character)  # depth == 2
     main_character.draw()
     if ROUND >= 1:
         for monster in monster_list:
@@ -77,7 +85,7 @@ def drawworld():
 def draw():
     # print('draw play_state')
     pico2d.clear_canvas()
-    drawworld()
+    draw_world()
     pico2d.update_canvas()
 
 def handle_events():
