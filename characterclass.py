@@ -26,6 +26,7 @@ class CHARACTER():
     Down_Distance = 0
 
     timer = 0
+    scale = 40
 
     camera_move_x = 0
     camera_move_y = 0
@@ -42,6 +43,7 @@ class CHARACTER():
     Attack_key_state = False
     Stun_state = False
     Hanging_state = False
+    enter_walking = False
 
     image = None
     grid_image = None
@@ -61,6 +63,7 @@ class CHARACTER():
                 if map_floor_array[index_y][index_x] == 1:
                     self.X = index_x * 60
                     self.Y = HEIGHT - index_y * 60 - 30
+                    self.enter_walking = True
 
     def Conflict_checking(self, mode, move): # mode : 충돌체크 유형 , move : 다음에 움직일 크기
         if mode == 1:       # Y충돌 체크
@@ -230,7 +233,15 @@ class CHARACTER():
             self.Stun_state = False
 
     def Motion(self, monster):
-        if self.Stun_state:
+        if self.enter_walking:
+            self.timer+= 1
+            self.scale -= 0.5
+            self.scale = clamp(0, self.scale, 60)
+            self.MotionIndex = (self.MotionIndex + 0.1) % 16 % 6 + 16 * 5 + 6
+            if self.timer >= 100:
+                self.timer = 0
+                self.enter_walking = False
+        elif self.Stun_state:
             if self.timer == 0: # 가시 장애물에 안걸렸을 때
                 self.Stun()
             else:
@@ -410,8 +421,9 @@ class CHARACTER():
             self.image.clip_draw(int(self.MotionIndex) % 16 * 128,
                                   1918 - 128 * (int(self.MotionIndex) // 16),
                                   128, 128, self.X - self.camera_move_x,
-                                  self.Y - self.camera_move_y,
-                                  60, 60)
+                                  self.Y - self.camera_move_y - self.scale / 2,
+                                  60 - self.scale, 60 - self.scale)
+            print(self.scale)
         elif self.DIRECTION == 1:
             if self.Attack_state:
                 self.image.clip_composite_draw(int(self.whip.MotionIndex) % 16 * 128,

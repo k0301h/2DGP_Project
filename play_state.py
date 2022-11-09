@@ -71,7 +71,8 @@ def drawworld():
             if monster.HP > 0:
                 monster.draw_monster(main_character)
     main_character.draw_UI(UI, UI_count)
-    delay(0.015)
+    if mode == 1:
+        delay(0.015)
 
 def draw():
     # print('draw play_state')

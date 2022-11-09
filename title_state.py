@@ -2,7 +2,7 @@ from pico2d import *
 import play_state
 
 import game_framework
-from map_floor import WIDTH, HEIGHT
+from map_floor import WIDTH, HEIGHT, mode
 
 main_image0 = None
 main_image1 = None
@@ -108,7 +108,10 @@ def update():
         if end_move_y >= HEIGHT * 3 / 5:
             running = True
     elif running:
-        select_move -= 1
+        if mode == 1:
+            select_move -= 1
+        else:
+            select_move -= 10
         select_move = clamp(0, select_move, 100)
 
 def draw():
