@@ -24,7 +24,7 @@ GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
-JUMP_SPEED_KMPH = 80.0
+JUMP_SPEED_KMPH = 90.0
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -73,6 +73,7 @@ class CHARACTER():
     Attack_key_state = False
     Stun_state = False
     Hanging_state = False
+    Hanging_jump = False
     enter_walking = False
 
     image = None
@@ -165,11 +166,15 @@ class CHARACTER():
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
         grav = clamp(0, self.DownSpeed, JUMP_SPEED_PPS * game_framework.frame_time)
-        self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time - grav
+        if self.Hanging_jump:
+            self.JumpSpeed = (JUMP_SPEED_PPS * game_framework.frame_time - grav) * 2 / 3
+        else:
+            self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time - grav
         if self.JumpSpeed < self.DownSpeed:
             self.Jump_Key_State = False
             self.DownSpeed = 0
             self.Down_Distance = 0
+            self.Hanging_jump = False
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
         elif self.JumpSpeed > 0 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
             self.Gravity = GRAVITY_ASPEED_PPS * game_framework.frame_time
@@ -184,6 +189,7 @@ class CHARACTER():
             self.Jump_Key_State = False
             self.DownSpeed = 0
             self.Down_Distance = 0
+            self.Hanging_jump = False
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
 
     def Attack(self, monster):
@@ -233,9 +239,9 @@ class CHARACTER():
                 #     self.MotionIndex = (self.MotionIndex + 0.1) % 3 % 16 + 16 * 3 + 8
                 # elif self.MotionIndex > 58:
                 self.Hanging_state = True
+                self.Hanging_jump = True
                 self.Can_Jump = True
                 self.MotionIndex = 59
-                self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time // 2
                 self.DownSpeed = 0
                 self.Down_Distance = 0
             elif not self.Conflict_checking(6, -self.DownSpeed):
@@ -269,7 +275,6 @@ class CHARACTER():
             self.DownSpeed = 0
             self.Down_Distance = 0
             self.Gravity_state = False
-            self.Hanging_state = False
 
     def Stun(self):
         if self.stun.MotionIndex <= 16 * 13 + 10.9:
@@ -441,9 +446,6 @@ class CHARACTER():
                     self.Action = 0
                 elif event.key == SDLK_LALT and (self.Jump_Key_State or self.Down_Jump_state):
                     self.Jump_Key_State = False
-
-                    self.DownSpeed = 0
-                    self.Down_Distance = 0
                     self.Down_Jump_state = False
                     self.JumpSpeed = 15
                     self.Climb_up_key_state = False
