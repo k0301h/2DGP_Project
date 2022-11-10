@@ -261,7 +261,6 @@ class CHARACTER():
                 if self.Y - self.camera_move_y <= 200:
                     self.camera_move_y -= self.DownSpeed
                 if not self.Attack_state and not self.Stun_state and self.DownSpeed > 1:
-                    print(self.DownSpeed)
                     self.MotionIndex = (self.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16 % 8 + 16 * 9
                 self.Gravity_state = True
         else:
