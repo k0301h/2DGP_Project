@@ -19,12 +19,12 @@ WALK_SPEED_MPM = (WALK_SPEED_KMPH * 1000.0 / 60.0)
 WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
 WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
-GRAVITY_ASPEED_KMPH = 4.0
+GRAVITY_ASPEED_KMPH = 2.5
 GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
-JUMP_SPEED_KMPH = 85.0
+JUMP_SPEED_KMPH = 80.0
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -164,11 +164,16 @@ class CHARACTER():
         return False
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
-        self.JumpSpeed = (JUMP_SPEED_PPS - self.Gravity * 25) * game_framework.frame_time
-        if self.JumpSpeed > 0 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
+        grav = clamp(0, self.DownSpeed, JUMP_SPEED_PPS * game_framework.frame_time)
+        self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time - grav
+        if self.JumpSpeed < self.DownSpeed:
+            self.Jump_Key_State = False
+            self.DownSpeed = 0
+            self.Down_Distance = 0
+            self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
+        elif self.JumpSpeed > 0 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
             self.Gravity = GRAVITY_ASPEED_PPS * game_framework.frame_time
             if not self.Attack_state:
-                print(FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)
                 self.MotionIndex = (self.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16 % 8 + 16 * 9
             if self.JumpSpeed > 0:
                 if self.Conflict_checking(1, self.JumpSpeed):
@@ -177,6 +182,8 @@ class CHARACTER():
                     self.camera_move_y += self.JumpSpeed
         else:
             self.Jump_Key_State = False
+            self.DownSpeed = 0
+            self.Down_Distance = 0
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
 
     def Attack(self, monster):
@@ -221,7 +228,6 @@ class CHARACTER():
 
     def gravity(self):
         if self.Conflict_checking(1, -self.DownSpeed) and not self.Climb_state:
-            self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
             if self.Gravity_state and not self.Conflict_checking(5, -self.DownSpeed) and not self.Jump_Key_State:
                 # if self.MotionIndex <= 58:
                 #     self.MotionIndex = (self.MotionIndex + 0.1) % 3 % 16 + 16 * 3 + 8
@@ -229,7 +235,7 @@ class CHARACTER():
                 self.Hanging_state = True
                 self.Can_Jump = True
                 self.MotionIndex = 59
-                self.JumpSpeed = (JUMP_SPEED_PPS / 2) * game_framework.frame_time
+                self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time // 2
                 self.DownSpeed = 0
                 self.Down_Distance = 0
             elif not self.Conflict_checking(6, -self.DownSpeed):
@@ -245,8 +251,7 @@ class CHARACTER():
                     self.DownSpeed += self.Gravity
                 if self.Conflict_checking(1, -self.DownSpeed):
                     self.Y -= self.DownSpeed
-                if not self.Jump_Key_State:
-                    self.Down_Distance += self.DownSpeed
+                self.Down_Distance += self.DownSpeed
                 if self.Y - self.camera_move_y <= 200:
                     self.camera_move_y -= self.DownSpeed
                 if not self.Attack_state and not self.Stun_state:
@@ -436,6 +441,9 @@ class CHARACTER():
                     self.Action = 0
                 elif event.key == SDLK_LALT and (self.Jump_Key_State or self.Down_Jump_state):
                     self.Jump_Key_State = False
+
+                    self.DownSpeed = 0
+                    self.Down_Distance = 0
                     self.Down_Jump_state = False
                     self.JumpSpeed = 15
                     self.Climb_up_key_state = False
