@@ -260,8 +260,8 @@ class CHARACTER():
                 self.Down_Distance += self.DownSpeed
                 if self.Y - self.camera_move_y <= 200:
                     self.camera_move_y -= self.DownSpeed
-                if not self.Attack_state and not self.Stun_state:
-                    # self.MotionIndex = (self.MotionIndex) % 16 % 4 % 6 + 16 * 11 + 4
+                if not self.Attack_state and not self.Stun_state and self.DownSpeed > 1:
+                    print(self.DownSpeed)
                     self.MotionIndex = (self.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16 % 8 + 16 * 9
                 self.Gravity_state = True
         else:
@@ -278,13 +278,13 @@ class CHARACTER():
 
     def Stun(self):
         if self.stun.MotionIndex <= 16 * 13 + 10.9:
-            self.stun.MotionIndex = (self.stun.MotionIndex + 0.2) % 11 + 16 * 13
+            self.stun.MotionIndex = (self.stun.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11 + 16 * 13
         else:
             self.Stun_state = False
 
     def Motion(self, monster):
         if self.enter_walking:
-            self.timer+= 1
+            self.timer += 1
             self.scale -= 0.5
             self.scale = clamp(0, self.scale, 60)
             self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 16 % 6 + 16 * 5 + 6
@@ -306,11 +306,12 @@ class CHARACTER():
                 self.Down_Jump()
 
             if self.Climb_state:
-                if self.Climb_up_key_state and self.Conflict_checking(3, 2):
-                    self.Y += 2
+                self.walk_move_speed = WALK_SPEED_PPS * game_framework.frame_time
+                if self.Climb_up_key_state and self.Conflict_checking(3, self.walk_move_speed):
+                    self.Y += self.walk_move_speed
                     self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 6 + 16 * 6
-                elif self.Climb_down_key_state and self.Conflict_checking(3, -2):
-                    self.Y -= 2
+                elif self.Climb_down_key_state and self.Conflict_checking(3, -self.walk_move_speed):
+                    self.Y -= self.walk_move_speed
                     self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 6 + 16 * 6
             else:
                 if self.Action == 0:
@@ -339,11 +340,11 @@ class CHARACTER():
                                 self.camera_move_x += self.run_move_speed
 
                         if not self.Jump_Key_State and not self.Attack_state:
-                            self.MotionIndex = (self.MotionIndex + 0.3) % 8
+                            self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 8
 
                 elif self.Action == 2:
                     if self.MotionIndex < 18 and not self.Jump_Key_State and not self.Attack_state:
-                        self.MotionIndex = (self.MotionIndex + 0.25) % 16 % 3 + 16
+                        self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) * 2) % 16 % 3 + 16
 
                 elif self.Action == 3:
                     self.run_move_speed = RUN_SPEED_PPS * game_framework.frame_time
@@ -357,7 +358,7 @@ class CHARACTER():
                                 self.camera_move_x -= self.walk_move_speed
 
                         if not self.Jump_Key_State and not self.Attack_state:
-                            self.MotionIndex = (self.MotionIndex + 0.1) % 8
+                            self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 8
                     else:
                         if self.Conflict_checking(2, -self.run_move_speed):
                             if self.X - self.camera_move_x >= 200:
@@ -366,17 +367,17 @@ class CHARACTER():
                                 self.X -= self.run_move_speed
                                 self.camera_move_x -= self.run_move_speed
                         if not self.Jump_Key_State and not self.Attack_state:
-                            self.MotionIndex = (self.MotionIndex + 0.3) % 8
+                            self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 8
                 elif self.Action == 5:
-                    self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 5
+                    self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) * 2) % 16 % 6 + 16 * 5
                     if self.MotionIndex % 16 == 5:
                         pass
 
                 if self.Attack_key_state:
                     for i in range(0, len(monster)):
                         self.Attack(monster[i])
-                    self.whip.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 12 + 10
-                    self.MotionIndex = (self.MotionIndex + 0.3) % 16 % 6 + 16 * 4
+                    self.whip.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) * 2) % 16 % 6 + 16 * 12 + 10
+                    self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) * 2) % 16 % 6 + 16 * 4
 
         self.gravity()
 
