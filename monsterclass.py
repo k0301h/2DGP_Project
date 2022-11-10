@@ -108,21 +108,22 @@ class Snake():
             self.Gravity_state = False
 
     def Motion(self, character):
+        self.run_move_speed = RUN_SPEED_PPS * game_framework.frame_time
         if self.Action == 0:
-            self.MotionIndex = (self.MotionIndex + 0.1) % 4
+            self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 4
             self.Conflict_checking(3, character)
-            if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
-                self.X += 3
-            elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
-                self.X -= 3
+            if self.Conflict_checking(2, self.run_move_speed / 2) and self.DIRECTION == 0:
+                self.X += self.run_move_speed / 2
+            elif self.Conflict_checking(2, -self.run_move_speed / 2) and self.DIRECTION == 1:
+                self.X -= self.run_move_speed / 2
         elif self.Action == 1:
             self.attack(character)
-            self.MotionIndex = (self.MotionIndex + 0.15) % 12
+            self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 12
             if not (self.X - 10 <= character.X <= self.X + 10):
-                if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
-                    self.X += 3
-                elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
-                    self.X -= 3
+                if self.Conflict_checking(2, self.run_move_speed / 2) and self.DIRECTION == 0:
+                    self.X += self.run_move_speed / 2
+                elif self.Conflict_checking(2, -self.run_move_speed / 2) and self.DIRECTION == 1:
+                    self.X -= self.run_move_speed / 2
         if self.HP <= 0:
             del self
         self.gravity()
@@ -209,33 +210,34 @@ class Bat():
 
     def Motion(self, character):
         if self.Action == 0:
-            self.MotionIndex = (self.MotionIndex + 0.1) % 4
+            self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 4
             self.Conflict_checking(3, character)
         elif self.Action == 1:
+            self.run_move_speed = RUN_SPEED_PPS * game_framework.frame_time
             if self.Y >= character.Y:
                 self.DIRECTION = 1
             elif self.Y < character.Y:
                 self.DIRECTION = 0
-            if self.Conflict_checking(1, 3) and self.DIRECTION == 0:
-                self.Y += 3
-            elif self.Conflict_checking(1, -3) and self.DIRECTION == 1:
-                self.Y -= 3
+            if self.Conflict_checking(1, self.run_move_speed / 2) and self.DIRECTION == 0:
+                self.Y += self.run_move_speed / 2
+            elif self.Conflict_checking(1, -self.run_move_speed / 2) and self.DIRECTION == 1:
+                self.Y -= self.run_move_speed / 2
             if self.X >= character.X:
                 self.DIRECTION = 1
             elif self.X < character.X:
                 self.DIRECTION = 0
             if not (self.X - 10 <= character.X <= self.X + 10):
-                if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
-                    self.X += 3
-                elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
-                    self.X -= 3
+                if self.Conflict_checking(2, self.run_move_speed / 2) and self.DIRECTION == 0:
+                    self.X += self.run_move_speed / 2
+                elif self.Conflict_checking(2, -self.run_move_speed / 2) and self.DIRECTION == 1:
+                    self.X -= self.run_move_speed / 2
             self.attack(character)
             if self.Motion_dir == 0:
-                self.MotionIndex = self.MotionIndex + 0.3
+                self.MotionIndex = self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) * 3 / 2
                 if self.MotionIndex >= 11.6:
                     self.Motion_dir = 1
             elif self.Motion_dir == 1:
-                self.MotionIndex = self.MotionIndex - 0.3
+                self.MotionIndex = self.MotionIndex - (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) * 3 / 2
                 if self.MotionIndex <= 6.4:
                     self.Motion_dir = 0
 
@@ -352,12 +354,13 @@ class Horned_Lizard():
             self.Jump_state = False
 
     def Motion(self, character):
+        self.run_move_speed = RUN_SPEED_PPS * game_framework.frame_time
         if self.Action == 0:
-            self.MotionIndex = (self.MotionIndex + 0.1) % 7
-            if self.Conflict_checking(2, 3) and self.DIRECTION == 0:
-                self.X += 3
-            elif self.Conflict_checking(2, -3) and self.DIRECTION == 1:
-                self.X -= 3
+            self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 7
+            if self.Conflict_checking(2, self.run_move_speed / 2) and self.DIRECTION == 0:
+                self.X += self.run_move_speed / 2
+            elif self.Conflict_checking(2, -self.run_move_speed / 2) and self.DIRECTION == 1:
+                self.X -= self.run_move_speed / 2
             if not self.Conflict_checking(3, character):
                 self.Action = 1
                 self.MotionIndex = 8
@@ -372,14 +375,14 @@ class Horned_Lizard():
                 self.timer = 0
             self.attack(character)
             self.Jump()
-            self.MotionIndex = (self.MotionIndex + 0.2)
+            self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time))
             if self.MotionIndex >= 13:
                 self.MotionIndex = 10
             if not (self.X - 10 <= character.X <= self.X + 10):
-                if self.Conflict_checking(2, 4) and self.DIRECTION == 0:
-                    self.X += 4
-                elif self.Conflict_checking(2, -4) and self.DIRECTION == 1:
-                    self.X -= 4
+                if self.Conflict_checking(2, self.run_move_speed) and self.DIRECTION == 0:
+                    self.X += self.run_move_speed
+                elif self.Conflict_checking(2, -self.run_move_speed) and self.DIRECTION == 1:
+                    self.X -= self.run_move_speed
 
         self.gravity()
 
