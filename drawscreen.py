@@ -28,6 +28,7 @@ def draw_background(BG_stage_I):
 
 # 느낌만 구현 나중에 맵 구체적으로 계획후 배열 제작
 def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0, range_r = WIDTH, range_b = 0, range_t = HEIGHT):
+    count = 0
     if ROUND == 0:
         Deco_tutorial_I.clip_draw(0, 1024 - 255, 510, 255, 13 * 60 - character.camera_move_x,
                                   HEIGHT - 3 * 60 - character.camera_move_y, 300, 150)
@@ -60,8 +61,10 @@ def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0,
                                                 HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
                 elif 40 == map_floor_array[index_y][index_x]:
                     trap[count].image.clip_composite_draw(0, 1600 - 160, 160, 160, 0, '',index_x * 60 - character.camera_move_x, HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
+                    count += 1
                 elif 41 == map_floor_array[index_y][index_x]:
                     trap[count].image.clip_composite_draw(0, 1600 - 160, 160, 160, 0, 'h', index_x * 60 - character.camera_move_x, HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
+                    count += 1
                 else:
                     FLOOR_stage_I.clip_draw(128 * ((map_floor_array[index_y][index_x] - 2) % 4),
                                             1410 - 128 * ((map_floor_array[index_y][index_x] - 2) // 4), 128, 128,

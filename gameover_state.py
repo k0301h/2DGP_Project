@@ -15,7 +15,7 @@ timer = 0
 def enter():
     print('enter title_state')
     global image0, image1, image2
-    image0 = load_image('./Textures/base_skynight.png')
+    image0 = load_image('./Textures/base_skynight2.png')
     image1 = load_image('./Textures/journal_back.png')
     image2 = load_image('./Textures/journal_top_gameover.png')
 

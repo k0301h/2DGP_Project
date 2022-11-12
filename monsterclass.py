@@ -381,10 +381,10 @@ class Horned_Lizard():
             if self.MotionIndex >= 13:
                 self.MotionIndex = 10
             if not (self.X - 10 <= character.X <= self.X + 10):
-                if self.Conflict_checking(2, self.run_move_speed) and self.DIRECTION == 0:
-                    self.X += self.run_move_speed
-                elif self.Conflict_checking(2, -self.run_move_speed) and self.DIRECTION == 1:
-                    self.X -= self.run_move_speed
+                if self.Conflict_checking(2, self.run_move_speed * 2 / 3) and self.DIRECTION == 0:
+                    self.X += self.run_move_speed * 2 / 3
+                elif self.Conflict_checking(2, -self.run_move_speed * 2 / 3) and self.DIRECTION == 1:
+                    self.X -= self.run_move_speed * 2 / 3
 
         self.gravity()
 
