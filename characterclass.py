@@ -1,6 +1,7 @@
 from map_floor import *
 from pico2d import *
 import game_framework
+import time
 
 class SUB():
     MotionIndex = 0
@@ -25,9 +26,9 @@ GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
 if mode == 1:
-    JUMP_SPEED_KMPH = 90.0
+    JUMP_SPEED_KMPH = 100.0
 else:
-    JUMP_SPEED_KMPH = 110.0
+    JUMP_SPEED_KMPH = 130.0
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -78,6 +79,9 @@ class CHARACTER():
     Hanging_state = False
     Hanging_jump = False
     enter_walking = False
+
+    jump_finish = False
+    jump_landing = True
 
     image = None
     grid_image = None
@@ -173,12 +177,12 @@ class CHARACTER():
             self.JumpSpeed = (JUMP_SPEED_PPS * game_framework.frame_time - grav) * 2 / 3
         else:
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time - grav
+        print(JUMP_SPEED_PPS, game_framework.frame_time, self.JumpSpeed, self.Hanging_jump)
         if self.JumpSpeed < self.DownSpeed:
+            self.jump_finish = True
             self.Jump_Key_State = False
             self.DownSpeed = 0
             self.Down_Distance = 0
-            self.Hanging_jump = False
-            self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
         elif self.JumpSpeed > 0 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
             self.Gravity = GRAVITY_ASPEED_PPS * game_framework.frame_time
             if not self.Attack_state:
@@ -190,9 +194,9 @@ class CHARACTER():
                     self.camera_move_y += self.JumpSpeed
         else:
             self.Jump_Key_State = False
+            self.Can_Jump = True
             self.DownSpeed = 0
             self.Down_Distance = 0
-            self.Hanging_jump = False
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
 
     def Attack(self, monster):
@@ -244,6 +248,7 @@ class CHARACTER():
                 self.Hanging_state = True
                 self.Hanging_jump = True
                 self.Can_Jump = True
+                self.jump_landing = True
                 self.MotionIndex = 59
                 self.DownSpeed = 0
                 self.Down_Distance = 0
@@ -269,20 +274,24 @@ class CHARACTER():
         else:
             if self.Down_Distance >= 600:
                 self.HP -= 1
+                self.timer = time.time()
                 self.MotionIndex = 9
                 self.stun.MotionIndex = 16 * 13
                 self.Stun_state = True
-            self.Can_Jump = True
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
             self.DownSpeed = 0
             self.Down_Distance = 0
             self.Gravity_state = False
+            self.Hanging_jump = False
+            if self.jump_finish:
+                self.Can_Jump = True
+            self.jump_landing = True
 
     def Stun(self):
-        if self.stun.MotionIndex <= 16 * 13 + 10.9:
-            self.stun.MotionIndex = (self.stun.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11 + 16 * 13
-        else:
+        self.stun.MotionIndex = (self.stun.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11 + 16 * 13
+        if time.time() - self.timer >= 3:
             self.Stun_state = False
+            self.timer = 0
 
     def Motion(self, monster):
         if self.enter_walking:
@@ -294,10 +303,11 @@ class CHARACTER():
                 self.timer = 0
                 self.enter_walking = False
         elif self.Stun_state:
-            if self.timer == 0: # 가시 장애물에 안걸렸을 때
+            if self.HP > 0: # 가시 장애물에 안걸렸을 때
                 self.Stun()
             else:
                 self.MotionIndex = 9
+                pass
         else:
             if self.HP <= 0:
                 self.Stun_state = True
@@ -378,8 +388,8 @@ class CHARACTER():
                 if self.Attack_key_state:
                     for i in range(0, len(monster)):
                         self.Attack(monster[i])
-                    self.whip.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) * 2) % 16 % 6 + 16 * 12 + 10
-                    self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) * 2) % 16 % 6 + 16 * 4
+                    self.whip.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 12 + 10
+                    self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 4
 
         self.gravity()
 
@@ -393,7 +403,7 @@ class CHARACTER():
                         self.Climb_state = True
                         self.Can_Jump = True
                         self.JumpSpeed = 3
-                        self.Jump_Key_State = False
+                        # self.Jump_Key_State = False
                 elif event.key == SDLK_RIGHT:
                     if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State) and not self.Stun_state:
                         self.Action = 1
@@ -413,9 +423,11 @@ class CHARACTER():
                 elif event.key == SDLK_LALT:
                     if self.Action == 2 and not self.Jump_Key_State and self.Can_Jump:
                         self. Down_Jump_state = True
-                    elif not self.Jump_Key_State and self.Can_Jump:
-                        self.Jump_Key_State = True
+                    elif not self.Jump_Key_State and self.Can_Jump and self.jump_landing:
+                        if not self.Jump_Key_State:
+                            self.Jump_Key_State = True
                         self.Can_Jump = False
+                        self.jump_landing = False
                         self.Hanging_state = False
                         if not self.Climb_down_key_state and not self.Climb_up_key_state:
                             self.Climb_state = False
@@ -447,10 +459,9 @@ class CHARACTER():
                     self.Climb_down_key_state = False
                 elif event.key == SDLK_LEFT and self.Action == 3 and (not self.Climb_state or self.Jump_Key_State):
                     self.Action = 0
-                elif event.key == SDLK_LALT and (self.Jump_Key_State or self.Down_Jump_state):
+                elif event.key == SDLK_LALT:
                     self.Jump_Key_State = False
                     self.Down_Jump_state = False
-                    self.JumpSpeed = 15
                     self.Climb_up_key_state = False
                     self.Climb_down_key_state = False
                 elif event.key == SDLK_LSHIFT:
@@ -464,7 +475,7 @@ class CHARACTER():
                                   128, 128, self.X - self.camera_move_x,
                                   self.Y - self.camera_move_y,
                                   50, 60)
-        if self.Stun_state and self.MotionIndex == 9 and self.timer == 0:
+        if self.Stun_state and self.MotionIndex == 9 and self.HP > 0:
             self.image.clip_draw(int(self.stun.MotionIndex) % 16 * 128,
                               1918 - 128 * (int(self.stun.MotionIndex) // 16),
                               128, 128, self.X - self.camera_move_x,

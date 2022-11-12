@@ -121,7 +121,7 @@ def run(start_state):
         frame_rate = 1.0 / frame_time
         current_time += frame_time
         # print(f'Frame Time : {frame_time}, Frame_rate {frame_rate}')
-        # pico2d.delay(0.01)
+        pico2d.delay(0.01)
 
     # repeatedly delete the top of the stack
     while (len(stack) > 0):
