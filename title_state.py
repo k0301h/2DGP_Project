@@ -35,6 +35,13 @@ end_move_y = 0
 rotation_finish = False
 select_move = HEIGHT / 10
 
+PIXEL_PER_METER = (10 / 0.5)
+
+ROTATION_SPEED_KMPH = 0.5
+ROTATION_SPEED_MPM = (ROTATION_SPEED_KMPH * 1000.0 / 60.0)
+ROTATION_SPEED_MPS = (ROTATION_SPEED_MPM / 60.0)
+ROTATION_SPEED_PPS = (ROTATION_SPEED_MPS * PIXEL_PER_METER)
+
 def enter():
     print('enter title_state')
     global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
@@ -87,7 +94,7 @@ def update():
     global running, radian, move, end_move, rotation_finish, end_move_y, select_move
 
     if radian <= 6.28 and game_start:
-        radian += 0.06
+        radian += ROTATION_SPEED_PPS * game_framework.frame_time
         delay(0.02)
         move = -move
         if radian >= 6.28:
@@ -109,7 +116,7 @@ def update():
             running = True
     elif running:
         if mode == 1:
-            select_move -= 1
+            select_move -= 5
         else:
             select_move -= 10
         select_move = clamp(0, select_move, 100)

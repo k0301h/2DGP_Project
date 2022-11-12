@@ -194,7 +194,7 @@ class CHARACTER():
                     self.camera_move_y += self.JumpSpeed
         else:
             self.Jump_Key_State = False
-            self.Can_Jump = True
+            # self.Can_Jump = True
             self.DownSpeed = 0
             self.Down_Distance = 0
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
