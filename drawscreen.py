@@ -21,10 +21,20 @@ def end_timer():
 def draw_background(BG_stage_I):
     BG_stage_I.draw(320, 320)
     BG_stage_I.draw(320, 960)
+    BG_stage_I.draw(320, 1600)
     BG_stage_I.draw(960, 320)
     BG_stage_I.draw(960, 960)
-    BG_stage_I.draw(1600, 320)
-    BG_stage_I.draw(1600, 960)
+    BG_stage_I.draw(960, 1600)
+    if mode == 1:
+        BG_stage_I.draw(1600, 320)
+        BG_stage_I.draw(1600, 960)
+        BG_stage_I.draw(1600, 1600)
+        BG_stage_I.draw(2240, 320)
+        BG_stage_I.draw(2240, 960)
+        BG_stage_I.draw(2240, 1600)
+        BG_stage_I.draw(2880, 320)
+        BG_stage_I.draw(2880, 960)
+        BG_stage_I.draw(2880, 1600)
 
 # 느낌만 구현 나중에 맵 구체적으로 계획후 배열 제작
 def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0, range_r = WIDTH, range_b = 0, range_t = HEIGHT):

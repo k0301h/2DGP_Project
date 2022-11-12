@@ -1,8 +1,10 @@
 mode = 1
 
 if mode == 1:
-    WIDTH = 1920
-    HEIGHT = 1080
+    WIDTH = 2570
+    HEIGHT = 1460
+#     WIDTH = 1920
+#     HEIGHT = 1080
 elif mode == 2:
     WIDTH = 1280
     HEIGHT = 720

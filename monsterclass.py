@@ -95,7 +95,8 @@ class Snake():
         if self.MotionIndex < 11.9:
             if  math.sqrt((self.X - character.X) ** 2 + (self.Y - character.Y) ** 2) < 60:
                 # character.Stun_state = True
-                character.HP -= self.ATK
+                if character.mode:
+                    character.HP -= self.ATK
         else:
             self.Action = 0
 
@@ -208,7 +209,8 @@ class Bat():
     def attack(self, character):
         if  math.sqrt((self.X - character.X) ** 2 + (self.Y - character.Y) ** 2) < 60:
             # character.Stun_state = True
-            character.HP -= self.ATK
+            if character.mode:
+                character.HP -= self.ATK
 
     def Motion(self, character):
         if self.Action == 0:
@@ -271,7 +273,7 @@ class Horned_Lizard():
     Y = 400
     DIRECTION = 0
 
-    Gravity = 0.5
+    Gravity = 0.3
     JumpSpeed = 15
     DownSpeed = 0
     Image = None
@@ -330,7 +332,8 @@ class Horned_Lizard():
     def attack(self, character):
         if math.sqrt((self.X - character.X) ** 2 + (self.Y - character.Y) ** 2) < 60:
             # character.Stun_state = True
-            character.HP -= self.ATK
+            if character.mode:
+                character.HP -= self.ATK
         # if self.Conflict_checking(3, character):
         #     self.Action = 0
 

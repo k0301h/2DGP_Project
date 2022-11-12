@@ -49,6 +49,7 @@ class CHARACTER():
     RopeCount = 4
     Money = 0
 
+    mode = 0
     # hnadle = None
 
     Gravity = None
@@ -78,7 +79,7 @@ class CHARACTER():
     Stun_state = False
     Hanging_state = False
     Hanging_jump = False
-    enter_walking = False
+    enter_walking = True
 
     jump_finish = False
     jump_landing = True
@@ -273,7 +274,8 @@ class CHARACTER():
                 self.Gravity_state = True
         else:
             if self.Down_Distance >= 600:
-                self.HP -= 1
+                if self.mode:
+                    self.HP -= 1
                 self.timer = time.time()
                 self.MotionIndex = 9
                 self.stun.MotionIndex = 16 * 13
@@ -381,7 +383,9 @@ class CHARACTER():
                         if not self.Jump_Key_State and not self.Attack_state:
                             self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 8
                 elif self.Action == 5:
-                    self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) * 2) % 16 % 6 + 16 * 5
+                    self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 5
+                    self.scale += 0.5
+                    self.scale = clamp(0, self.scale, 60)
                     if self.MotionIndex % 16 == 5:
                         pass
 
@@ -435,6 +439,11 @@ class CHARACTER():
                     self.shift_on = True
                 elif event.key == SDLK_b:
                     ROUND = 1
+                elif event.key == SDLK_m:
+                    if self.mode:
+                        self.mode = 0
+                    else: 
+                        self.mode= 1
                     pass
                 elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State):
                     self.MotionIndex = 0
