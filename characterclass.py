@@ -105,6 +105,7 @@ class CHARACTER():
                     self.enter_walking = False
                     self.camera_move_x = 0
                     self.camera_move_y = 0
+                    self.scale = 0
 
     def Conflict_checking(self, mode, move): # mode : 충돌체크 유형 , move : 다음에 움직일 크기
         if mode == 1:       # Y충돌 체크

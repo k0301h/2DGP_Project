@@ -9,7 +9,8 @@ image1 = None
 image2 = None
 
 start = False
-timer = 0
+# timer = 0
+timer = time.time()
 
 running = True
 
@@ -28,7 +29,7 @@ def exit():
 
 def update():
     global timer, running
-    if time.time() - timer > 3.0 and start == True:
+    if time.time() - timer > 3.0: #  and start == True
         timer = 0
         running = False
         game_framework.change_state(title_state)
@@ -36,12 +37,12 @@ def update():
 
 def draw():
     pico2d.clear_canvas()
-    if start == True:
-        if time.time() - timer <= 1.5:
-            image1.clip_draw(0, 0, 1920, 1080, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
-        else:
-            image2.clip_draw(0, 0, 1920, 1080, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
-        pico2d.update_canvas()
+    # if start == True:
+    if time.time() - timer <= 1.5:
+        image1.clip_draw(0, 0, 1920, 1080, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
+    else:
+        image2.clip_draw(0, 0, 1920, 1080, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
+    pico2d.update_canvas()
 
 def handle_events():
     global start, timer
@@ -52,9 +53,9 @@ def handle_events():
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 close_canvas()
-            elif event.key == SDLK_SPACE:
-                start = True
-                timer = time.time()
+            # elif event.key == SDLK_SPACE:
+                # start = True
+                # timer = time.time()
 
 def pause(): pass
 
