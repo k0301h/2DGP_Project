@@ -20,9 +20,9 @@ def enter():
     image2 = load_image('./Textures/journal_top_gameover.png')
 
     play_state.main_character.camera_move_x += (play_state.main_character.X - play_state.main_character.camera_move_x - WIDTH // 4)
-    print(play_state.main_character.camera_move_y, (play_state.main_character.Y - play_state.main_character.camera_move_y - HEIGHT * 2 // 3))
+    # print(play_state.main_character.camera_move_y, (play_state.main_character.Y - play_state.main_character.camera_move_y - HEIGHT * 2 // 3))
     play_state.main_character.camera_move_y += (play_state.main_character.Y - play_state.main_character.camera_move_y - HEIGHT * 2 // 3)
-    print(play_state.main_character.camera_move_y)
+    # print(play_state.main_character.camera_move_y)
 
 def exit():
     print('exit title_state')

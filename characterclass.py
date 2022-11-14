@@ -28,7 +28,7 @@ GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 if mode == 1:
     JUMP_SPEED_KMPH = 100.0
 else:
-    JUMP_SPEED_KMPH = 130.0
+    JUMP_SPEED_KMPH = 60.0
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -80,8 +80,6 @@ class CHARACTER():
     Hanging_state = False
     Hanging_jump = False
     enter_walking = True
-
-    jump_finish = False
     jump_landing = True
 
     image = None
@@ -166,6 +164,16 @@ class CHARACTER():
             if 36 <= map_floor_array[character_index_y + 1][character_index_x] <= 38 or \
                 36 <= map_floor_array[character_index_y][character_index_x] <= 38:
                 return False
+        elif mode == 7:
+            character_index_x = int(self.X // 60)
+            character_index_y = int((HEIGHT - self.Y) // 60)
+
+            for index_x in range(character_index_x - 1, character_index_x + 2):
+                for index_y in range(character_index_y - 1, character_index_y + 2):
+                    if 2 <= map_floor_array[index_y][index_x] <= 29 and \
+                        index_x * 60 - 30 <= self.X <= index_x * 60 + 30 and\
+                        HEIGHT - (index_y * 60) + 58 <= self.Y <= HEIGHT - (index_y * 60) + 65:
+                        return False
         return True
 
     def attack_conflict_checking(self, monster):
@@ -181,7 +189,6 @@ class CHARACTER():
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time - grav
         print(JUMP_SPEED_PPS, game_framework.frame_time, self.JumpSpeed, self.Hanging_jump)
         if self.JumpSpeed < self.DownSpeed:
-            self.jump_finish = True
             self.Jump_Key_State = False
             self.DownSpeed = 0
             self.Down_Distance = 0
@@ -286,9 +293,10 @@ class CHARACTER():
             self.Down_Distance = 0
             self.Gravity_state = False
             self.Hanging_jump = False
-            if self.jump_finish:
-                self.Can_Jump = True
-            self.jump_landing = True
+            if not self.Conflict_checking(7,0):
+                self.jump_landing = True
+            self.Can_Jump = True
+            print(self.jump_landing, self.Can_Jump)
 
     def Stun(self):
         self.stun.MotionIndex = (self.stun.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11 + 16 * 13
@@ -408,6 +416,7 @@ class CHARACTER():
                         self.Climb_state = True
                         self.Can_Jump = True
                         self.JumpSpeed = 3
+                        self.jump_landing = True
                         # self.Jump_Key_State = False
                 elif event.key == SDLK_RIGHT:
                     if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State) and not self.Stun_state:
@@ -472,8 +481,8 @@ class CHARACTER():
                 elif event.key == SDLK_LALT:
                     self.Jump_Key_State = False
                     self.Down_Jump_state = False
-                    self.Climb_up_key_state = False
-                    self.Climb_down_key_state = False
+                    # self.Climb_up_key_state = False
+                    # self.Climb_down_key_state = False
                 elif event.key == SDLK_LSHIFT:
                     self.shift_on = False
                 elif event.key == SDLK_UP:
