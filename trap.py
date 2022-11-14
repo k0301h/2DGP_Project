@@ -78,6 +78,9 @@ class Arrow_Trap:
                 self.arrow_x = self.index_x * 60
 
     def draw(self, character):
-        print(self.arrow_x, self.arrow_y)
-        self.attack_image.clip_draw(145, 2048 - 160, 95, 60, self.arrow_x - character.camera_move_x,
-                                    self.arrow_y - character.camera_move_y, 60, 60)
+        if map_floor_array[self.index_y][self.index_x] == 40:
+            self.attack_image.clip_draw(145, 2048 - 210, 95, 60, self.arrow_x - character.camera_move_x,
+                                    HEIGHT - self.arrow_y - character.camera_move_y, 40, 20)
+        elif map_floor_array[self.index_y][self.index_y] == 41:
+            self.attack_image.clip_composote_draw(145, 2048 - 210, 95, 60, 0, 'h', self.arrow_x - character.camera_move_x,
+                                    HEIGHT - self.arrow_y - character.camera_move_y, 40, 20)
