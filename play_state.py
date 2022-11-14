@@ -76,6 +76,8 @@ def update():
         if not trap[count].attack_state:
             for unit in game_world.all_object():
                 trap[count].Attack_boundary(unit)
+        else:
+            trap[count].Attack_move()
 
     if main_character.HP <= 0:
         timer += 0.05
@@ -96,6 +98,10 @@ def draw_world():
                 unit.draw()
             elif type(unit).__name__ == 'Snake' or type(unit).__name__ == 'Bat' or type(unit).__name__ == 'Horned_Lizard':
                 unit.draw_monster(main_character)
+
+    for count in range(2):
+        if trap[count].attack_state:
+            trap[count].draw(main_character)
 
     main_character.draw_UI(UI, UI_count)
     # if mode == 1:
