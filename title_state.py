@@ -164,7 +164,7 @@ def draw():
 
 def handle_events():
     handle = get_events()
-    global game_start, select_menu_y, select_move
+    global game_start, select_menu_y, select_move, radian, end_move, end_move_y, running
     for event in handle:
         if event.type == SDL_QUIT:
             game_framework.quit()
@@ -172,11 +172,16 @@ def handle_events():
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             elif event.key == SDLK_RETURN:
-                if game_start and select_menu_y == HEIGHT / 2 + HEIGHT / 10:
+                if game_start:
+                    radian = 7
+                    end_move = HEIGHT
+                    end_move_y = HEIGHT
+                    running = True
+                if running and select_menu_y == HEIGHT / 2 + HEIGHT / 10:
                     game_framework.change_state(play_state)
-                elif game_start and select_menu_y == HEIGHT / 2:
+                elif running and select_menu_y == HEIGHT / 2:
                     pass
-                elif game_start and select_menu_y == HEIGHT / 2 - HEIGHT / 10:
+                elif running and select_menu_y == HEIGHT / 2 - HEIGHT / 10:
                     game_framework.quit()
                 game_start = True
             elif event.key == SDLK_UP:

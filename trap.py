@@ -56,12 +56,20 @@ class Arrow_Trap:
         if map_floor_array[self.index_y][self.index_x] == 40 and not self.attack_state:
             if HEIGHT - self.index_y * 60 - 40 <= unit.Y <= HEIGHT - self.index_y * 60 + 40 and \
                     self.index_x * 60 + 30 <= unit.X <= self.index_x * 60 + 30 + self.attack_range * 60:
-                unit.HP -= 2
+                if type(unit).__name__ == 'CHARACTER':
+                    if unit.mode == 1:
+                        unit.HP -= 2
+                else:
+                    unit.HP -= 2
                 self.attack_state = True
         elif map_floor_array[self.index_y][self.index_x] == 41 and not self.attack_state:
             if HEIGHT - self.index_y * 60 - 40 <= unit.Y <= HEIGHT - self.index_y * 60 + 40 and \
                     self.index_x * 60 - 30 - self.attack_range * 60 <= unit.X <= self.index_x * 60 - 30:
-                unit.HP -= 2
+                if type(unit).__name__ == 'CHARACTER':
+                    if unit.mode == 1:
+                        unit.HP -= 2
+                else:
+                    unit.HP -= 2
                 self.attack_state = True
 
     def Attack_move(self):

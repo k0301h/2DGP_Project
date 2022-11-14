@@ -1,4 +1,6 @@
 from pico2d import *
+
+import play_state
 from drawscreen import *
 from characterclass import *
 from monsterclass import *
@@ -6,6 +8,7 @@ import gameover_state
 import game_world
 import game_framework
 from trap import *
+import title_state
 
 main_character = None
 BG_stage_I = None
@@ -47,7 +50,7 @@ def enter():
 def exit():
     print('exit play_state')
     global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, trap, Deco_tutorial_I
-
+    game_world.remove_object(main_character)
     del main_character
 
     del Deco_tutorial_I
@@ -66,7 +69,6 @@ def update():
             if type(unit).__name__ == 'Snake' or type(unit).__name__ == 'Bat' or type(unit).__name__ == 'Horned_Lizard':
                 if unit.HP <= 0:
                     game_world.remove_object(unit)
-                    del unit
                 else:
                     unit.Motion(main_character)
 
@@ -126,4 +128,4 @@ def handle_events():
 
 def pause(): pass
 
-def resume(): pass
+def resume(): game_framework.change_state(title_state)
