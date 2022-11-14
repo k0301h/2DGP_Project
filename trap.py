@@ -4,7 +4,7 @@ from map_floor import *
 
 PIXEL_PER_METER = (10 / 0.5)
 
-RUN_SPEED_KMPH = 50.0
+RUN_SPEED_KMPH = 180.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -39,7 +39,6 @@ class Arrow_Trap:
                     break
             if self.index_y and self.index_x:
                 break
-
         if map_floor_array[self.index_y][self.index_x] == 40:
             for c in range(1, map_size - self.index_x):
                 if 2 <= map_floor_array[self.index_y][self.index_x + c] <= 29:
@@ -71,16 +70,59 @@ class Arrow_Trap:
                 run_move_speed = RUN_SPEED_PPS * game_framework.frame_time
                 self.arrow_x += run_move_speed
                 self.arrow_move_distance += run_move_speed
-                print(self.arrow_x, self.arrow_y)
             else:
                 self.attack_state = False
                 self.arrow_y = self.index_y * 60
                 self.arrow_x = self.index_x * 60
+                self.arrow_move_distance = 0
+
+        elif map_floor_array[self.index_y][self.index_x] == 41:
+            if self.arrow_move_distance <= self.attack_range * 60:
+                run_move_speed = RUN_SPEED_PPS * game_framework.frame_time
+                self.arrow_x -= run_move_speed
+                self.arrow_move_distance += run_move_speed
+            else:
+                self.attack_state = False
+                self.arrow_y = self.index_y * 60
+                self.arrow_x = self.index_x * 60
+                self.arrow_move_distance = 0
 
     def draw(self, character):
         if map_floor_array[self.index_y][self.index_x] == 40:
+            print("40draw")
             self.attack_image.clip_draw(145, 2048 - 210, 95, 60, self.arrow_x - character.camera_move_x,
                                     HEIGHT - self.arrow_y - character.camera_move_y, 40, 20)
+        if map_floor_array[self.index_y][self.index_x] == 41:
+            print("41draw")
+            self.attack_image.clip_composite_draw(145, 2048 - 210, 95, 60, 0, 'h', self.arrow_x - character.camera_move_x,
+                                    HEIGHT - self.arrow_y - character.camera_move_y, 40, 20)
+
+
+class Punch_Trap:
+    index_x = 0
+    index_y = 0
+
+    def __init__(self):
+        if Arrow_Trap.image == None:
+            Arrow_Trap.image = pico2d.load_image('./Textures/journal_entry_traps.png')
+        if Arrow_Trap.attack_image == None:
+            Arrow_Trap.attack_image = pico2d.load_image('./Textures/items.png')
+
+    def Place(self, number):
+        for x in range(map_size):
+            for y in range(map_size):
+                if map_floor_array[y][x] == number + 40:
+                    self.index_x, self.index_y = x , y
+                    self.arrow_x, self.arrow_y = x * 60, y * 60
+                    break
+            if self.index_y and self.index_x:
+                break
+
+
+    def draw(self, character):
+        if map_floor_array[self.index_y][self.index_x] == 40:
+            self.attack_image.clip_draw(0, 2048 - 1390, 130, 90, 0, self.arrow_x - character.camera_move_x,
+                                    HEIGHT - self.arrow_y - character.camera_move_y, 40, 20)
         elif map_floor_array[self.index_y][self.index_y] == 41:
-            self.attack_image.clip_composote_draw(145, 2048 - 210, 95, 60, 0, 'h', self.arrow_x - character.camera_move_x,
+            self.attack_image.clip_composote_draw(0, 2048 - 1390, 130, 90, 0, 'h', self.arrow_x - character.camera_move_x,
                                     HEIGHT - self.arrow_y - character.camera_move_y, 40, 20)
