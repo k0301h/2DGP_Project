@@ -413,7 +413,8 @@ class CHARACTER():
                         self.Can_Jump = True
                         self.JumpSpeed = 3
                         self.jump_landing = True
-                        # self.Jump_Key_State = False
+                        self.Jump_Key_State = False
+                        self.Action = 0
                 elif event.key == SDLK_RIGHT:
                     if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State) and not self.Stun_state:
                         self.Action = 1
