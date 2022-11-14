@@ -3,6 +3,7 @@ from drawscreen import *
 from characterclass import *
 from monsterclass import *
 import gameover_state
+import game_world
 import game_framework
 from trap import *
 
@@ -34,9 +35,14 @@ def enter():
     FLOOR_stage_I = load_image('./Textures/floor_cave.png')
     Deco_tutorial_I = load_image('./Textures/deco_tutorial.png')
     trap = [Arrow_Trap() for _ in range(2)]
+    for count in range(2):
+        trap[count].Place(count)
     #UI
     UI = load_image('./Textures/hud.png')
     UI_count = load_image('./Textures/number.png')
+
+    game_world.add_object(main_character, 2)
+    game_world.add_objects(monster_list, 2)
 
 def exit():
     print('exit play_state')
@@ -56,13 +62,20 @@ def update():
     global timer
     # print('update play_state')
     if ROUND >= 1:
-        for monster in monster_list:
-            if monster.HP <= 0:
-                monster_list.remove(monster)
-                del monster
-            else:
-                monster.Motion(main_character)
+        for unit in game_world.all_object():
+            if type(unit).__name__ == 'Snake' or type(unit).__name__ == 'Bat' or type(unit).__name__ == 'Horned_Lizard':
+                if unit.HP <= 0:
+                    game_world.remove_object(unit)
+                    del unit
+                else:
+                    unit.Motion(main_character)
+
     main_character.Motion(monster_list)
+
+    for count in range(2):
+        if not trap[count].attack_state:
+            for unit in game_world.all_object():
+                trap[count].Attack_boundary(unit)
 
     if main_character.HP <= 0:
         timer += 0.05
@@ -78,9 +91,12 @@ def draw_world():
     draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, main_character, main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT)  # depth == 2 // main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT
     main_character.draw()
     if ROUND >= 1:
-        for monster in monster_list:
-            if monster.HP > 0:
-                monster.draw_monster(main_character)
+        for unit in game_world.all_object():
+            if type(unit).__name__ == 'CHARACTER':
+                unit.draw()
+            elif type(unit).__name__ == 'Snake' or type(unit).__name__ == 'Bat' or type(unit).__name__ == 'Horned_Lizard':
+                unit.draw_monster(main_character)
+
     main_character.draw_UI(UI, UI_count)
     # if mode == 1:
     # delay(0.015)

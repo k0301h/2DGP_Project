@@ -25,10 +25,7 @@ GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
-if mode == 1:
-    JUMP_SPEED_KMPH = 100.0
-else:
-    JUMP_SPEED_KMPH = 60.0
+JUMP_SPEED_KMPH = 110.0
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -187,7 +184,7 @@ class CHARACTER():
             self.JumpSpeed = (JUMP_SPEED_PPS * game_framework.frame_time - grav) * 2 / 3
         else:
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time - grav
-        print(JUMP_SPEED_PPS, game_framework.frame_time, self.JumpSpeed, self.Hanging_jump)
+        # print(JUMP_SPEED_PPS, game_framework.frame_time, self.JumpSpeed, self.Hanging_jump)
         if self.JumpSpeed < self.DownSpeed:
             self.Jump_Key_State = False
             self.DownSpeed = 0
@@ -296,7 +293,6 @@ class CHARACTER():
             if not self.Conflict_checking(7,0):
                 self.jump_landing = True
             self.Can_Jump = True
-            print(self.jump_landing, self.Can_Jump)
 
     def Stun(self):
         self.stun.MotionIndex = (self.stun.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11 + 16 * 13
