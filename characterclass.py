@@ -2,6 +2,7 @@ from map_floor import *
 from pico2d import *
 import game_framework
 import time
+import play_state
 
 class SUB():
     MotionIndex = 0
@@ -466,6 +467,7 @@ class CHARACTER():
                     if self.Conflict_checking(4, 0):
                         self.Action = 5
                         self.MotionIndex = 0
+                        play_state.timer = time.time()
             elif event.type == SDL_KEYUP:
                 if event.key == SDLK_RIGHT and self.Action == 1 and (not self.Climb_state or self.Jump_Key_State):
                     self.Action = 0

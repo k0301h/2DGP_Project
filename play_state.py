@@ -9,6 +9,7 @@ import game_world
 import game_framework
 from trap import *
 import title_state
+import stageclear_state
 
 main_character = None
 BG_stage_I = None
@@ -90,11 +91,13 @@ def update():
     if main_character.HP <= 0:
         timer += 0.05
         delay(0.01)
-    if timer >= 3:
-        timer = 0
-        main_character.HP = 5
-        # game_framework.change_state(gameover_state)
-        game_framework.push_state(gameover_state)
+        if timer >= 3:
+            timer = 0
+            main_character.HP = 5
+            game_framework.push_state(gameover_state)
+    elif time.time() - timer >= 2:
+        ROUND += 1
+        game_framework.change_state(stageclear_state)
 
 def draw_world():
     draw_background(BG_stage_I)
