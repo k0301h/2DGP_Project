@@ -54,6 +54,10 @@ class Snake():
     def Place(self, index_x, index_y):
         self.X, self.Y = index_x * 60, HEIGHT - index_y * 60
         self.DIRECTION = random.randint(0, 1)
+        self.HP = 2
+        self.ATK = 1
+        self.Action = 0
+        self.MotionIndex = 0
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         if mode == 1:  # Y충돌 체크
@@ -179,6 +183,10 @@ class Bat():
         self.X, self.Y = index_x * 60, HEIGHT - index_y * 60
         self.Action = 0
         self.DIRECTION = random.randint(0, 1)
+        self.HP = 1
+        self.ATK = 1
+        self.MotionIndex = 0
+        self.Motion_dir = 0
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         if mode == 1:  # Y충돌 체크
@@ -297,6 +305,10 @@ class Horned_Lizard():
     def Place(self, index_x, index_y):
         self.X, self.Y = index_x * 60, HEIGHT - index_y * 60
         self.DIRECTION = random.randint(0,1)
+        self.HP = 3
+        self.ATK = 1
+        self.Action = 0
+        self.MotionIndex = 0
 
     def Conflict_checking(self, mode, move):  # mode : x,y충돌 검사 , move : 다음에 움직일 크기
         if mode == 1:  # Y충돌 체크

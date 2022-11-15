@@ -47,10 +47,16 @@ def enter():
     game_world.add_object(main_character, 2)
     game_world.add_objects(monster_list, 2)
 
+    # count = 0
+    # for unit in game_world.all_object():
+    #     print(unit)
+    #     count += 1
+    # print(count)
 def exit():
     print('exit play_state')
     global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, trap, Deco_tutorial_I
-    game_world.remove_object(main_character)
+    game_world.clear()
+
     del main_character
 
     del Deco_tutorial_I
