@@ -9,8 +9,6 @@ if ROUND == 0:
     map_floor_array += map_tutorial
 elif ROUND == 1:
     map_floor_array += map_floor_array_1
-# elif ROUND == 2:
-#     map_floor_array += map_floor_array_2
 
 def start_time():
     global start

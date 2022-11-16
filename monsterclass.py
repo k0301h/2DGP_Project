@@ -131,6 +131,8 @@ class Snake():
                     self.X += self.run_move_speed / 2
                 elif self.Conflict_checking(2, -self.run_move_speed / 2) and self.DIRECTION == 1:
                     self.X -= self.run_move_speed / 2
+        if self.HP <= 0:
+            del self
         self.gravity()
 
     def draw_monster(self, main_character):
@@ -393,10 +395,11 @@ class Horned_Lizard():
             self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time))
             if self.MotionIndex >= 13:
                 self.MotionIndex = 10
-            if self.Conflict_checking(2, self.run_move_speed * 2 / 3) and self.DIRECTION == 0:
-                self.X += self.run_move_speed * 2 / 3
-            elif self.Conflict_checking(2, -self.run_move_speed * 2 / 3) and self.DIRECTION == 1:
-                self.X -= self.run_move_speed * 2 / 3
+            if not (self.X - 10 <= character.X <= self.X + 10):
+                if self.Conflict_checking(2, self.run_move_speed * 2 / 3) and self.DIRECTION == 0:
+                    self.X += self.run_move_speed * 2 / 3
+                elif self.Conflict_checking(2, -self.run_move_speed * 2 / 3) and self.DIRECTION == 1:
+                    self.X -= self.run_move_speed * 2 / 3
 
         self.gravity()
 
