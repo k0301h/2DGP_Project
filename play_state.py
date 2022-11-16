@@ -17,12 +17,13 @@ FLOOR_stage_I = None
 trap = None
 UI = None
 UI_count = None
+side_block = None
 
 timer = 0
 
 def enter():
     print("enter play_state")
-    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I, trap
+    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I, trap, side_block
 
     # character
     main_character = CHARACTER()
@@ -43,6 +44,8 @@ def enter():
     #UI
     UI = load_image('./Textures/hud.png')
     UI_count = load_image('./Textures/number.png')
+
+    side_block = load_image('./Textures/bg_stone.png')
 
     game_world.add_object(main_character, 2)
     game_world.add_objects(monster_list, 2)
@@ -97,7 +100,7 @@ def update():
         game_framework.push_state(gameover_state)
 
 def draw_world():
-    draw_background(BG_stage_I)
+    draw_background(BG_stage_I, side_block, main_character)
     draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, main_character, main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT)  # depth == 2 // main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT
     main_character.draw()
     if ROUND >= 1:
