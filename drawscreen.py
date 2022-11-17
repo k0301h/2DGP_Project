@@ -18,16 +18,13 @@ def end_timer():
     global end
     end = time.time()
 
-def draw_background(BG_stage_I, side_block_I, character):
+def draw_background(BG_stage_I, character):
     BG_stage_I.draw(320, 320)
     BG_stage_I.draw(320, 960)
     BG_stage_I.draw(320, 1600)
     BG_stage_I.draw(960, 320)
     BG_stage_I.draw(960, 960)
     BG_stage_I.draw(960, 1600)
-
-    for y in range(7):
-        side_block_I.clip_draw(0, 0, 240, 512, - 120 -character.camera_move_x, WIDTH - 256 - 512 * y - character.camera_move_y)
 
     if mode == 1:
         BG_stage_I.draw(1600, 320)
@@ -40,9 +37,39 @@ def draw_background(BG_stage_I, side_block_I, character):
         BG_stage_I.draw(2880, 960)
         BG_stage_I.draw(2880, 1600)
 
-# 느낌만 구현 나중에 맵 구체적으로 계획후 배열 제작
 def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0, range_r = WIDTH, range_b = 0, range_t = HEIGHT):
     count = 0
+    print(character.camera_move_x, character.camera_move_y)
+    if character.camera_move_x < -30:
+        for x in range(-5, 0):
+            for y in range(-5, 55):
+                    FLOOR_stage_I.clip_draw(895, 1536 - 128, 128, 128, x * 60 - character.camera_move_x,
+                                            HEIGHT - y * 60 - character.camera_move_y, 60, 60)
+                    FLOOR_stage_I.clip_draw(895, 1536 - 128, 128, 128, x * 60 - character.camera_move_x,
+                                            HEIGHT - y * 60 - character.camera_move_y, 60, 60)
+    if character.camera_move_x > 1680:
+        for x in range(50,55):
+            for y in range(-5, 55):
+                    FLOOR_stage_I.clip_draw(895, 1536 - 128, 128, 128, x * 60 - character.camera_move_x,
+                                            HEIGHT - y * 60 - character.camera_move_y, 60, 60)
+                    FLOOR_stage_I.clip_draw(895, 1536 - 128, 128, 128, x * 60 - character.camera_move_x,
+                                            HEIGHT - y * 60 - character.camera_move_y, 60, 60)
+
+    if character.camera_move_y > 30:
+        for y in range(-5, 0):
+            for x in range(-5, 55):
+                FLOOR_stage_I.clip_draw(895, 1536 - 128, 128, 128, x * 60 - character.camera_move_x,
+                                            HEIGHT - y * 60 - character.camera_move_y, 60, 60)
+                FLOOR_stage_I.clip_draw(895, 1536 - 128, 128, 128, x * 60 - character.camera_move_x,
+                                            HEIGHT - y * 60 - character.camera_move_y, 60, 60)
+    if character.camera_move_y < -2150:
+        for y in range(50,55):
+            for x in range(-5, 55):
+                    FLOOR_stage_I.clip_draw(895, 1536 - 128, 128, 128, x * 60 - character.camera_move_x,
+                                            HEIGHT - y * 60 - character.camera_move_y, 60, 60)
+                    FLOOR_stage_I.clip_draw(895, 1536 - 128, 128, 128, x * 60 - character.camera_move_x,
+                                            HEIGHT - y * 60 - character.camera_move_y, 60, 60)
+
     if ROUND == 0:
         Deco_tutorial_I.clip_draw(0, 1024 - 255, 510, 255, 13 * 60 - character.camera_move_x,
                                   HEIGHT - 3 * 60 - character.camera_move_y, 300, 150)
