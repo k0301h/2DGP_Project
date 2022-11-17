@@ -335,7 +335,7 @@ class CHARACTER():
             else:
                 if self.Action == 0:
                     if not self.Jump_Key_State and not self.Gravity_state and not self.Attack_state:
-                        self.MotionIndex = 0
+                        self.MotionIndex = 11 + 16 * 2
                 elif self.Action == 1:
                     self.run_move_speed = RUN_SPEED_PPS * game_framework.frame_time
                     self.walk_move_speed = WALK_SPEED_PPS * game_framework.frame_time

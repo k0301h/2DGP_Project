@@ -9,6 +9,7 @@ import game_world
 import game_framework
 from trap import *
 import title_state
+from itemclass import *
 
 main_character = None
 BG_stage_I = None
@@ -17,6 +18,7 @@ FLOOR_stage_I = None
 trap = None
 UI = None
 UI_count = None
+item = shotgun()
 
 timer = 0
 
@@ -111,6 +113,7 @@ def draw_world():
         if trap[count].attack_state:
             trap[count].draw(main_character)
 
+    item.draw(main_character)
     main_character.draw_UI(UI, UI_count)
     # if mode == 1:
     # delay(0.015)
