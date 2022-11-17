@@ -1,6 +1,10 @@
 from pico2d import *
 from map_floor import HEIGHT
 
+class bullet:
+    X = 0
+    Y = 0
+
 class shotgun:
     ATK = 2
     Action = 0
