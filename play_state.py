@@ -102,6 +102,9 @@ def draw_world():
     draw_background(BG_stage_I, main_character)
     draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, main_character, main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT)  # depth == 2 // main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT
     main_character.draw()
+
+    
+
     if ROUND >= 1:
         for unit in game_world.all_object():
             if type(unit).__name__ == 'CHARACTER':

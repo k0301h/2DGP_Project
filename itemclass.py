@@ -1,21 +1,37 @@
 from pico2d import *
 from map_floor import *
+from math import sqrt
+import game_framework
+
+PIXEL_PER_METER = (10 / 0.5)
+
+RUN_SPEED_KMPH = 40.0
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 class bullet:
     X = 0
     Y = 0
     direction = 0
+    save = 1
+    run_speed = 0
     def __init__(self):
         if shotgun.image == None:
             shotgun.image = load_image('./Textures/items.png')
 
     def move(self):
+        self.run_speed = RUN_SPEED_PPS * game_framework.frame_time
         if self.direction == 0:
-            if self.Conflict_check(1, 10):
-                self.X += 10
+            if self.Conflict_check(1, self.run_speed):
+                self.X += self.run_speed
+            else:
+                self.save = 0
         else:
-            if self.Conflict_check(1, -10):
-                self.X -= 10
+            if self.Conflict_check(1, -self.run_speed):
+                self.X -= self.run_speed
+            else:
+                self.save = 0
 
     def Conflict_check(self, mode, move, unit = None):
         if mode == 1:     # X충돌 체크
@@ -26,6 +42,9 @@ class bullet:
                         (2 <= map_floor_array[character_index_y][index_x] <= 29 or 40 <= map_floor_array[character_index_y][index_x] <= 41) and \
                         abs(self.Y - (HEIGHT - character_index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55:
                     return False
+        elif mode == 2:
+            if sqrt((unit.X - self.X) ** 2 + (unit.Y - self.Y) ** 2) <= 40:
+                unit.HP -= 1
         return True
     
     def draw(self, character):

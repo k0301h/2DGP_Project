@@ -47,6 +47,7 @@ class CHARACTER():
     Money = 0
 
     mode = 0
+    itemmode = 0 # 0 : 맨손 1 : 샷건
     # hnadle = None
 
     Gravity = None
@@ -302,11 +303,11 @@ class CHARACTER():
 
     def Motion(self, monster):
         if self.enter_walking:
-            self.timer += 1
+            self.timer += game_framework.frame_time
             self.scale -= 0.5
             self.scale = clamp(0, self.scale, 60)
             self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 16 % 6 + 16 * 5 + 6
-            if self.timer >= 100:
+            if self.timer >= 3:
                 self.timer = 0
                 self.enter_walking = False
         elif self.Stun_state:
@@ -395,10 +396,13 @@ class CHARACTER():
                         pass
 
                 if self.Attack_key_state:
-                    for i in range(0, len(monster)):
-                        self.Attack(monster[i])
-                    self.whip.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 12 + 10
-                    self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 4
+                    if self.itemmode == 0:      # 맨손 채찍 공격
+                        for i in range(0, len(monster)):
+                            self.Attack(monster[i])
+                        self.whip.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 12 + 10
+                        self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 4
+                    elif self.itemmode == 1:    # 샷건 공격
+                        pass
 
         self.gravity()
 
