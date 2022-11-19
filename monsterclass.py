@@ -325,13 +325,14 @@ class Horned_Lizard():
             character_index_x = int((self.X + move) // 60)
             character_index_y = int((HEIGHT - self.Y) // 60)
             for index_y in range(character_index_y - 1, character_index_y + 2):
-                for index_x in range(character_index_x - 2, character_index_x + 3):
+                for index_x in range(character_index_x - 1, character_index_x + 2):
                     if 0 <= index_x < map_size and 0 <= index_y < map_size \
                             and character_index_y + 1 < map_size and character_index_x + 1 < map_size and \
                             2 <= map_floor_array[index_y][index_x] <= 29 and \
                             (abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55) \
                             or (map_floor_array[character_index_y + 1][character_index_x + 1] == 0 and 2 <= map_floor_array[character_index_y + 1][character_index_x] <= 29  \
                             or map_floor_array[character_index_y + 1][character_index_x] == 0 and 2 <= map_floor_array[character_index_y + 1][character_index_x + 1] <= 29):
+                        print((abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55))
                         if self.DIRECTION:
                             self.DIRECTION = 0
                         else:

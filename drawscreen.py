@@ -39,7 +39,6 @@ def draw_background(BG_stage_I, character):
 
 def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0, range_r = WIDTH, range_b = 0, range_t = HEIGHT):
     count = 0
-    print(character.camera_move_x, character.camera_move_y)
     if character.camera_move_x < -30:
         for x in range(-5, 0):
             for y in range(-5, 55):
