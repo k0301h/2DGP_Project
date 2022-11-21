@@ -2,6 +2,7 @@ from map_floor import *
 from pico2d import *
 import game_framework
 import time
+from itemclass import *
 
 class SUB():
     MotionIndex = 0
@@ -48,7 +49,7 @@ class CHARACTER():
 
     mode = 0
     itemmode = 0 # 0 : 맨손 1 : 샷건
-    # hnadle = None
+    handle_item = None
 
     Gravity = None
     JumpSpeed = None
@@ -336,7 +337,10 @@ class CHARACTER():
             else:
                 if self.Action == 0:
                     if not self.Jump_Key_State and not self.Gravity_state and not self.Attack_state:
-                        self.MotionIndex = 11 + 16 * 2
+                        if self.itemmode == 0:
+                            self.MotionIndex = 0
+                        elif self.itemmode == 1:
+                            self.MotionIndex = 11 + 16 * 2
                 elif self.Action == 1:
                     self.run_move_speed = RUN_SPEED_PPS * game_framework.frame_time
                     self.walk_move_speed = WALK_SPEED_PPS * game_framework.frame_time

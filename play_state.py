@@ -18,7 +18,6 @@ FLOOR_stage_I = None
 trap = None
 UI = None
 UI_count = None
-item = shotgun()
 
 timer = 0
 
