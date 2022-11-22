@@ -5,10 +5,17 @@ import threading
 start = 0
 end = 0
 
-if ROUND == 0:
-    map_floor_array += map_tutorial
-elif ROUND == 1:
-    map_floor_array += map_floor_array_1
+def map_chanege():
+    global map_floor_array
+    map_floor_array.clear()
+
+    if not clear:
+        if ROUND == 0:
+            map_floor_array += map_tutorial
+        elif ROUND == 1:
+            map_floor_array += map_floor_array_1
+    else:
+        map_floor_array += map_clear
 
 def start_time():
     global start

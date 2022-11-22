@@ -21,12 +21,12 @@ WALK_SPEED_MPM = (WALK_SPEED_KMPH * 1000.0 / 60.0)
 WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
 WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
-GRAVITY_ASPEED_KMPH = 1.0       # 2.5
+GRAVITY_ASPEED_KMPH = 2.0       # 2.5
 GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
-JUMP_SPEED_KMPH = 130.0     # 130
+JUMP_SPEED_KMPH = 90.0     # 130
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -396,8 +396,6 @@ class CHARACTER():
                     self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 5
                     self.scale += 0.5
                     self.scale = clamp(0, self.scale, 60)
-                    if self.MotionIndex % 16 == 5:
-                        pass
 
                 if self.Attack_key_state:
                     if self.itemmode == 0:      # 맨손 채찍 공격
