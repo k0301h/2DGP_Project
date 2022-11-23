@@ -26,7 +26,7 @@ GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
-JUMP_SPEED_KMPH = 90.0     # 130
+JUMP_SPEED_KMPH = 80.0     # 130
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -490,6 +490,16 @@ class CHARACTER():
                     self.shift_on = False
                 elif event.key == SDLK_UP:
                     self.Climb_up_key_state = False
+
+    def clear_motion(self):
+        if self.timer < 2:
+            self.DIRECTION = 0
+            self.Action = 1
+            print(self.X)
+            self.timer += game_framework.frame_time
+        else:
+            self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 7 + 16 * 3
+
 
     def draw(self):
         self.grid_image.clip_draw(int(self.MotionIndex) % 16 * 128,

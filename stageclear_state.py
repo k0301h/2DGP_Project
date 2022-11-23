@@ -3,15 +3,8 @@ from play_state import *
 
 from characterclass import *
 import game_framework
-from map_floor import *
-from drawscreen import *
-from trap import *
-
-PIXEL_PER_METER = (10 / 0.5)
-
-TIME_PER_ACTION = 0.5
-ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 8
+import map_floor
+import drawscreen
 
 main_character = None
 BG_stage_I = None
@@ -40,13 +33,15 @@ def exit():
 
 def update():
     # print('update stageclear_state')
-    main_character.Motion(None)
+    main_character.clear_motion()
+    if main_character.timer < 2:
+        main_character.Motion(None)
 
 def draw():
     # print('draw stageclear_state')
     pico2d.clear_canvas()
-    draw_background(BG_stage_I, main_character)
-    draw_map_floor(FLOOR_stage_I, None, None, main_character,
+    drawscreen.draw_background(BG_stage_I, main_character)
+    drawscreen.draw_map_floor(FLOOR_stage_I, None, None, main_character,
                    main_character.X - main_character.camera_move_x - WIDTH,
                    main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT,
                    main_character.Y + HEIGHT)  # depth == 2 // main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT
@@ -54,7 +49,6 @@ def draw():
     pico2d.update_canvas()
 
 def handle_events():
-    global clear
     handle = get_events()
     for event in handle:
         if event.type == SDL_QUIT:
@@ -63,8 +57,8 @@ def handle_events():
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             elif event.key == SDLK_RETURN:
-                map_chanege()
-                clear = False
+                drawscreen.clear = False
+                drawscreen.map_chanege()
                 game_framework.change_state(play_state)
             elif event.key == SDLK_UP:
                 pass

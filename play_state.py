@@ -93,13 +93,11 @@ def update():
             trap[count].Attack_move()
 
     if main_character.HP <= 0:
-        timer += 0.05
-        delay(0.01)
+        timer += game_framework.frame_time
     elif main_character.scale == 60:
         drawscreen.clear = True
         drawscreen.ROUND += 1
         drawscreen.map_chanege()
-        print(drawscreen.clear, drawscreen.ROUND)
         game_framework.change_state(stageclear_state)
 
     if timer >= 3:

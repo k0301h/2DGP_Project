@@ -332,7 +332,6 @@ class Horned_Lizard():
                             (abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55) \
                             or (map_floor_array[character_index_y + 1][character_index_x + 1] == 0 and 2 <= map_floor_array[character_index_y + 1][character_index_x] <= 29  \
                             or map_floor_array[character_index_y + 1][character_index_x] == 0 and 2 <= map_floor_array[character_index_y + 1][character_index_x + 1] <= 29):
-                        print((abs(self.Y - (HEIGHT - index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55))
                         if self.DIRECTION:
                             self.DIRECTION = 0
                         else:
