@@ -8,7 +8,7 @@ import gameover_state
 import title_state
 import stageclear_state
 
-from drawscreen import *
+import drawscreen
 from characterclass import *
 from monsterclass import *
 
@@ -73,7 +73,7 @@ def exit():
     del UI_count
 
 def update():
-    global timer, ROUND, clear
+    global timer
     # print('update play_state')
     if ROUND >= 1:
         for unit in game_world.all_object():
@@ -96,10 +96,11 @@ def update():
         timer += 0.05
         delay(0.01)
     elif main_character.scale == 60:
+        drawscreen.clear = True
+        drawscreen.ROUND += 1
+        drawscreen.map_chanege()
+        print(drawscreen.clear, drawscreen.ROUND)
         game_framework.change_state(stageclear_state)
-        clear = True
-        ROUND += 1
-        map_chanege()
 
     if timer >= 3:
         timer = 0
@@ -107,8 +108,8 @@ def update():
         game_framework.push_state(gameover_state)
 
 def draw_world():
-    draw_background(BG_stage_I, main_character)
-    draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, main_character, main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT)  # depth == 2 // main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT
+    drawscreen.draw_background(BG_stage_I, main_character)
+    drawscreen.draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, main_character, main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT)  # depth == 2 // main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT
     main_character.draw()
 
     if ROUND >= 1:
