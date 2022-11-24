@@ -21,12 +21,12 @@ WALK_SPEED_MPM = (WALK_SPEED_KMPH * 1000.0 / 60.0)
 WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
 WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
-GRAVITY_ASPEED_KMPH = 2.0       # 2.5
+GRAVITY_ASPEED_KMPH = 1.0       # 2.5
 GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
-JUMP_SPEED_KMPH = 90.0     # 130
+JUMP_SPEED_KMPH = 120.0     # 130
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -249,6 +249,7 @@ class CHARACTER():
 
     def gravity(self):
         if self.Conflict_checking(1, -self.DownSpeed) and not self.Climb_state:
+            self.Gravity = GRAVITY_ASPEED_PPS * game_framework.frame_time
             if self.Gravity_state and not self.Conflict_checking(5, -self.DownSpeed) and not self.Jump_Key_State:
                 # if self.MotionIndex <= 58:
                 #     self.MotionIndex = (self.MotionIndex + 0.1) % 3 % 16 + 16 * 3 + 8
@@ -264,11 +265,10 @@ class CHARACTER():
                 self.Stun_state = True
                 self.HP = 0
                 self.MotionIndex = 9
-                if self.timer <= 40:
-                    self.Y -= 1
-                    self.timer += 1
+                if self.timer <= 3:
+                    self.Y -= self.Gravity * 3
+                    self.timer += game_framework.frame_time
             else:
-                self.Gravity = GRAVITY_ASPEED_PPS * game_framework.frame_time
                 if self.DownSpeed <= 20:
                     self.DownSpeed += self.Gravity
                 if self.Conflict_checking(1, -self.DownSpeed):
@@ -283,7 +283,7 @@ class CHARACTER():
             if self.Down_Distance >= 600:
                 if self.mode:
                     self.HP -= 1
-                self.timer = time.time()
+                # self.timer = time.time()
                 self.MotionIndex = 9
                 self.stun.MotionIndex = 16 * 13
                 self.Stun_state = True
@@ -316,7 +316,7 @@ class CHARACTER():
                 self.Stun()
             else:
                 self.MotionIndex = 9
-                pass
+                self.Stun_state = False
         else:
             if self.HP <= 0:
                 self.Stun_state = True
