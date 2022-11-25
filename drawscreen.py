@@ -106,7 +106,7 @@ def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0,
                                             , 128, 128, index_x * 60 - character.camera_move_x,
                                             HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
                     if index_x * 60 - 30 <= character.X <= index_x * 60 + 30 and\
-                        index_y * 60 + 120 <= character.Y <= index_y * 60 + 175:
+                        index_y * 60 <= character.Y <= index_y * 60 + 60:
                         FLOOR_stage_I.clip_draw(128 * (map_floor_array[index_y][index_x] - 31), 1410 - 1282
                                                 , 128, 128, index_x * 60 - character.camera_move_x,
                                                 HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
