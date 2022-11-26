@@ -16,12 +16,12 @@ def map_chanege():
         if ROUND == 0:
             map_floor_array += map_tutorial
         elif ROUND == 1:
-            # map_floor_array += map_floor_array_1
-            # monster_list += monster_list_1stage
-            # monster_place += monster_place_1stage
-            map_floor_array += map_floor_array_3
-            monster_list += monster_list_3stage
-            monster_place += monster_place_3stage
+            map_floor_array += map_floor_array_1
+            monster_list += monster_list_1stage
+            monster_place += monster_place_1stage
+            # map_floor_array += map_floor_array_2
+            # monster_list += monster_list_2stage
+            # monster_place += monster_place_2stage
         elif ROUND == 2:
             map_floor_array += map_floor_array_2
         elif ROUND == 3:
@@ -95,8 +95,8 @@ def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0,
                                   HEIGHT - 3 * 60 - character.camera_move_y, 300, 150)
         Deco_tutorial_I.clip_draw(510, 1024 - 255, 510, 255, 22 * 60 - character.camera_move_x,
                                   HEIGHT - 5 * 60 - character.camera_move_y, 300, 150)
-    for index_x in range(0, map_size):
-        for index_y in range(0, map_size):
+    for index_y in range(0, map_size):
+        for index_x in range(0, map_size):
             if range_b - 30 <= HEIGHT - index_y * 60 <= range_t + 30 and\
                     range_l - 30 <= index_x * 60  - character.camera_move_x <= range_r + 30:
                 if map_floor_array[index_y][index_x] == 0:

@@ -102,6 +102,11 @@ class CHARACTER():
                     self.enter_walking = False
                     self.camera_move_x = 0
                     self.camera_move_y = 0
+                    print(self.X)
+                    if self.Y < 200:
+                        self.camera_move_x = self.X // 3
+                        self.camera_move_y = self.Y * 2
+                        print(self.camera_move_y)
                     self.scale = 0
 
     def Conflict_checking(self, mode, move): # mode : 충돌체크 유형 , move : 다음에 움직일 크기
@@ -330,9 +335,13 @@ class CHARACTER():
                 self.walk_move_speed = WALK_SPEED_PPS * game_framework.frame_time
                 if self.Climb_up_key_state and self.Conflict_checking(3, self.walk_move_speed):
                     self.Y += self.walk_move_speed
+                    if self.Y - self.camera_move_y >= HEIGHT - 200:
+                        self.camera_move_y += self.walk_move_speed
                     self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 6 + 16 * 6
                 elif self.Climb_down_key_state and self.Conflict_checking(3, -self.walk_move_speed):
                     self.Y -= self.walk_move_speed
+                    if self.Y - self.camera_move_y <= 200:
+                        self.camera_move_y -= self.walk_move_speed
                     self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 6 + 16 * 6
             else:
                 if self.Action == 0:
@@ -495,7 +504,6 @@ class CHARACTER():
         if self.timer < 2:
             self.DIRECTION = 0
             self.Action = 1
-            print(self.X)
             self.timer += game_framework.frame_time
         else:
             self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 7 + 16 * 3
