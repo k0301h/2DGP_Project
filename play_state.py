@@ -29,6 +29,8 @@ def enter():
     print("enter play_state")
     global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I, trap
 
+    drawscreen.map_chanege()
+    
     # character
     main_character = CHARACTER()
     main_character.Place()

@@ -1,4 +1,5 @@
 from map_floor import *
+from monsterclass import *
 import time
 import threading
 
@@ -6,18 +7,27 @@ start = 0
 end = 0
 
 def map_chanege():
-    global map_floor_array
+    global map_floor_array, monster_list, monster_place
     map_floor_array.clear()
+    monster_list.clear()
+    monster_place.clear()
     print(clear, ROUND)
     if not clear:
         if ROUND == 0:
             map_floor_array += map_tutorial
         elif ROUND == 1:
-            map_floor_array += map_floor_array_1
+            # map_floor_array += map_floor_array_1
+            # monster_list += monster_list_1stage
+            # monster_place += monster_place_1stage
+            map_floor_array += map_floor_array_3
+            monster_list += monster_list_3stage
+            monster_place += monster_place_3stage
         elif ROUND == 2:
             map_floor_array += map_floor_array_2
         elif ROUND == 3:
             map_floor_array += map_floor_array_3
+            monster_list += monster_list_3stage
+            monster_place += monster_place_3stage
     else:
         map_floor_array += map_clear
 

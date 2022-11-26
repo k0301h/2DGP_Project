@@ -1,8 +1,10 @@
 from pico2d import *
-from drawscreen import *
+from map_floor import WIDTH, HEIGHT
 import game_framework
 
 pico2d.open_canvas(WIDTH, HEIGHT)
+
+from drawscreen import *
 
 import logo_state
 import title_state

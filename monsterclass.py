@@ -424,13 +424,26 @@ class Horned_Lizard():
                                             self.Y - main_character.camera_move_y,
                                             60, 60)
 
-monster_place = [[33, 18], [22, 23], [4, 41], [31, 45], # lizard
-                 [17, 2], [40, 1], [40, 15], [18, 16], [29, 21], [29, 25], [17, 28], [43, 32], [5, 44], [26, 44], [12, 47], [32, 47],   # bat
-                 [38, 7], [10, 17], [38, 12], [8, 22], [39, 26], [11, 30], [16, 39], [17, 46], [43, 48]]                                # snake
 
 monster_list = []
-monster_list_3 = [Snake() for i in range(9)]
-monster_list_2 = [Bat() for i in range(12)]
-monster_list_1 = [Horned_Lizard() for i in range(4)]
+monster_place = []
 
-monster_list += monster_list_1 + monster_list_2 + monster_list_3
+monster_list_1stage = []
+monster_list_1stage_snake = [Snake() for i in range(9)]
+monster_list_1stage_bat = [Bat() for i in range(12)]
+monster_list_1stage_lizard = [Horned_Lizard() for i in range(4)]
+
+monster_place_1stage = [[33, 18], [22, 23], [4, 41], [31, 45], # lizard
+                        [17, 2], [40, 1], [40, 15], [18, 16], [29, 21], [29, 25], [17, 28], [43, 32], [5, 44], [26, 44], [12, 47], [32, 47],   # bat
+                        [38, 7], [10, 17], [38, 12], [8, 22], [39, 26], [11, 30], [16, 39], [17, 46], [43, 48]]                                # snake
+
+monster_list_1stage += monster_list_1stage_lizard + monster_list_1stage_bat + monster_list_1stage_snake
+
+monster_list_3stage = []
+monster_list_3stage_snake = [Snake() for i in range(2)]
+monster_list_3stage_bat = [Bat() for i in range(2)]
+
+monster_place_3stage = [[22, 15], [27, 22],   # bat
+                        [5, 18], [6, 29]]# snake
+
+monster_list_3stage += monster_list_3stage_bat + monster_list_3stage_snake

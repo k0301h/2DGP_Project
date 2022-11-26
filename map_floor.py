@@ -273,7 +273,5 @@ map_floor_array_3 = [[2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 
 
 map_floor_array = []
 
-map_floor_array += map_floor_array_3
-
 clear = False
 ROUND = 1
