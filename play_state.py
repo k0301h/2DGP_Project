@@ -8,6 +8,7 @@ import gameover_state
 import title_state
 import stageclear_state
 
+import map_floor
 import drawscreen
 from characterclass import *
 from monsterclass import *
@@ -25,9 +26,11 @@ UI_count = None
 
 timer = 0
 
+round_check = 0
+
 def enter():
     print("enter play_state")
-    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I, trap
+    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I, trap, round_check
 
     drawscreen.map_chanege()
 
@@ -36,13 +39,23 @@ def enter():
     main_character.Place()
     # monster
     count = 0
-    if ROUND >= 1:
+    round_check += 1
+    print(map_floor.ROUND)
+    if map_floor.ROUND >= 1:
         for monster in monster_list:
             monster.Place(monster_place[count][0], monster_place[count][1])
             count += 1
     # stage image
-    BG_stage_I = load_image('./Textures/bg_cave.png')
-    FLOOR_stage_I = load_image('./Textures/floor_cave.png')
+    if 1 <= round_check <= 3:
+        BG_stage_I = load_image('./Textures/bg_cave.png')
+    elif 4 <= round_check <= 6:
+        BG_stage_I = load_image('./Textures/bg_jungle.png')
+
+    if 1 <= round_check <= 3:
+        FLOOR_stage_I = load_image('./Textures/floor_cave.png')
+    elif 4 <= round_check <= 6:
+        FLOOR_stage_I = load_image('./Textures/floor_jungle.png')
+
     Deco_tutorial_I = load_image('./Textures/deco_tutorial.png')
     trap = [Arrow_Trap() for _ in range(2)]
     for count in range(2):
@@ -77,7 +90,7 @@ def exit():
 def update():
     global timer
     # print('update play_state')
-    if ROUND >= 1:
+    if map_floor.ROUND >= 1:
         for unit in game_world.all_object():
             if type(unit).__name__ == 'Snake' or type(unit).__name__ == 'Bat' or type(unit).__name__ == 'Horned_Lizard':
                 if unit.HP <= 0:
@@ -112,7 +125,7 @@ def draw_world():
     drawscreen.draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, main_character, main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT)  # depth == 2 // main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT
     main_character.draw()
 
-    if ROUND >= 1:
+    if map_floor.ROUND >= 1:
         for unit in game_world.all_object():
             if type(unit).__name__ == 'CHARACTER':
                 unit.draw()

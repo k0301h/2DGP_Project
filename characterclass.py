@@ -102,11 +102,9 @@ class CHARACTER():
                     self.enter_walking = False
                     self.camera_move_x = 0
                     self.camera_move_y = 0
-                    print(self.X)
                     if self.Y < 200:
                         self.camera_move_x = self.X // 3
                         self.camera_move_y = self.Y * 2
-                        print(self.camera_move_y)
                     self.scale = 0
 
     def Conflict_checking(self, mode, move): # mode : 충돌체크 유형 , move : 다음에 움직일 크기

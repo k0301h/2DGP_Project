@@ -11,7 +11,6 @@ def map_chanege():
     map_floor_array.clear()
     monster_list.clear()
     monster_place.clear()
-    print(clear, ROUND)
     if not clear:
         if ROUND == 0:
             map_floor_array += map_tutorial
@@ -27,6 +26,7 @@ def map_chanege():
             map_floor_array += map_floor_array_3
             monster_list += monster_list_3stage
             monster_place += monster_place_3stage
+        # 2-1 Stage
         elif ROUND == 4:
             map_floor_array += map_floor_array_4
             monster_list += monster_list_4stage

@@ -18,8 +18,15 @@ def enter():
     main_character = CHARACTER()
     main_character.Place()
 
-    BG_stage_I = load_image('./Textures/bg_cave.png')
-    FLOOR_stage_I = load_image('./Textures/floor_cave.png')
+    if 1 <= map_floor.ROUND <= 3:
+        BG_stage_I = load_image('./Textures/bg_cave.png')
+    elif 4 <= map_floor.ROUND <= 6:
+        BG_stage_I = load_image('./Textures/bg_jungle.png')
+
+    if 1 <= map_floor.ROUND <= 3:
+        FLOOR_stage_I = load_image('./Textures/floor_cave.png')
+    elif 4 <= map_floor.ROUND <= 6:
+        FLOOR_stage_I = load_image('./Textures/floor_jungle.png')
 
 
 def exit():
