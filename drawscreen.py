@@ -19,15 +19,18 @@ def map_chanege():
             map_floor_array += map_floor_array_1
             monster_list += monster_list_1stage
             monster_place += monster_place_1stage
-            # map_floor_array += map_floor_array_2
-            # monster_list += monster_list_2stage
-            # monster_place += monster_place_2stage
         elif ROUND == 2:
             map_floor_array += map_floor_array_2
+            monster_list += monster_list_2stage
+            monster_place += monster_place_2stage
         elif ROUND == 3:
             map_floor_array += map_floor_array_3
             monster_list += monster_list_3stage
             monster_place += monster_place_3stage
+        elif ROUND == 4:
+            map_floor_array += map_floor_array_4
+            monster_list += monster_list_4stage
+            monster_place += monster_place_4stage
     else:
         map_floor_array += map_clear
 

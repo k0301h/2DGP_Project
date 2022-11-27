@@ -458,3 +458,12 @@ monster_place_3stage = [[22, 15], [27, 22], [11, 39], [29, 46],    # bat
                         [5, 18], [6, 29]]# snake
 
 monster_list_3stage += monster_list_3stage_bat + monster_list_3stage_snake
+
+monster_list_4stage = []
+monster_list_4stage_snake = [Snake() for i in range(2)]
+monster_list_4stage_bat = [Bat() for i in range(4)]
+
+monster_place_4stage = [[22, 15], [27, 22], [11, 39], [29, 46],    # bat
+                        [5, 18], [6, 29]]# snake
+
+monster_list_4stage += monster_list_4stage_bat + monster_list_4stage_snake

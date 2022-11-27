@@ -21,7 +21,7 @@ WALK_SPEED_MPM = (WALK_SPEED_KMPH * 1000.0 / 60.0)
 WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
 WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
-GRAVITY_ASPEED_KMPH = 1.0       # 2.5
+GRAVITY_ASPEED_KMPH = 1.2      # 2.5
 GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
@@ -501,10 +501,10 @@ class CHARACTER():
                     self.Climb_up_key_state = False
 
     def clear_motion(self):
-        if self.timer < 2:
+        if self.timer < 2.0:
             self.DIRECTION = 0
             self.Action = 1
-            self.timer += game_framework.frame_time
+            self.timer += game_framework.frame_time / 2
         else:
             self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 7 + 16 * 3
 
