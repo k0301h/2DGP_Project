@@ -137,6 +137,8 @@ class CHARACTER():
         elif mode == 4:     # 출구 체크
             character_index_x = int(self.X // 60)
             character_index_y = int((HEIGHT - self.Y) // 60)
+            if map_floor_array[character_index_y - 1][character_index_x] == -1:
+                return True
             if not map_floor_array[character_index_y][character_index_x] == -1:
                 return False
         elif mode == 5:     # 블럭에 매달리기

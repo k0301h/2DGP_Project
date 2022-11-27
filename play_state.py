@@ -41,7 +41,7 @@ def enter():
     count = 0
     round_check += 1
     print(map_floor.ROUND)
-    if map_floor.ROUND >= 1:
+    if round_check >= 1:
         for monster in monster_list:
             monster.Place(monster_place[count][0], monster_place[count][1])
             count += 1
