@@ -135,11 +135,13 @@ class CHARACTER():
         elif mode == 3:     # 사다리 체크
             character_index_x = int(self.X // 60)
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
-            print(character_index_x, map_floor_array[character_index_y][character_index_x + 1], ((character_index_x + 1) * 60 - self.X))
-            if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or (30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and\
-                    ((character_index_x + 1) * 60 - self.X) < -20 or ((character_index_x + 1) * 60 - self.X) > 20):
+            print(map_floor_array[character_index_y][character_index_x + 1], map_floor_array[character_index_y][character_index_x], ((character_index_x + 1) * 60 - self.X), ((character_index_x) * 60 - self.X))
+            if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or \
+                    ((30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and (character_index_x + 1) * 60 - self.X) < -20) and\
+                    ((30 <= map_floor_array[character_index_y][character_index_x] <= 35) and ((character_index_x) * 60 - self.X) > 20):
                 return False
-            elif 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and not self.Climb_state:
+            elif (30 <= map_floor_array[character_index_y][character_index_x] <= 35 or \
+                  30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35) and not self.Climb_state:
                 self.X = character_index_x * 60
         elif mode == 4:     # 출구 체크
             character_index_x = int(self.X // 60)
@@ -550,6 +552,6 @@ class CHARACTER():
     def draw_UI(self, UI, UI_count):
         UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 30, 40, 40)                 # 생명
         UI_count.clip_draw(64 * (self.HP % 4), 320 - 64 * (self.HP // 4 + 1), 64, 64, 35, HEIGHT - 35, 30, 30)
-        UI.clip_draw(140, 512 - 125, 40, 40, 90, HEIGHT - 35, 30, 30)               # 폭탄
-        UI.clip_draw(200, 512 - 125, 40, 40, 140, HEIGHT - 35, 30, 30)              # 로프
-        UI.clip_draw(270, 512 - 115, 30, 40, WIDTH - 300, HEIGHT - 30, 30, 40)      # 돈
+        # UI.clip_draw(140, 512 - 125, 40, 40, 90, HEIGHT - 35, 30, 30)               # 폭탄
+        # UI.clip_draw(200, 512 - 125, 40, 40, 140, HEIGHT - 35, 30, 30)              # 로프
+        # UI.clip_draw(270, 512 - 115, 30, 40, WIDTH - 300, HEIGHT - 30, 30, 40)      # 돈
