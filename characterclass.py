@@ -21,12 +21,18 @@ WALK_SPEED_MPM = (WALK_SPEED_KMPH * 1000.0 / 60.0)
 WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
 WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
-GRAVITY_ASPEED_KMPH = 1.2      # 2.5
+if mode == 1:
+    GRAVITY_ASPEED_KMPH = 1.2  # 2.5
+elif mode == 2:
+    GRAVITY_ASPEED_KMPH = 2.5      # 2.5
 GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
-JUMP_SPEED_KMPH = 130.0     # 130
+if mode == 1:
+    JUMP_SPEED_KMPH = 130.0  # 130
+elif mode == 2:
+    JUMP_SPEED_KMPH = 100.0     # 130
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -129,8 +135,9 @@ class CHARACTER():
         elif mode == 3:     # 사다리 체크
             character_index_x = int(self.X // 60)
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
-            if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or (30 <= map_floor_array[character_index_y][character_index_x] <= 35 and\
-                    abs(self.X - character_index_x * 60) > 20):
+            print(character_index_x, map_floor_array[character_index_y][character_index_x + 1], ((character_index_x + 1) * 60 - self.X))
+            if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or (30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and\
+                    ((character_index_x + 1) * 60 - self.X) < -20 or ((character_index_x + 1) * 60 - self.X) > 20):
                 return False
             elif 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and not self.Climb_state:
                 self.X = character_index_x * 60
@@ -192,11 +199,7 @@ class CHARACTER():
         else:
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time - grav
         # print(JUMP_SPEED_PPS, game_framework.frame_time, self.JumpSpeed, self.Hanging_jump)
-        if self.JumpSpeed < self.DownSpeed:
-            self.Jump_Key_State = False
-            self.DownSpeed = 0
-            self.Down_Distance = 0
-        elif self.JumpSpeed > 0 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
+        if self.JumpSpeed > 0 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
             self.Gravity = GRAVITY_ASPEED_PPS * game_framework.frame_time
             if not self.Attack_state:
                 self.MotionIndex = (self.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16 % 8 + 16 * 9
@@ -207,7 +210,6 @@ class CHARACTER():
                     self.camera_move_y += self.JumpSpeed
         else:
             self.Jump_Key_State = False
-            # self.Can_Jump = True
             self.DownSpeed = 0
             self.Down_Distance = 0
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
@@ -303,7 +305,8 @@ class CHARACTER():
 
     def Stun(self):
         self.stun.MotionIndex = (self.stun.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11 + 16 * 13
-        if time.time() - self.timer >= 3:
+        self.timer += game_framework.frame_time
+        if self.timer >= 3:
             self.Stun_state = False
             self.timer = 0
 
@@ -333,6 +336,7 @@ class CHARACTER():
 
             if self.Climb_state:
                 self.walk_move_speed = WALK_SPEED_PPS * game_framework.frame_time
+                self.Can_Jump = True
                 if self.Climb_up_key_state and self.Conflict_checking(3, self.walk_move_speed):
                     self.Y += self.walk_move_speed
                     if self.Y - self.camera_move_y >= HEIGHT - 200:

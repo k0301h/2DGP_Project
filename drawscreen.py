@@ -114,6 +114,9 @@ def draw_map_floor(FLOOR_stage_I, Deco_tutorial_I, trap, character, range_l = 0,
                     FLOOR_stage_I.clip_draw(128 * 4, 1410 - 128 * (map_floor_array[index_y][index_x] - 30)
                                             , 128, 128, index_x * 60 - character.camera_move_x,
                                             HEIGHT - index_y * 60 - character.camera_move_y, 60, 60)
+                    # FLOOR_stage_I.clip_draw_to_origin(128 * 4, 1410 - 128 * (map_floor_array[index_y][index_x] - 30)
+                    #                         , 128, 128, 64, 64, 60,60)
+
                 elif 36 <= map_floor_array[index_y][index_x] <= 39:
                     FLOOR_stage_I.clip_draw(128 * (map_floor_array[index_y][index_x] - 31), 1410 - 1155
                                             , 128, 128, index_x * 60 - character.camera_move_x,

@@ -64,8 +64,6 @@ def enter():
 
     select_image = load_image('./Textures/menu_basic.png')
 
-
-
 def exit():
     print('exit title_state')
     global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
