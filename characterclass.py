@@ -56,8 +56,8 @@ class CHARACTER():
     type = 'Anna'
 
     mode = 0
-    itemmode = 0 # 0 : 맨손 1 : 샷건
-    handle_item = None
+    itemmode = 1 # 0 : 맨손 1 : 샷건
+    handle_item = shotgun()
 
     Gravity = None
     JumpSpeed = None
@@ -96,7 +96,6 @@ class CHARACTER():
     stun = SUB()
 
     def __init__(self):
-
         if CHARACTER.grid_image == None:
             CHARACTER.grid_image = load_image('./Textures/Entities/char_yellow_full_grid.png')
 
@@ -141,10 +140,10 @@ class CHARACTER():
         elif mode == 3:     # 사다리 체크
             character_index_x = int(self.X // 60)
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
-            print(map_floor_array[character_index_y][character_index_x + 1], map_floor_array[character_index_y][character_index_x], ((character_index_x + 1) * 60 - self.X), ((character_index_x) * 60 - self.X))
+            print(map_floor_array[character_index_y][character_index_x + 1],((character_index_x + 1) * 60 - self.X),  map_floor_array[character_index_y][character_index_x], self.X - character_index_x * 60)
             if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or \
-                    ((30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and (character_index_x + 1) * 60 - self.X) < -20) and\
-                    ((30 <= map_floor_array[character_index_y][character_index_x] <= 35) and ((character_index_x) * 60 - self.X) > 20):
+                    ((30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and (character_index_x + 1) * 60 - self.X) < 20) or\
+                    ((30 <= map_floor_array[character_index_y][character_index_x] <= 35) and (self.X - character_index_x * 60) < 20):
                 return False
             elif (30 <= map_floor_array[character_index_y][character_index_x] <= 35 or \
                   30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35) and not self.Climb_state:
@@ -472,7 +471,10 @@ class CHARACTER():
                 elif event.key == SDLK_LSHIFT:
                     self.shift_on = True
                 elif event.key == SDLK_b:
-                    ROUND = 1
+                    if self.itemmode:
+                        self.itemmode = 0
+                    else:
+                        self.itemmode = 1
                 elif event.key == SDLK_m:
                     if self.mode:
                         self.mode = 0
@@ -535,9 +537,9 @@ class CHARACTER():
         if self.DIRECTION == 0:
             if self.Attack_state:
                 self.image.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
-                                      1918 - 128 * (int(self.whip.MotionIndex) // 16),
-                                      128, 128, self.whip.X - self.camera_move_x,
-                                      self.whip.Y - self.camera_move_y, 60, 60)
+                                    1918 - 128 * (int(self.whip.MotionIndex) // 16),
+                                    128, 128, self.whip.X - self.camera_move_x,
+                                    self.whip.Y - self.camera_move_y, 60, 60)
             self.image.clip_draw(int(self.MotionIndex) % 16 * 128,
                                   1918 - 128 * (int(self.MotionIndex) // 16),
                                   128, 128, self.X - self.camera_move_x,
@@ -554,6 +556,8 @@ class CHARACTER():
                                   128, 128, 0, 'h', self.X - self.camera_move_x,
                                            self.Y - self.camera_move_y - self.scale / 2,
                                            60 - self.scale, 60 - self.scale)
+        if self.itemmode:
+            self.handle_item.draw(self)
 
     def draw_UI(self, UI, UI_count):
         UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 30, 40, 40)                 # 생명
