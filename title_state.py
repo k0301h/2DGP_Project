@@ -22,7 +22,9 @@ main_body_image = None
 main_head_image = None
 main_door_image = None
 
-music = None
+title_music = None
+select_sound = None
+earthquake_sound = None
 
 select_menu_x = WIDTH / 2
 select_menu_y = HEIGHT / 2
@@ -49,7 +51,8 @@ ROTATION_SPEED_PPS = (ROTATION_SPEED_MPS * PIXEL_PER_METER)
 def enter():
     print('enter title_state')
     global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
-        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font, music
+        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font, title_music, earthquake_sound\
+        , sound
     main_image0 = load_image('./Textures/hud_controller_buttons.png')
     main_image1 = load_image('./Textures/menu_title.png')
     main_image2 = load_image('./Textures/menu_titlegal.png')
@@ -69,15 +72,17 @@ def enter():
     select_image = load_image('./Textures/menu_basic.png')
 
     font = load_font('./Textures/ENCR10B.TTF', 50)
-    music = load_wav('./sound/title.mp3')
+
+    title_music = load_wav('./sound/title.mp3')
+    # earthquake_sound = load_wav('./sound/earthquake.mp3')
 
     # music.set_volume(100)
-    music.play()
+    title_music.play()
 
 def exit():
     print('exit title_state')
     global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
-        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font, music
+        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font, title_music
     del main_image0
     del main_image1
     del main_image2
@@ -97,7 +102,7 @@ def exit():
     del select_image
     del font
 
-    del music
+    del title_music
 def update():
     # print('update title_state')
     global running, radian, move, end_move, rotation_finish, end_move_y, select_move
@@ -141,14 +146,13 @@ def draw():
         sub_back_image0.clip_draw(0, 0, 512, 512, WIDTH / 2 + move, HEIGHT / 2, WIDTH, HEIGHT)
         sub_image0.clip_draw(0, 0, 1024, 256, WIDTH / 2 + move, HEIGHT / 5, (2 * WIDTH) / 3, HEIGHT / 4)
 
-        font.draw(WIDTH * 3 / 7, HEIGHT * 3 / 5, 'Game Start', (255, 255, 255))
-        if character == 'Anna':
-            font.draw(WIDTH * 7 / 15, HEIGHT / 2, 'Anna', (255, 255, 255))
-        elif character == 'spelunky':
-            font.draw(WIDTH * 4 / 9, HEIGHT / 2, 'spelunky', (255, 255, 255))
-        font.draw(WIDTH * 7 / 15, HEIGHT * 2 / 5, 'Exit', (255, 255, 255))
-
         if running:
+            font.draw(WIDTH * 3 / 7, HEIGHT * 3 / 5, 'Game Start', (255, 255, 255))
+            if character == 'Anna':
+                font.draw(WIDTH * 7 / 15, HEIGHT / 2, 'Anna', (255, 255, 255))
+            elif character == 'spelunky':
+                font.draw(WIDTH * 4 / 9, HEIGHT / 2, 'spelunky', (255, 255, 255))
+            font.draw(WIDTH * 7 / 15, HEIGHT * 2 / 5, 'Exit', (255, 255, 255))
             select_image.clip_draw(895, 1280 - 730, 360, 55, select_menu_x - WIDTH / 6 - select_move, select_menu_y, 210, 30)
             select_image.clip_composite_draw(895, 1280 - 730, 360, 55, 0, 'h', select_menu_x + WIDTH / 6 + select_move, select_menu_y,
                                          210, 30)
@@ -180,7 +184,7 @@ def draw():
 
 def handle_events():
     handle = get_events()
-    global game_start, select_menu_y, select_move, radian, end_move, end_move_y, running, character
+    global game_start, select_menu_y, select_move, radian, end_move, end_move_y, running, character, title_music
     for event in handle:
         if event.type == SDL_QUIT:
             game_framework.quit()
@@ -189,10 +193,13 @@ def handle_events():
                 game_framework.quit()
             elif event.key == SDLK_RETURN:
                 if game_start:
+                    # title_music = load_wav('./sound/earthquake.mp3')
+                    # title_music.play()
                     radian = 7
                     end_move = HEIGHT
                     end_move_y = HEIGHT
                     running = True
+                    game_start = False
                 if running and select_menu_y == HEIGHT / 2 + HEIGHT / 10:
                     play_state.character = character
                     game_framework.change_state(play_state)

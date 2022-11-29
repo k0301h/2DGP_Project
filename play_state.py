@@ -26,13 +26,15 @@ UI_count = None
 
 character = None
 
+music = None
+
 timer = 0
 
 round_check = 0
 
 def enter():
     print("enter play_state")
-    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I, trap, round_check, character
+    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I, trap, round_check, character, music
 
     drawscreen.map_chanege()
 
@@ -70,11 +72,9 @@ def enter():
     game_world.add_object(main_character, 2)
     game_world.add_objects(monster_list, 2)
 
-    # count = 0
-    # for unit in game_world.all_object():
-    #     print(unit)
-    #     count += 1
-    # print(count)
+    music = load_wav('./sound/stage1.mp3')
+
+    music.play()
 def exit():
     print('exit play_state')
     global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, trap, Deco_tutorial_I
