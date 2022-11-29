@@ -24,13 +24,13 @@ WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 if mode == 1:
     GRAVITY_ASPEED_KMPH = 1.2  # 2.5
 elif mode == 2:
-    GRAVITY_ASPEED_KMPH = 2.5      # 2.5
+    GRAVITY_ASPEED_KMPH = 2.3      # 2.5
 GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
 if mode == 1:
-    JUMP_SPEED_KMPH = 130.0  # 130
+    JUMP_SPEED_KMPH = 120.0  # 130
 elif mode == 2:
     JUMP_SPEED_KMPH = 100.0     # 130
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
@@ -212,8 +212,8 @@ class CHARACTER():
                     self.camera_move_y += self.JumpSpeed
         else:
             self.Jump_Key_State = False
-            self.DownSpeed = 0
-            self.Down_Distance = 0
+            # self.DownSpeed = 0
+            # self.Down_Distance = 0
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
 
     def Attack(self, monster):
