@@ -69,15 +69,15 @@ def enter():
     select_image = load_image('./Textures/menu_basic.png')
 
     font = load_font('./Textures/ENCR10B.TTF', 50)
-
     music = load_wav('./sound/title.mp3')
 
+    # music.set_volume(100)
     music.play()
 
 def exit():
     print('exit title_state')
     global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
-        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font
+        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font, music
     del main_image0
     del main_image1
     del main_image2
@@ -97,6 +97,7 @@ def exit():
     del select_image
     del font
 
+    del music
 def update():
     # print('update title_state')
     global running, radian, move, end_move, rotation_finish, end_move_y, select_move
