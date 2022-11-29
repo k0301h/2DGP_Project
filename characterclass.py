@@ -53,6 +53,8 @@ class CHARACTER():
     RopeCount = 4
     Money = 0
 
+    type = 'Anna'
+
     mode = 0
     itemmode = 0 # 0 : 맨손 1 : 샷건
     handle_item = None
@@ -94,12 +96,16 @@ class CHARACTER():
     stun = SUB()
 
     def __init__(self):
-        if CHARACTER.image == None:
-            CHARACTER.image = load_image('./Textures/char_yellow.png')
+
         if CHARACTER.grid_image == None:
             CHARACTER.grid_image = load_image('./Textures/Entities/char_yellow_full_grid.png')
 
     def Place(self):
+        if CHARACTER.image == None:
+            if self.type == 'Anna':
+                CHARACTER.image = load_image('./Textures/char_yellow.png')
+            elif self.type == 'spelunky':
+                CHARACTER.image = load_image('./Textures/guy_spelunky.png')
         for index_x in range(0, map_size):
             for index_y in range(0, map_size):
                 if map_floor_array[index_y][index_x] == 1:

@@ -34,6 +34,8 @@ end_move = 0
 end_move_y = 0
 rotation_finish = False
 select_move = HEIGHT / 10
+font = None
+character = 'spelunky'
 
 PIXEL_PER_METER = (10 / 0.5)
 
@@ -45,7 +47,7 @@ ROTATION_SPEED_PPS = (ROTATION_SPEED_MPS * PIXEL_PER_METER)
 def enter():
     print('enter title_state')
     global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
-        sub_image4, select_image, main_body_image, main_head_image, main_door_image
+        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font
     main_image0 = load_image('./Textures/hud_controller_buttons.png')
     main_image1 = load_image('./Textures/menu_title.png')
     main_image2 = load_image('./Textures/menu_titlegal.png')
@@ -64,10 +66,12 @@ def enter():
 
     select_image = load_image('./Textures/menu_basic.png')
 
+    font = load_font('./Textures/ENCR10B.TTF', 50)
+
 def exit():
     print('exit title_state')
     global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
-        sub_image4, select_image, main_body_image, main_head_image, main_door_image
+        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font
     del main_image0
     del main_image1
     del main_image2
@@ -85,7 +89,7 @@ def exit():
     del sub_image4
 
     del select_image
-
+    del font
 
 def update():
     # print('update title_state')
@@ -130,6 +134,13 @@ def draw():
         sub_back_image0.clip_draw(0, 0, 512, 512, WIDTH / 2 + move, HEIGHT / 2, WIDTH, HEIGHT)
         sub_image0.clip_draw(0, 0, 1024, 256, WIDTH / 2 + move, HEIGHT / 5, (2 * WIDTH) / 3, HEIGHT / 4)
 
+        font.draw(WIDTH * 3 / 7, HEIGHT * 3 / 5, 'Game Start', (255, 255, 255))
+        if character == 'Anna':
+            font.draw(WIDTH * 7 / 15, HEIGHT / 2, 'Anna', (255, 255, 255))
+        elif character == 'spelunky':
+            font.draw(WIDTH * 4 / 9, HEIGHT / 2, 'spelunky', (255, 255, 255))
+        font.draw(WIDTH * 7 / 15, HEIGHT * 2 / 5, 'Exit', (255, 255, 255))
+
         if running:
             select_image.clip_draw(895, 1280 - 730, 360, 55, select_menu_x - WIDTH / 6 - select_move, select_menu_y, 210, 30)
             select_image.clip_composite_draw(895, 1280 - 730, 360, 55, 0, 'h', select_menu_x + WIDTH / 6 + select_move, select_menu_y,
@@ -162,7 +173,7 @@ def draw():
 
 def handle_events():
     handle = get_events()
-    global game_start, select_menu_y, select_move, radian, end_move, end_move_y, running
+    global game_start, select_menu_y, select_move, radian, end_move, end_move_y, running, character
     for event in handle:
         if event.type == SDL_QUIT:
             game_framework.quit()
@@ -176,9 +187,14 @@ def handle_events():
                     end_move_y = HEIGHT
                     running = True
                 if running and select_menu_y == HEIGHT / 2 + HEIGHT / 10:
+                    play_state.character = character
                     game_framework.change_state(play_state)
                 elif running and select_menu_y == HEIGHT / 2:
-                    pass
+                    if play_state.character == None:
+                        if character == 'Anna':
+                            character = 'spelunky'
+                        elif character == 'spelunky':
+                            character = 'Anna'
                 elif running and select_menu_y == HEIGHT / 2 - HEIGHT / 10:
                     game_framework.quit()
                 game_start = True

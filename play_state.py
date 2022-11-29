@@ -24,18 +24,21 @@ trap = None
 UI = None
 UI_count = None
 
+character = None
+
 timer = 0
 
 round_check = 0
 
 def enter():
     print("enter play_state")
-    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I, trap, round_check
+    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, Deco_tutorial_I, trap, round_check, character
 
     drawscreen.map_chanege()
 
     # character
     main_character = CHARACTER()
+    main_character.type = character
     main_character.Place()
     # monster
     count = 0
