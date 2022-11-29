@@ -22,6 +22,8 @@ main_body_image = None
 main_head_image = None
 main_door_image = None
 
+music = None
+
 select_menu_x = WIDTH / 2
 select_menu_y = HEIGHT / 2
 
@@ -47,7 +49,7 @@ ROTATION_SPEED_PPS = (ROTATION_SPEED_MPS * PIXEL_PER_METER)
 def enter():
     print('enter title_state')
     global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
-        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font
+        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font, music
     main_image0 = load_image('./Textures/hud_controller_buttons.png')
     main_image1 = load_image('./Textures/menu_title.png')
     main_image2 = load_image('./Textures/menu_titlegal.png')
@@ -67,6 +69,10 @@ def enter():
     select_image = load_image('./Textures/menu_basic.png')
 
     font = load_font('./Textures/ENCR10B.TTF', 50)
+
+    music = load_wav('./sound/title.mp3')
+
+    music.play()
 
 def exit():
     print('exit title_state')

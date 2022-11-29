@@ -424,7 +424,8 @@ class CHARACTER():
                         self.whip.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 12 + 10
                         self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 4
                     elif self.itemmode == 1:    # 샷건 공격
-                        pass
+                        for i in range(3):
+                            self.handle_item.bullet_object[i].move()
 
         self.gravity()
 
@@ -482,15 +483,19 @@ class CHARACTER():
                         self.mode= 1
                     pass
                 elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State):
-                    self.MotionIndex = 0
                     self.Attack_key_state = True
-                    # 공격시 채찍 위치 오류 완화
-                    if self.DIRECTION == 0:
-                        self.whip.X = self.X - 45
-                        self.whip.Y = self.Y - 10
-                    elif self.DIRECTION == 1:
-                        self.whip.X = self.X + 45
-                        self.whip.Y = self.Y - 10
+                    if not self.itemmode:
+                        self.MotionIndex = 0
+                        # 공격시 채찍 위치 오류 완화
+                        if self.DIRECTION == 0:
+                            self.whip.X = self.X - 45
+                            self.whip.Y = self.Y - 10
+                        elif self.DIRECTION == 1:
+                            self.whip.X = self.X + 45
+                            self.whip.Y = self.Y - 10
+                    else:
+                        for i in range(3):
+                            self.handle_item.bullet_object[i].Place(self)
                 elif event.key == SDLK_x:
                     if self.Conflict_checking(4, 0):
                         self.Action = 5
@@ -558,6 +563,9 @@ class CHARACTER():
                                            60 - self.scale, 60 - self.scale)
         if self.itemmode:
             self.handle_item.draw(self)
+        if self.Attack_key_state:
+            for i in range(3):
+                self.handle_item.bullet_object[i].draw(self)
 
     def draw_UI(self, UI, UI_count):
         UI.clip_draw(0, 512 - 250, 60, 59, 30, HEIGHT - 30, 40, 40)                 # 생명
