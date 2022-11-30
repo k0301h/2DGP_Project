@@ -72,12 +72,12 @@ def enter():
     game_world.add_object(main_character, 2)
     game_world.add_objects(monster_list, 2)
 
-    music = load_wav('./sound/stage1.mp3')
+    music = load_music('./sound/stage1.mp3')
 
     music.play()
 def exit():
     print('exit play_state')
-    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, trap, Deco_tutorial_I
+    global main_character, BG_stage_I, FLOOR_stage_I, UI, UI_count, trap, Deco_tutorial_I, music
     game_world.clear()
 
     del main_character
@@ -89,6 +89,7 @@ def exit():
 
     del UI
     del UI_count
+    del music
 
 def update():
     global timer, round_check

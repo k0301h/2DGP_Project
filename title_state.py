@@ -77,6 +77,7 @@ def enter():
     earthquake_sound = load_wav('./sound/earthquake.wav')
     select_sound = load_wav('./sound/select.wav')
 
+    title_music.set_volume(50)
     title_music.play()
 
 def exit():
@@ -117,20 +118,25 @@ def update():
         if radian >= 6.28:
             rotation_finish = True
     elif rotation_finish:
+        earthquake_sound.set_volume(0)
         delay(0.5)
         rotation_finish = False
     elif end_move <= HEIGHT * 3 / 5 and game_start:
         end_move += HEIGHT / 100
+        earthquake_sound.set_volume(100)
         delay(0.03)
         move = -move
         if end_move >= HEIGHT * 3 / 5:
             rotation_finish = True
     elif end_move_y <= HEIGHT * 3 / 5 and game_start:
         end_move_y += HEIGHT / 80
+        earthquake_sound.set_volume(100)
         delay(0.03)
         move = -move
         if end_move_y >= HEIGHT * 3 / 5:
             running = True
+            earthquake_sound.__del__()
+            title_music.set_volume(70)
     elif running:
         if mode == 1:
             select_move -= 5
@@ -197,8 +203,11 @@ def handle_events():
             elif event.key == SDLK_RETURN:
                 if not game_start:
                     game_start = True
+                    title_music.set_volume(10)
                     earthquake_sound.play()
                 else:
+                    earthquake_sound.__del__()
+                    title_music.set_volume(70)
                     radian = 7
                     end_move = HEIGHT
                     end_move_y = HEIGHT
