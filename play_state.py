@@ -45,7 +45,7 @@ def enter():
     # monster
     count = 0
     round_check += 1
-    print(map_floor.ROUND)
+    print(round_check)
     if round_check >= 1:
         for monster in monster_list:
             monster.Place(monster_place[count][0], monster_place[count][1])
@@ -91,7 +91,7 @@ def exit():
     del UI_count
 
 def update():
-    global timer
+    global timer, round_check
     # print('update play_state')
     if map_floor.ROUND >= 1:
         for unit in game_world.all_object():
@@ -112,6 +112,7 @@ def update():
 
     if main_character.HP <= 0:
         timer += game_framework.frame_time
+
     elif main_character.scale == 60:
         drawscreen.clear = True
         drawscreen.ROUND += 1
@@ -120,6 +121,7 @@ def update():
 
     if timer >= 3:
         timer = 0
+        round_check -= 1
         main_character.HP = 5
         game_framework.push_state(gameover_state)
 

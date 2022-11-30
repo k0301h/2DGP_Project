@@ -141,13 +141,20 @@ class CHARACTER():
             character_index_x = int(self.X // 60)
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
             print(map_floor_array[character_index_y][character_index_x + 1],((character_index_x + 1) * 60 - self.X),  map_floor_array[character_index_y][character_index_x], self.X - character_index_x * 60)
-            if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or \
-                    ((30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and (character_index_x + 1) * 60 - self.X) < 20) or\
-                    ((30 <= map_floor_array[character_index_y][character_index_x] <= 35) and (self.X - character_index_x * 60) < 20):
+            # if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or \
+            #         ((30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and (character_index_x + 1) * 60 - self.X) < 20) or\
+            #         ((30 <= map_floor_array[character_index_y][character_index_x] <= 35) and (self.X - character_index_x * 60) < 20):
+            #     return False
+            if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and\
+                    self.X - character_index_x * 60 < 20:
                 return False
-            elif (30 <= map_floor_array[character_index_y][character_index_x] <= 35 or \
-                  30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35) and not self.Climb_state:
+            elif not 30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and \
+                    (character_index_x + 1) * 60 - self.X < 20:
+                return False
+            elif 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and not self.Climb_state:
                 self.X = character_index_x * 60
+            elif 30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and not self.Climb_state:
+                self.X = (character_index_x + 1) * 60
         elif mode == 4:     # 출구 체크
             character_index_x = int(self.X // 60)
             character_index_y = int((HEIGHT - self.Y) // 60)
@@ -434,7 +441,7 @@ class CHARACTER():
         for event in self.handle:
             if event.type == SDL_KEYDOWN:
                 if event.key == SDLK_UP:
-                    if self.Conflict_checking(3, 0):
+                    if self.Conflict_checking(3, 0) and not self.Action == 5:
                         self.Climb_up_key_state = True
                         self.Climb_state = True
                         self.Can_Jump = True
@@ -443,25 +450,25 @@ class CHARACTER():
                         self.Jump_Key_State = False
                         self.Action = 0
                 elif event.key == SDLK_RIGHT:
-                    if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State) and not self.Stun_state:
+                    if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State) and not self.Stun_state and not self.Action == 5:
                         self.Action = 1
                         self.DIRECTION = 0
                 elif event.key == SDLK_DOWN:
-                    if self.Conflict_checking(3, 0) and self.Climb_state:
+                    if self.Conflict_checking(3, 0) and self.Climb_state and not self.Action == 5:
                         self.Climb_down_key_state = True
                         self.Can_Jump = True
                         self.JumpSpeed = 3
                         self.Jump_Key_State = False
-                    else:
+                    elif not self.Action == 5:
                         self.Action = 2
                 elif event.key == SDLK_LEFT:
-                    if self.Action != 2 and (not self.Climb_state or self.Jump_Key_State) and not self.Stun_state:
+                    if self.Action != 2 and not self.Action == 5 and (not self.Climb_state or self.Jump_Key_State) and not self.Stun_state:
                         self.DIRECTION = 1
                         self.Action = 3
                 elif event.key == SDLK_LALT:
-                    if self.Action == 2 and not self.Jump_Key_State and self.Can_Jump:
+                    if self.Action == 2 and not self.Jump_Key_State and self.Can_Jump and not self.Action == 5:
                         self. Down_Jump_state = True
-                    elif not self.Jump_Key_State and self.Can_Jump and self.jump_landing:
+                    elif not self.Jump_Key_State and self.Can_Jump and self.jump_landing and not self.Action == 5:
                         if not self.Jump_Key_State:
                             self.Jump_Key_State = True
                         self.Can_Jump = False
@@ -482,7 +489,7 @@ class CHARACTER():
                     else: 
                         self.mode= 1
                     pass
-                elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State):
+                elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State) and not self.Action == 5:
                     self.Attack_key_state = True
                     if not self.itemmode:
                         self.MotionIndex = 0
@@ -499,19 +506,21 @@ class CHARACTER():
                 elif event.key == SDLK_x:
                     if self.Conflict_checking(4, 0):
                         self.Action = 5
+                        self.itemmode = 0
                         self.MotionIndex = 0
             elif event.type == SDL_KEYUP:
-                if event.key == SDLK_RIGHT and self.Action == 1 and (not self.Climb_state or self.Jump_Key_State):
+                if event.key == SDLK_RIGHT and self.Action == 1 and (not self.Climb_state or self.Jump_Key_State) and not self.Action == 5:
                     self.Action = 0
-                elif event.key == SDLK_DOWN and self.Action == 2 and (not self.Climb_state or self.Jump_Key_State):
+                elif event.key == SDLK_DOWN and self.Action == 2 and (not self.Climb_state or self.Jump_Key_State) and not self.Action == 5:
                     self.Action = 0
-                elif event.key == SDLK_DOWN:
+                elif event.key == SDLK_DOWN and not self.Action == 5:
                     self.Climb_down_key_state = False
-                elif event.key == SDLK_LEFT and self.Action == 3 and (not self.Climb_state or self.Jump_Key_State):
+                elif event.key == SDLK_LEFT and self.Action == 3 and (not self.Climb_state or self.Jump_Key_State) and not self.Action == 5:
                     self.Action = 0
-                elif event.key == SDLK_LALT:
+                elif event.key == SDLK_LALT and not self.Action == 5:
                     self.Jump_Key_State = False
                     self.Down_Jump_state = False
+                    self.Can_Jump = True
                     # self.Climb_up_key_state = False
                     # self.Climb_down_key_state = False
                 elif event.key == SDLK_LSHIFT:
