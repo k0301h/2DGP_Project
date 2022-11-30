@@ -52,7 +52,7 @@ def enter():
     print('enter title_state')
     global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
         sub_image4, select_image, main_body_image, main_head_image, main_door_image, font, title_music, earthquake_sound\
-        , sound
+        , select_sound
     main_image0 = load_image('./Textures/hud_controller_buttons.png')
     main_image1 = load_image('./Textures/menu_title.png')
     main_image2 = load_image('./Textures/menu_titlegal.png')
@@ -73,16 +73,17 @@ def enter():
 
     font = load_font('./Textures/ENCR10B.TTF', 50)
 
-    title_music = load_wav('./sound/title.mp3')
-    # earthquake_sound = load_wav('./sound/earthquake.mp3')
+    title_music = load_music('./sound/title.mp3')
+    earthquake_sound = load_wav('./sound/earthquake.wav')
+    select_sound = load_wav('./sound/select.wav')
 
-    # music.set_volume(100)
     title_music.play()
 
 def exit():
     print('exit title_state')
     global main_image0, main_image1, main_image2, sub_back_image0, sub_image0, sub_image1, sub_image2, sub_image3, \
-        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font, title_music
+        sub_image4, select_image, main_body_image, main_head_image, main_door_image, font, title_music, earthquake_sound,\
+        select_sound
     del main_image0
     del main_image1
     del main_image2
@@ -103,6 +104,8 @@ def exit():
     del font
 
     del title_music
+    del earthquake_sound
+    del select_sound
 def update():
     # print('update title_state')
     global running, radian, move, end_move, rotation_finish, end_move_y, select_move
@@ -184,7 +187,7 @@ def draw():
 
 def handle_events():
     handle = get_events()
-    global game_start, select_menu_y, select_move, radian, end_move, end_move_y, running, character, title_music
+    global game_start, select_menu_y, select_move, radian, end_move, end_move_y, running, character
     for event in handle:
         if event.type == SDL_QUIT:
             game_framework.quit()
@@ -192,14 +195,14 @@ def handle_events():
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             elif event.key == SDLK_RETURN:
-                if game_start:
-                    # title_music = load_wav('./sound/earthquake.mp3')
-                    # title_music.play()
+                if not game_start:
+                    game_start = True
+                    earthquake_sound.play()
+                else:
                     radian = 7
                     end_move = HEIGHT
                     end_move_y = HEIGHT
                     running = True
-                    game_start = False
                 if running and select_menu_y == HEIGHT / 2 + HEIGHT / 10:
                     play_state.character = character
                     game_framework.change_state(play_state)
@@ -211,13 +214,15 @@ def handle_events():
                             character = 'Anna'
                 elif running and select_menu_y == HEIGHT / 2 - HEIGHT / 10:
                     game_framework.quit()
-                game_start = True
+
             elif event.key == SDLK_UP:
                 select_menu_y += HEIGHT // 10
+                select_sound.play()
                 select_move = 100
                 select_menu_y = clamp(HEIGHT / 2 - HEIGHT / 10, select_menu_y, HEIGHT / 2 + HEIGHT / 10)
             elif event.key == SDLK_DOWN:
                 select_menu_y -= HEIGHT // 10
+                select_sound.play()
                 select_move = 100
                 select_menu_y = clamp(HEIGHT / 2 - HEIGHT / 10, select_menu_y, HEIGHT / 2 + HEIGHT / 10)
             elif event.key == SDLK_SPACE:

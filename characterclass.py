@@ -92,6 +92,8 @@ class CHARACTER():
     image = None
     grid_image = None
 
+    landing_sound = load_wav('./sound/player_jump.wav')
+
     whip = SUB()
     stun = SUB()
 
@@ -471,6 +473,7 @@ class CHARACTER():
                     elif not self.Jump_Key_State and self.Can_Jump and self.jump_landing and not self.Action == 5:
                         if not self.Jump_Key_State:
                             self.Jump_Key_State = True
+                        self.landing_sound.play()
                         self.Can_Jump = False
                         self.jump_landing = False
                         self.Hanging_state = False
