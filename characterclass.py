@@ -49,9 +49,9 @@ class CHARACTER():
     X = 400
     Y = 400
     DIRECTION = 0
-    BombCount = 4
-    RopeCount = 4
-    Money = 0
+    # BombCount = 4
+    # RopeCount = 4
+    # Money = 0
 
     type = 'Anna'
 
@@ -92,7 +92,8 @@ class CHARACTER():
     image = None
     grid_image = None
 
-    landing_sound = load_wav('./sound/player_jump.wav')
+    jump_sound = None
+    landing_sound = None
 
     whip = SUB()
     stun = SUB()
@@ -100,6 +101,9 @@ class CHARACTER():
     def __init__(self):
         if CHARACTER.grid_image == None:
             CHARACTER.grid_image = load_image('./Textures/Entities/char_yellow_full_grid.png')
+        self.jump_sound = load_wav('./sound/player_jump.wav')
+        self.landing_sound = load_wav('./sound/Landing.wav')
+        self.landing_sound.set_volume(30)
 
     def Place(self):
         if CHARACTER.image == None:
@@ -311,12 +315,13 @@ class CHARACTER():
                 self.stun.MotionIndex = 16 * 13
                 self.Stun_state = True
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
-            self.DownSpeed = 0
+            self.DownSpeed = self.Gravity
             self.Down_Distance = 0
             self.Gravity_state = False
             self.Hanging_jump = False
-            if not self.Conflict_checking(7,0):
+            if not self.Conflict_checking(7,0) and not self.jump_landing:
                 self.jump_landing = True
+                self.landing_sound.play()
             self.Can_Jump = True
 
     def Stun(self):
@@ -473,7 +478,7 @@ class CHARACTER():
                     elif not self.Jump_Key_State and self.Can_Jump and self.jump_landing and not self.Action == 5:
                         if not self.Jump_Key_State:
                             self.Jump_Key_State = True
-                        self.landing_sound.play()
+                        self.jump_sound.play()
                         self.Can_Jump = False
                         self.jump_landing = False
                         self.Hanging_state = False
@@ -504,6 +509,7 @@ class CHARACTER():
                             self.whip.X = self.X + 45
                             self.whip.Y = self.Y - 10
                     else:
+                        self.handle_item.sound.play()
                         for i in range(3):
                             self.handle_item.bullet_object[i].Place(self)
                 elif event.key == SDLK_x:

@@ -66,9 +66,12 @@ class shotgun:
     image = None
     bullet_object = [bullet() for _ in range(3)]
 
+    sound = None
+
     def __init__(self):
         if shotgun.image == None:
             shotgun.image = load_image('./Textures/items.png')
+        self.sound = load_wav('./sound/shotgun_fire.wav')
 
     def draw(self, character):
         if character.DIRECTION:
