@@ -57,8 +57,10 @@ class Arrow_Trap:
             if HEIGHT - self.index_y * 60 - 40 <= unit.Y <= HEIGHT - self.index_y * 60 + 40 and \
                     self.index_x * 60 + 30 <= unit.X <= self.index_x * 60 + 30 + self.attack_range * 60:
                 if type(unit).__name__ == 'CHARACTER':
-                    if unit.mode == 1:
+                    if unit.mode == 1 and not unit.hit_state:
                         unit.HP -= 2
+                        if unit.HP > 0:
+                            unit.hit_state = True
                 else:
                     unit.HP -= 2
                 self.attack_state = True
@@ -66,8 +68,10 @@ class Arrow_Trap:
             if HEIGHT - self.index_y * 60 - 40 <= unit.Y <= HEIGHT - self.index_y * 60 + 40 and \
                     self.index_x * 60 - 30 - self.attack_range * 60 <= unit.X <= self.index_x * 60 - 30:
                 if type(unit).__name__ == 'CHARACTER':
-                    if unit.mode == 1:
+                    if unit.mode == 1 and not unit.hit_state:
                         unit.HP -= 2
+                        if unit.HP > 0:
+                            unit.hit_state = True
                 else:
                     unit.HP -= 2
                 self.attack_state = True

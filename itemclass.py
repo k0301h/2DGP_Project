@@ -5,7 +5,7 @@ import game_framework
 
 PIXEL_PER_METER = (10 / 0.5)
 
-RUN_SPEED_KMPH = 40.0
+RUN_SPEED_KMPH = 150.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -21,9 +21,13 @@ class bullet:
         if bullet.image == None:
             bullet.image = load_image('./Textures/items.png')
 
-    def Place(self, character):
-        self.X = character.X
-        self.Y = character.Y
+    def Place(self, character, index):
+        if character.DIRECTION:
+            self.X = character.X - 10
+        else:
+            self.X = character.X + 60
+        self.Y = character.Y - (index - 1) * 10
+        self.save = 1
         self.DIRECTION = character.DIRECTION
 
     def move(self):
@@ -46,16 +50,18 @@ class bullet:
             for index_x in range(character_index_x - 2, character_index_x + 3):
                 if 0 <= index_x < map_size and \
                         (2 <= map_floor_array[character_index_y][index_x] <= 29 or 40 <= map_floor_array[character_index_y][index_x] <= 41) and \
-                        abs(self.Y - (HEIGHT - character_index_y * 60)) < 58 and abs(self.X + move - index_x * 60) <= 55:
+                        abs(self.Y + 10 - (HEIGHT - character_index_y * 60 - 30)) < 40 and abs(self.X + 10 + move - index_x * 60 - 30) <= 40:
                     return False
         elif mode == 2:
             if sqrt((unit.X - self.X) ** 2 + (unit.Y - self.Y) ** 2) <= 40:
                 unit.HP -= 1
+                self.save = 0
         return True
     
     def draw(self, character):
-        self.image.clip_draw(50, 2048 - 1865, 30, 30, self.X - character.camera_move_x - 17,
-                                          self.Y - character.camera_move_y - 12, 20, 20)
+        if self.save:
+            self.image.clip_draw(50, 2048 - 1865, 30, 30, self.X - character.camera_move_x - 17,
+                                              self.Y - character.camera_move_y - 12, 20, 20)
 
 
 class shotgun:
@@ -72,6 +78,10 @@ class shotgun:
         if shotgun.image == None:
             shotgun.image = load_image('./Textures/items.png')
         self.sound = load_wav('./sound/shotgun_fire.wav')
+
+    def update(self, character):
+        if not self.bullet_object[0].save and not self.bullet_object[1].save and not self.bullet_object[2].save:
+            character.reload = True
 
     def draw(self, character):
         if character.DIRECTION:

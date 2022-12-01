@@ -56,8 +56,9 @@ class CHARACTER():
     type = 'Anna'
 
     mode = 0
-    itemmode = 1 # 0 : 맨손 1 : 샷건
+    itemmode = 0 # 0 : 맨손 1 : 샷건
     handle_item = shotgun()
+    reload = True
 
     Gravity = None
     JumpSpeed = None
@@ -68,11 +69,13 @@ class CHARACTER():
     walk_move_speed = None
 
     timer = 0
+    effect = False
     scale = 0 # 40
 
     camera_move_x = 0
     camera_move_y = 0
 
+    hit_state = False
     shift_on = False
     Can_Jump = True
     Jump_Key_State = False
@@ -230,8 +233,6 @@ class CHARACTER():
                     self.camera_move_y += self.JumpSpeed
         else:
             self.Jump_Key_State = False
-            # self.DownSpeed = 0
-            # self.Down_Distance = 0
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
 
     def Attack(self, monster):
@@ -440,7 +441,21 @@ class CHARACTER():
                     elif self.itemmode == 1:    # 샷건 공격
                         for i in range(3):
                             self.handle_item.bullet_object[i].move()
-
+                            self.handle_item.update(self)
+                            for m in monster:
+                                for i in range(3):
+                                    self.handle_item.bullet_object[i].Conflict_check(2, 0, m)
+            if self.hit_state and self.timer < 4:
+                self.timer += game_framework.frame_time
+                if 0.0 <= self.timer % 0.1 <= 0.01:
+                    if self.effect:
+                        self.effect = False
+                    else:
+                        self.effect = True
+            else:
+                self.timer = 0
+                self.hit_state = False
+                self.effect = False
         self.gravity()
 
     def key_down(self):
@@ -508,10 +523,11 @@ class CHARACTER():
                         elif self.DIRECTION == 1:
                             self.whip.X = self.X + 45
                             self.whip.Y = self.Y - 10
-                    else:
+                    elif self.reload:
                         self.handle_item.sound.play()
+                        self.reload = False
                         for i in range(3):
-                            self.handle_item.bullet_object[i].Place(self)
+                            self.handle_item.bullet_object[i].Place(self, i)
                 elif event.key == SDLK_x:
                     if self.Conflict_checking(4, 0):
                         self.Action = 5
@@ -547,38 +563,67 @@ class CHARACTER():
 
 
     def draw(self):
-        self.grid_image.clip_draw(int(self.MotionIndex) % 16 * 128,
-                                  1918 - 128 * (int(self.MotionIndex) // 16) + 50,
+        if self.hit_state and self.effect:
+            self.grid_image.clip_draw(8 * 128,
+                                      1918 - 128 * 14,
+                                      128, 128, self.X - self.camera_move_x,
+                                      self.Y - self.camera_move_y,
+                                      50, 60)
+            if self.Stun_state and self.MotionIndex == 9 and self.HP > 0:
+                self.image.clip_draw(8 * 128, 1918 - 128 * 14,
+                                     128, 128, self.X - self.camera_move_x,
+                                     self.Y - self.camera_move_y + 10, 60, 60)
+            if self.DIRECTION == 0:
+                if self.Attack_state:
+                    self.image.clip_draw(8 * 128, 1918 - 128 * 14,
+                                         128, 128, self.whip.X - self.camera_move_x,
+                                         self.whip.Y - self.camera_move_y, 60, 60)
+                self.image.clip_draw(8 * 128, 1918 - 128 * 14,
+                                     128, 128, self.X - self.camera_move_x,
+                                     self.Y - self.camera_move_y - self.scale / 2,
+                                     60 - self.scale, 60 - self.scale)
+            elif self.DIRECTION == 1:
+                if self.Attack_state:
+                    self.image.clip_composite_draw(8 * 128, 1918 - 128 * 14,
+                                                   128, 128, 0, 'h', self.whip.X - self.camera_move_x,
+                                                   self.whip.Y - self.camera_move_y, 60, 60)
+                self.image.clip_composite_draw(8 * 128, 1918 - 128 * 14,
+                                               128, 128, 0, 'h', self.X - self.camera_move_x,
+                                               self.Y - self.camera_move_y - self.scale / 2,
+                                               60 - self.scale, 60 - self.scale)
+        else:
+            self.grid_image.clip_draw(int(self.MotionIndex) % 16 * 128,
+                                      1918 - 128 * (int(self.MotionIndex) // 16) + 50,
+                                      128, 128, self.X - self.camera_move_x,
+                                      self.Y - self.camera_move_y,
+                                      50, 60)
+            if self.Stun_state and self.MotionIndex == 9 and self.HP > 0:
+                self.image.clip_draw(int(self.stun.MotionIndex) % 16 * 128,
+                                  1918 - 128 * (int(self.stun.MotionIndex) // 16),
                                   128, 128, self.X - self.camera_move_x,
-                                  self.Y - self.camera_move_y,
-                                  50, 60)
-        if self.Stun_state and self.MotionIndex == 9 and self.HP > 0:
-            self.image.clip_draw(int(self.stun.MotionIndex) % 16 * 128,
-                              1918 - 128 * (int(self.stun.MotionIndex) // 16),
-                              128, 128, self.X - self.camera_move_x,
-                              self.Y - self.camera_move_y + 10, 60, 60)
-        if self.DIRECTION == 0:
-            if self.Attack_state:
-                self.image.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
-                                    1918 - 128 * (int(self.whip.MotionIndex) // 16),
-                                    128, 128, self.whip.X - self.camera_move_x,
-                                    self.whip.Y - self.camera_move_y, 60, 60)
-            self.image.clip_draw(int(self.MotionIndex) % 16 * 128,
-                                  1918 - 128 * (int(self.MotionIndex) // 16),
-                                  128, 128, self.X - self.camera_move_x,
-                                  self.Y - self.camera_move_y - self.scale / 2,
-                                  60 - self.scale, 60 - self.scale)
-        elif self.DIRECTION == 1:
-            if self.Attack_state:
-                self.image.clip_composite_draw(int(self.whip.MotionIndex) % 16 * 128,
-                                      1918 - 128 * (int(self.whip.MotionIndex) // 16),
-                                      128, 128, 0, 'h', self.whip.X - self.camera_move_x,
-                                      self.whip.Y - self.camera_move_y, 60, 60)
-            self.image.clip_composite_draw(int(self.MotionIndex) % 16 * 128,
-                                  1918 - 128 * (int(self.MotionIndex) // 16),
-                                  128, 128, 0, 'h', self.X - self.camera_move_x,
-                                           self.Y - self.camera_move_y - self.scale / 2,
-                                           60 - self.scale, 60 - self.scale)
+                                  self.Y - self.camera_move_y + 10, 60, 60)
+            if self.DIRECTION == 0:
+                if self.Attack_state:
+                    self.image.clip_draw(int(self.whip.MotionIndex) % 16 * 128,
+                                        1918 - 128 * (int(self.whip.MotionIndex) // 16),
+                                        128, 128, self.whip.X - self.camera_move_x,
+                                        self.whip.Y - self.camera_move_y, 60, 60)
+                self.image.clip_draw(int(self.MotionIndex) % 16 * 128,
+                                      1918 - 128 * (int(self.MotionIndex) // 16),
+                                      128, 128, self.X - self.camera_move_x,
+                                      self.Y - self.camera_move_y - self.scale / 2,
+                                      60 - self.scale, 60 - self.scale)
+            elif self.DIRECTION == 1:
+                if self.Attack_state:
+                    self.image.clip_composite_draw(int(self.whip.MotionIndex) % 16 * 128,
+                                          1918 - 128 * (int(self.whip.MotionIndex) // 16),
+                                          128, 128, 0, 'h', self.whip.X - self.camera_move_x,
+                                          self.whip.Y - self.camera_move_y, 60, 60)
+                self.image.clip_composite_draw(int(self.MotionIndex) % 16 * 128,
+                                      1918 - 128 * (int(self.MotionIndex) // 16),
+                                      128, 128, 0, 'h', self.X - self.camera_move_x,
+                                               self.Y - self.camera_move_y - self.scale / 2,
+                                               60 - self.scale, 60 - self.scale)
         if self.itemmode:
             self.handle_item.draw(self)
         if self.Attack_key_state:
