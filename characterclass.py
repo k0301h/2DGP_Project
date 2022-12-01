@@ -263,6 +263,8 @@ class CHARACTER():
                     self.whip.Y = self.Y - 10
         else:
             if self.attack_conflict_checking(monster):
+                print(type(monster).__name__)
+                monster.hit_sound.play()
                 monster.HP -= 1
             self.Attack_state = False
             self.Attack_key_state = False
@@ -436,8 +438,8 @@ class CHARACTER():
 
                 if self.Attack_key_state:
                     if self.itemmode == 0:      # 맨손 채찍 공격
-                        for i in range(0, len(monster)):
-                            self.Attack(monster[i])
+                        for m in monster:
+                            self.Attack(m)
                         self.whip.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 12 + 10
                         self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 6 + 16 * 4
                     elif self.itemmode == 1:    # 샷건 공격
