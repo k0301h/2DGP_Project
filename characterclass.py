@@ -514,7 +514,7 @@ class CHARACTER():
                     else: 
                         self.mode= 1
                     pass
-                elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State) and not self.Action == 5:
+                elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State) and not self.Action == 5 and not self.Hanging_state:
                     self.Attack_key_state = True
                     if not self.itemmode:
                         self.whip_sound.play()

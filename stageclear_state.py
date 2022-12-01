@@ -3,7 +3,6 @@ from play_state import *
 
 from characterclass import *
 import game_framework
-import map_floor
 import drawscreen
 
 main_character = None
@@ -12,20 +11,21 @@ FLOOR_stage_I = None
 BG_stage_I = None
 
 def enter():
+    import play_state
     global main_character, BG_stage_I, FLOOR_stage_I
     print('enter stageclear_state')
 
     main_character = CHARACTER()
     main_character.Place()
 
-    if 1 <= round_check <= 3:
+    if 1 <= play_state.round_check <= 3:
         BG_stage_I = load_image('./Textures/bg_cave.png')
-    elif 4 <= round_check <= 6:
+    elif 4 <= play_state.round_check <= 6:
         BG_stage_I = load_image('./Textures/bg_jungle.png')
 
-    if 1 <= round_check <= 3:
+    if 1 <= play_state.round_check <= 3:
         FLOOR_stage_I = load_image('./Textures/floor_cave.png')
-    elif 4 <= round_check <= 6:
+    elif 4 <= play_state.round_check <= 6:
         FLOOR_stage_I = load_image('./Textures/floor_jungle.png')
 
 
