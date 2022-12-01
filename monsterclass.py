@@ -43,6 +43,9 @@ class Snake():
     Gravity_state = False
     Attack_state = False
 
+    hit_sound = None
+    dead_sound = None
+
     def __init__(self):
         if Snake.Image == None:
             Snake.Image = load_image('./Textures/Entities/Monsters/snake.png')
@@ -50,6 +53,10 @@ class Snake():
             Snake.rImage = load_image('./Textures/Entities/Monsters/snake_reverse.png')
         if Snake.grid_image == None:
            Snake.grid_image = load_image('./Textures/Entities/Monsters/snake_grid.png')
+        if Snake.hit_sound == None:
+            Snake.hit_sound = load_wav('./sound/snake/snake_hit.wav')
+        if Snake.dead_sound == None:
+            Snake.dead_sound = load_wav('./sound/snake/snake_die.wav')
 
     def Place(self, index_x, index_y):
         self.X, self.Y = index_x * 60, HEIGHT - index_y * 60
@@ -173,6 +180,9 @@ class Bat():
 
     Attack_state = False
 
+    hit_sound = None
+    dead_sound = None
+
     def __init__(self):
         if Bat.Image == None:
             Bat.Image = load_image('./Textures/Entities/Monsters/bat.png')
@@ -180,6 +190,10 @@ class Bat():
             Bat.rImage = load_image('./Textures/Entities/Monsters/bat_reverse.png')
         if Bat.grid_image == None:
             Bat.grid_image = load_image('./Textures/Entities/Monsters/bat_grid.png')
+        if Bat.hit_sound == None:
+            Bat.hit_sound = load_wav('./sound/bat/bat_hit.wav')
+        if Bat.dead_sound == None:
+            Bat.dead_sound = load_wav('./sound/bat/bat_death.wav')
 
     def Place(self, index_x, index_y):
         self.X, self.Y = index_x * 60, HEIGHT - index_y * 60
@@ -298,6 +312,9 @@ class Horned_Lizard():
     Gravity_state = False
     Attack_state = False
 
+    hit_sound = None
+    dead_sound = None
+
     def __init__(self):
         if Horned_Lizard.Image == None:
             Horned_Lizard.Image = load_image('./Textures/Entities/Monsters/horned_lizard.png')
@@ -305,6 +322,10 @@ class Horned_Lizard():
             Horned_Lizard.rImage = load_image('./Textures/Entities/Monsters/horned_lizard_reverse.png')
         if Horned_Lizard.grid_image == None:
             Horned_Lizard.grid_image = load_image('./Textures/Entities/Monsters/horned_lizard_grid.png')
+        if Horned_Lizard.hit_sound == None:
+            Horned_Lizard.hit_sound = load_wav('./sound/lizard/lizard_hit.wav')
+        if Horned_Lizard.dead_sound == None:
+            Horned_Lizard.dead_sound = load_wav('./sound/lizard/lizard_die.wav')
 
     def Place(self, index_x, index_y):
         self.X, self.Y = index_x * 60, HEIGHT - index_y * 60

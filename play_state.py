@@ -98,6 +98,7 @@ def update():
         for unit in game_world.all_object():
             if type(unit).__name__ == 'Snake' or type(unit).__name__ == 'Bat' or type(unit).__name__ == 'Horned_Lizard':
                 if unit.HP <= 0:
+                    unit.dead_sound.play()
                     game_world.remove_object(unit)
                 else:
                     unit.Motion(main_character)

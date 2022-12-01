@@ -97,6 +97,7 @@ class CHARACTER():
 
     jump_sound = None
     landing_sound = None
+    whip_sound = None
 
     whip = SUB()
     stun = SUB()
@@ -106,6 +107,7 @@ class CHARACTER():
             CHARACTER.grid_image = load_image('./Textures/Entities/char_yellow_full_grid.png')
         self.jump_sound = load_wav('./sound/player_jump.wav')
         self.landing_sound = load_wav('./sound/Landing.wav')
+        self.whip_sound = load_wav('./sound/whip.wav')
         self.landing_sound.set_volume(30)
 
     def Place(self):
@@ -515,6 +517,7 @@ class CHARACTER():
                 elif event.key == SDLK_LCTRL and not self.Attack_state and (not self.Climb_state or self.Jump_Key_State) and not self.Action == 5:
                     self.Attack_key_state = True
                     if not self.itemmode:
+                        self.whip_sound.play()
                         self.MotionIndex = 0
                         # 공격시 채찍 위치 오류 완화
                         if self.DIRECTION == 0:
