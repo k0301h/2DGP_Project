@@ -152,13 +152,22 @@ class CHARACTER():
         elif mode == 3:     # 사다리 체크
             character_index_x = int(self.X // 60)
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
-            print(map_floor_array[character_index_y][character_index_x + 1],((character_index_x + 1) * 60 - self.X),  map_floor_array[character_index_y][character_index_x], self.X - character_index_x * 60)
             if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and\
-                    self.X - character_index_x * 60 < 20:
+                not 30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35:
                 return False
-            elif not 30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and \
-                    (character_index_x + 1) * 60 - self.X < 20:
+            if 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and\
+                self.X - character_index_x * 60 > 20:
                 return False
+            if 30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and\
+                (character_index_x + 1) * 60 - self.X > 20:
+                return False
+
+            # if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and\
+            #         self.X - character_index_x * 60 < 20:
+            #     return False
+            # elif not 30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and \
+            #         (character_index_x + 1) * 60 - self.X < 20:
+            #     return False
             elif 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and not self.Climb_state:
                 self.X = character_index_x * 60
             elif 30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and not self.Climb_state:
@@ -326,20 +335,20 @@ class CHARACTER():
             self.Can_Jump = True
 
     def Stun(self):
-        self.stun.MotionIndex = (self.stun.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time / 2) % 11 + 16 * 13
+        self.stun.MotionIndex = (self.stun.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 16 % 11 + 16 * 13
+        print( (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time))
         self.timer += game_framework.frame_time
-        if self.timer >= 3:
+        if self.timer >= 2:
             self.Stun_state = False
             self.timer = 0
 
     def Motion(self, monster):
         if self.enter_walking:
-            print('enter')
             self.timer += game_framework.frame_time
             self.scale -= 0.5
             self.scale = clamp(0, self.scale, 60)
             self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 16 % 6 + 16 * 5 + 6
-            if self.timer >= 3:
+            if self.timer >= 1:
                 self.timer = 0
                 self.enter_walking = False
         elif self.Stun_state:
