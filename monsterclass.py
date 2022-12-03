@@ -467,15 +467,11 @@ monster_place_1stage = [[33, 18], [22, 23], [4, 41], [31, 45], # lizard
 monster_list_1stage += monster_list_1stage_lizard + monster_list_1stage_bat + monster_list_1stage_snake
 
 monster_list_2stage = []
-monster_list_2stage_snake = [Snake() for i in range(9)]
-monster_list_2stage_bat = [Bat() for i in range(12)]
-monster_list_2stage_lizard = [Horned_Lizard() for i in range(4)]
+monster_list_2stage_bat = [Bat() for i in range(21)]
 
-monster_place_2stage = [[33, 18], [22, 23], [4, 41], [31, 45], # lizard
-                        [17, 2], [40, 1], [40, 15], [18, 16], [29, 21], [29, 25], [17, 28], [43, 32], [5, 44], [26, 44], [12, 47], [32, 47],   # bat
-                        [38, 7], [10, 17], [38, 12], [8, 22], [39, 26], [11, 30], [16, 39], [17, 46], [43, 48]]                                # snake
+monster_place_2stage = [[4, 2], [5, 2], [6, 2], [7, 2], [8, 2], [9, 2], [10, 2], [11, 2], [12, 2], [20, 5], [29, 1], [10, 11], [5, 33], [6, 40], [9, 40], [15, 40], [3, 42], [2, 43], [1, 44], [34, 41], [44, 40]]   # bat
 
-monster_list_2stage += monster_list_2stage_lizard + monster_list_2stage_bat + monster_list_2stage_snake
+monster_list_2stage +=  monster_list_2stage_bat
 
 monster_list_3stage = []
 monster_list_3stage_snake = [Snake() for i in range(2)]

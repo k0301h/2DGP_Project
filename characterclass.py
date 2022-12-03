@@ -11,28 +11,28 @@ class SUB():
 
 PIXEL_PER_METER = (10 / 0.5)
 
-RUN_SPEED_KMPH = 40.0
+RUN_SPEED_KMPH = 45.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-WALK_SPEED_KMPH = 20.0
+WALK_SPEED_KMPH = 25.0
 WALK_SPEED_MPM = (WALK_SPEED_KMPH * 1000.0 / 60.0)
 WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
 WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
 if mode == 1:
-    GRAVITY_ASPEED_KMPH = 1.2  # 2.5
+    GRAVITY_ASPEED_KMPH = 1.2  # 1.2
 elif mode == 2:
-    GRAVITY_ASPEED_KMPH = 2.3      # 2.5
+    GRAVITY_ASPEED_KMPH = 2.3      # 2.3
 GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
 if mode == 1:
-    JUMP_SPEED_KMPH = 120.0  # 130
+    JUMP_SPEED_KMPH = 130.0  # 120
 elif mode == 2:
-    JUMP_SPEED_KMPH = 100.0     # 130
+    JUMP_SPEED_KMPH = 100.0     # 100
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -335,7 +335,7 @@ class CHARACTER():
             self.Can_Jump = True
 
     def Stun(self):
-        self.stun.MotionIndex = (self.stun.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 16 % 11 + 16 * 13
+        self.stun.MotionIndex = (self.stun.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 11 + 16 * 13
         print( (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time))
         self.timer += game_framework.frame_time
         if self.timer >= 2:
