@@ -70,7 +70,7 @@ class CHARACTER():
 
     timer = 0
     effect = False
-    scale = 0 # 40
+    scale = 40 # 40
 
     camera_move_x = 0
     camera_move_y = 0
@@ -121,13 +121,14 @@ class CHARACTER():
                 if map_floor_array[index_y][index_x] == 1:
                     self.X = index_x * 60
                     self.Y = HEIGHT - index_y * 60 - 59
-                    self.enter_walking = False
+                    self.enter_walking = True
                     self.camera_move_x = 0
                     self.camera_move_y = 0
+                    if self.X > WIDTH - 200:
+                        self.camera_move_x = self.X - WIDTH / 2
                     if self.Y < 200:
-                        self.camera_move_x = self.X // 3
-                        self.camera_move_y = self.Y * 2
-                    self.scale = 0
+                        self.camera_move_y = self.Y - HEIGHT / 2
+                    self.scale =40
 
     def Conflict_checking(self, mode, move): # mode : 충돌체크 유형 , move : 다음에 움직일 크기
         if mode == 1:       # Y충돌 체크
@@ -152,10 +153,6 @@ class CHARACTER():
             character_index_x = int(self.X // 60)
             character_index_y = int((HEIGHT - (self.Y + move)) // 60)
             print(map_floor_array[character_index_y][character_index_x + 1],((character_index_x + 1) * 60 - self.X),  map_floor_array[character_index_y][character_index_x], self.X - character_index_x * 60)
-            # if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 or \
-            #         ((30 <= map_floor_array[character_index_y][character_index_x + 1] <= 35 and (character_index_x + 1) * 60 - self.X) < 20) or\
-            #         ((30 <= map_floor_array[character_index_y][character_index_x] <= 35) and (self.X - character_index_x * 60) < 20):
-            #     return False
             if not 30 <= map_floor_array[character_index_y][character_index_x] <= 35 and\
                     self.X - character_index_x * 60 < 20:
                 return False
@@ -315,7 +312,6 @@ class CHARACTER():
             if self.Down_Distance >= 600:
                 if self.mode:
                     self.HP -= 1
-                # self.timer = time.time()
                 self.MotionIndex = 9
                 self.stun.MotionIndex = 16 * 13
                 self.Stun_state = True
@@ -330,7 +326,7 @@ class CHARACTER():
             self.Can_Jump = True
 
     def Stun(self):
-        self.stun.MotionIndex = (self.stun.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11 + 16 * 13
+        self.stun.MotionIndex = (self.stun.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time / 2) % 11 + 16 * 13
         self.timer += game_framework.frame_time
         if self.timer >= 3:
             self.Stun_state = False
@@ -338,6 +334,7 @@ class CHARACTER():
 
     def Motion(self, monster):
         if self.enter_walking:
+            print('enter')
             self.timer += game_framework.frame_time
             self.scale -= 0.5
             self.scale = clamp(0, self.scale, 60)
@@ -446,6 +443,7 @@ class CHARACTER():
                         for i in range(3):
                             self.handle_item.bullet_object[i].move()
                             self.handle_item.update(self)
+                            print(self.reload)
                             for m in monster:
                                 for i in range(3):
                                     self.handle_item.bullet_object[i].Conflict_check(2, 0, m)

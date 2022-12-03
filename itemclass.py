@@ -47,11 +47,17 @@ class bullet:
         if mode == 1:     # X충돌 체크
             character_index_x = int((self.X + move) // 60)
             character_index_y = int((HEIGHT - self.Y) // 60)
-            for index_x in range(character_index_x - 2, character_index_x + 3):
-                if 0 <= index_x < map_size and \
-                        (2 <= map_floor_array[character_index_y][index_x] <= 29 or 40 <= map_floor_array[character_index_y][index_x] <= 41) and \
-                        abs(self.Y + 10 - (HEIGHT - character_index_y * 60 - 30)) < 40 and abs(self.X + 10 + move - index_x * 60 - 30) <= 40:
+            if not self.DIRECTION:
+                character_index_x += 1
+                if (2 <= map_floor_array[character_index_y][character_index_x] <= 29 or 40 <= map_floor_array[character_index_y][character_index_x] <= 41) and \
+                        abs(self.Y - 10 - (HEIGHT - character_index_y * 60 - 30)) < 40 and abs(self.X + move - character_index_x * 60) <= 20:
                     return False
+            else:
+                for index_x in range(character_index_x - 1, character_index_x + 2):
+                    if 0 <= index_x < map_size and \
+                            (2 <= map_floor_array[character_index_y][index_x] <= 29 or 40 <= map_floor_array[character_index_y][index_x] <= 41) and \
+                            abs(self.Y - 10 - (HEIGHT - character_index_y * 60 - 30)) < 40 and abs(self.X + move - index_x * 60 - 60) <= 0:
+                        return False
         elif mode == 2:
             if sqrt((unit.X - self.X) ** 2 + (unit.Y - self.Y) ** 2) <= 40:
                 unit.HP -= 1
@@ -72,6 +78,8 @@ class shotgun:
     image = None
     bullet_object = [bullet() for _ in range(3)]
 
+    timer = 0
+
     sound = None
 
     def __init__(self):
@@ -80,8 +88,10 @@ class shotgun:
         self.sound = load_wav('./sound/shotgun_fire.wav')
 
     def update(self, character):
-        if not self.bullet_object[0].save and not self.bullet_object[1].save and not self.bullet_object[2].save:
+        self.timer += game_framework.frame_time
+        if self.timer > 2:
             character.reload = True
+            self.timer = 0
 
     def draw(self, character):
         if character.DIRECTION:
