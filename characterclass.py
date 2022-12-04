@@ -25,7 +25,7 @@ WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 #     GRAVITY_ASPEED_KMPH = 1.2  # 1.2
 # elif mode == 2:
 #     GRAVITY_ASPEED_KMPH = 2.3      # 2.3
-GRAVITY_ASPEED_KMPH = 1.0
+GRAVITY_ASPEED_KMPH = 2.0
 GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
@@ -34,7 +34,7 @@ GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 #     JUMP_SPEED_KMPH = 120.0  # 120
 # elif mode == 2:
 #     JUMP_SPEED_KMPH = 100.0     # 100
-JUMP_SPEED_KMPH = 90.0
+JUMP_SPEED_KMPH = 70.0
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -249,18 +249,20 @@ class CHARACTER():
         #         if self.Y - self.camera_move_y >= HEIGHT - 200:
         #             self.camera_move_y += self.JumpSpeed
         # 점프 크기 똑같이 하고 올라가는 높이 측정 ==> 최대 높이로 올라가면 점프키 비활성화
+        print(self.JumpSpeed, self.JUMP_Distance, self.Y)
         if self.Hanging_jump:
             self.JumpSpeed = (JUMP_SPEED_PPS * game_framework.frame_time) * 2 / 3
+            self.JUMP_Distance += self.JumpSpeed
         else:
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
-        if self.JUMP_Distance < 120 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
+        if self.JUMP_Distance < 90 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
             if not self.Attack_state:
                 self.MotionIndex = (self.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16 % 8 + 16 * 9
             if self.Conflict_checking(1, self.JumpSpeed):
                 self.Y += self.JumpSpeed
                 self.JUMP_Distance += self.JumpSpeed
-            if self.Y - self.camera_move_y >= HEIGHT - 200:
-                self.camera_move_y += self.JumpSpeed
+                if self.Y - self.camera_move_y >= HEIGHT - 200:
+                    self.camera_move_y += self.JumpSpeed
         else:
             self.Jump_Key_State = False
             self.JUMP_Distance = 0
@@ -329,7 +331,7 @@ class CHARACTER():
                     self.Y -= self.Gravity * 3
                     self.timer += game_framework.frame_time
             else:
-                if self.DownSpeed <= 20:
+                if self.DownSpeed <= 10:
                     self.DownSpeed += self.Gravity
                 if self.Conflict_checking(1, -self.DownSpeed):
                     self.Y -= self.DownSpeed
@@ -347,6 +349,7 @@ class CHARACTER():
                 self.stun.MotionIndex = 16 * 13
                 self.Stun_state = True
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
+            self.JUMP_Distance = 0
             self.DownSpeed = self.Gravity
             self.Down_Distance = 0
             self.Gravity_state = False
@@ -492,7 +495,8 @@ class CHARACTER():
                     self.timer = 0
                     self.hit_state = False
                     self.effect = False
-        self.gravity()
+        if not self.Jump_Key_State:
+            self.gravity()
 
     def key_down(self):
         global ROUND
