@@ -147,11 +147,11 @@ class Snake():
         self.gravity()
 
     def draw_monster(self, main_character):
-        self.grid_image.clip_draw(int(self.MotionIndex) % 4 * 128,
-                               544 - 128 * (int(self.MotionIndex) // 4 + 1),
-                               128, 128, self.X - main_character.camera_move_x,
-                               self.Y - main_character.camera_move_y,
-                               60, 60)
+        # self.grid_image.clip_draw(int(self.MotionIndex) % 4 * 128,
+        #                        544 - 128 * (int(self.MotionIndex) // 4 + 1),
+        #                        128, 128, self.X - main_character.camera_move_x,
+        #                        self.Y - main_character.camera_move_y,
+        #                        60, 60)
         if self.DIRECTION == 0 and self.HP > 0:
             self.Image.clip_draw(int(self.MotionIndex) % 4 * 128,
                                     544 - 128 * (int(self.MotionIndex) // 4 + 1),
@@ -276,11 +276,11 @@ class Bat():
                     self.Motion_dir = 0
 
     def draw_monster(self, main_character):
-        self.grid_image.clip_draw(int(self.MotionIndex) % 4 * 128,
-                               544 - 128 * (int(self.MotionIndex) // 4 + 1),
-                               128, 128, self.X - main_character.camera_move_x,
-                               self.Y - main_character.camera_move_y,
-                               60, 60)
+        # self.grid_image.clip_draw(int(self.MotionIndex) % 4 * 128,
+        #                        544 - 128 * (int(self.MotionIndex) // 4 + 1),
+        #                        128, 128, self.X - main_character.camera_move_x,
+        #                        self.Y - main_character.camera_move_y,
+        #                        60, 60)
         if self.DIRECTION == 0 and self.HP > 0:
             self.Image.clip_draw(int(self.MotionIndex) % 4 * 128,
                                     544 - 128 * (int(self.MotionIndex) // 4 + 1),
@@ -438,11 +438,11 @@ class Horned_Lizard():
         self.gravity()
 
     def draw_monster(self, main_character):
-        self.grid_image.clip_draw(int(self.MotionIndex) % 5 * 128,
-                               800 - 128 * (int(self.MotionIndex) // 5 + 1),
-                               128, 128, self.X - main_character.camera_move_x,
-                               self.Y - main_character.camera_move_y,
-                               60, 60)
+        # self.grid_image.clip_draw(int(self.MotionIndex) % 5 * 128,
+        #                        800 - 128 * (int(self.MotionIndex) // 5 + 1),
+        #                        128, 128, self.X - main_character.camera_move_x,
+        #                        self.Y - main_character.camera_move_y,
+        #                        60, 60)
         if self.DIRECTION == 0 and self.HP > 0:
             self.Image.clip_draw(int(self.MotionIndex) % 5 * 128,
                                     800 - 128 * (int(self.MotionIndex) // 5 + 1),

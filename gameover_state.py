@@ -47,16 +47,6 @@ def exit():
 
 
 def update():
-    # play_state.main_character.camera_move_x = clamp(200, play_state.main_character.X - play_state.main_character.camera_move_x, 300 )
-    # print(play_state.main_character.X - play_state.main_character.camera_move_x)
-
-    # global timer, running
-    # if timer > 5.0:
-    #     timer = 0
-    #     running = False
-    #     game_framework.change_state(title_state)
-    # delay(0.01)
-    # timer += 0.01
     pass
 
 
