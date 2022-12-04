@@ -11,6 +11,7 @@ def map_chanege():
     map_floor_array.clear()
     monster_list.clear()
     monster_place.clear()
+    print(ROUND)
     if not clear:
         if ROUND == 0:
             map_floor_array += map_tutorial
@@ -32,7 +33,10 @@ def map_chanege():
             monster_list += monster_list_4stage
             monster_place += monster_place_4stage
     else:
-        map_floor_array += map_clear
+        if ROUND == 5: # 7
+            map_floor_array += game_clear
+        else:
+            map_floor_array += map_clear
 
 def start_time():
     global start

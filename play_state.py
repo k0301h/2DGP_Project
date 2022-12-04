@@ -7,6 +7,7 @@ import play_state
 import gameover_state
 import title_state
 import stageclear_state
+import game_clear_state
 
 import map_floor
 import drawscreen
@@ -45,7 +46,6 @@ def enter():
     # monster
     count = 0
     round_check += 1
-    print(round_check)
     if round_check >= 1:
         for monster in monster_list:
             monster.Place(monster_place[count][0], monster_place[count][1])
@@ -119,7 +119,10 @@ def update():
         drawscreen.clear = True
         drawscreen.ROUND += 1
         drawscreen.map_chanege()
-        game_framework.change_state(stageclear_state)
+        if drawscreen.ROUND >= 5: # 7
+            game_framework.change_state(game_clear_state)
+        else:
+            game_framework.change_state(stageclear_state)
 
     if timer >= 3:
         timer = 0

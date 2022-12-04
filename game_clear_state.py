@@ -10,9 +10,11 @@ BG_stage_I = None
 FLOOR_stage_I = None
 BG_stage_I = None
 
+font = None
+
 def enter():
     import play_state
-    global main_character, BG_stage_I, FLOOR_stage_I
+    global main_character, BG_stage_I, FLOOR_stage_I, font
     print('enter stageclear_state')
 
     main_character = CHARACTER()
@@ -20,17 +22,18 @@ def enter():
 
     if 1 <= play_state.round_check <= 3:
         BG_stage_I = load_image('./Textures/bg_cave.png')
-    elif 4 <= play_state.round_check <= 6:
+    elif 4 <= play_state.round_check <= 7:
         BG_stage_I = load_image('./Textures/bg_jungle.png')
 
     if 1 <= play_state.round_check <= 3:
         FLOOR_stage_I = load_image('./Textures/floor_cave.png')
-    elif 4 <= play_state.round_check <= 6:
+    elif 4 <= play_state.round_check <= 7:
         FLOOR_stage_I = load_image('./Textures/floor_jungle.png')
 
+    font = load_font('./Textures/ENCR10B.TTF', 50)
 
 def exit():
-    global main_character, BG_stage_I, FLOOR_stage_I
+    global main_character, BG_stage_I, FLOOR_stage_I, font
     print('exit stageclear_state')
 
     del main_character
@@ -38,10 +41,12 @@ def exit():
     del BG_stage_I
     del FLOOR_stage_I
 
+    del font
+
 def update():
     # print('update stageclear_state')
-    main_character.clear_motion()
-    if main_character.timer < 2:
+    main_character.game_clear_motion()
+    if main_character.timer < 1.6:
         main_character.Motion(None)
 
 def draw():
@@ -53,6 +58,7 @@ def draw():
                    main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT,
                    main_character.Y + HEIGHT)  # depth == 2 // main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT
     main_character.draw()
+    font.draw(WIDTH * 3 / 5, HEIGHT * 6 / 7, 'You are die!', (255, 255, 255))
     pico2d.update_canvas()
 
 def handle_events():

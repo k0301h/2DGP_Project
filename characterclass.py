@@ -249,7 +249,7 @@ class CHARACTER():
         #         if self.Y - self.camera_move_y >= HEIGHT - 200:
         #             self.camera_move_y += self.JumpSpeed
         # 점프 크기 똑같이 하고 올라가는 높이 측정 ==> 최대 높이로 올라가면 점프키 비활성화
-        print(self.JumpSpeed, self.JUMP_Distance, self.Y)
+        # print(self.JumpSpeed, self.JUMP_Distance, self.Y)
         if self.Hanging_jump:
             self.JumpSpeed = (JUMP_SPEED_PPS * game_framework.frame_time) * 2 / 3
             self.JUMP_Distance += self.JumpSpeed
@@ -484,17 +484,18 @@ class CHARACTER():
                                 for m in monster:
                                     for i in range(3):
                                         self.handle_item.bullet_object[i].Conflict_check(2, 0, m)
-                if self.hit_state and self.timer < 4:
-                    self.timer += game_framework.frame_time
-                    if 0.0 <= self.timer % 0.1 <= 0.01:
-                        if self.effect:
-                            self.effect = False
-                        else:
-                            self.effect = True
-                else:
-                    self.timer = 0
-                    self.hit_state = False
-                    self.effect = False
+                if self.hit_state:
+                    if self.timer < 4:
+                        self.timer += game_framework.frame_time
+                        if 0.0 <= self.timer % 0.1 <= 0.01:
+                            if self.effect:
+                                self.effect = False
+                            else:
+                                self.effect = True
+                    else:
+                        self.timer = 0
+                        self.hit_state = False
+                        self.effect = False
         if not self.Jump_Key_State:
             self.gravity()
 
@@ -595,8 +596,18 @@ class CHARACTER():
                 elif event.key == SDLK_UP:
                     self.Climb_up_key_state = False
 
+    def game_clear_motion(self):
+        if self.timer < 1.6:
+            self.DIRECTION = 0
+            self.Action = 1
+            self.timer += game_framework.frame_time / 2
+        else:
+            if self.MotionIndex % 16 < 8:
+                self.MotionIndex = 16 * 9 + 8
+            self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 11 + 16 * 9
+
     def clear_motion(self):
-        if self.timer < 2.0:
+        if self.timer < 1.6:
             self.DIRECTION = 0
             self.Action = 1
             self.timer += game_framework.frame_time / 2

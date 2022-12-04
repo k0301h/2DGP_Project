@@ -41,7 +41,8 @@ def exit():
 def update():
     # print('update stageclear_state')
     main_character.clear_motion()
-    if main_character.timer < 2:
+    # print(main_character.timer)
+    if main_character.timer < 1.6:
         main_character.Motion(None)
 
 def draw():
