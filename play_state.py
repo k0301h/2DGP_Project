@@ -30,7 +30,6 @@ character = None
 music = None
 
 timer = 0
-
 round_check = 0
 
 def enter():
@@ -119,7 +118,7 @@ def update():
         drawscreen.clear = True
         drawscreen.ROUND += 1
         drawscreen.map_chanege()
-        if drawscreen.ROUND >= 5: # 7
+        if drawscreen.ROUND >= 4: # 7
             game_framework.change_state(game_clear_state)
         else:
             game_framework.change_state(stageclear_state)

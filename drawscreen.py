@@ -33,7 +33,7 @@ def map_chanege():
             monster_list += monster_list_4stage
             monster_place += monster_place_4stage
     else:
-        if ROUND == 5: # 7
+        if ROUND == 4: # 7
             map_floor_array += game_clear
         else:
             map_floor_array += map_clear

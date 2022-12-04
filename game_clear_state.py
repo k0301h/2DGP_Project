@@ -58,7 +58,7 @@ def draw():
                    main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT,
                    main_character.Y + HEIGHT)  # depth == 2 // main_character.X -main_character.camera_move_x - WIDTH, main_character.X - main_character.camera_move_x + WIDTH, main_character.Y - HEIGHT, main_character.Y + HEIGHT
     main_character.draw()
-    font.draw(WIDTH * 3 / 5, HEIGHT * 6 / 7, 'You are die!', (255, 255, 255))
+    font.draw(WIDTH * 3 / 5, HEIGHT * 6 / 7, 'You are Win!', (255, 255, 255))
     pico2d.update_canvas()
 
 def handle_events():
@@ -70,9 +70,7 @@ def handle_events():
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             elif event.key == SDLK_RETURN:
-                drawscreen.clear = False
-                drawscreen.map_chanege()
-                game_framework.change_state(play_state)
+                game_framework.quit()
             elif event.key == SDLK_UP:
                 pass
             elif event.key == SDLK_DOWN:

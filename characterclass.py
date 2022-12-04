@@ -137,6 +137,7 @@ class CHARACTER():
                         self.camera_move_y = self.Y - HEIGHT / 2
                     self.scale =40
                     self.JUMP_Distance = 0
+                    self.timer = 0
 
     def Conflict_checking(self, mode, move): # mode : 충돌체크 유형 , move : 다음에 움직일 크기
         if mode == 1:       # Y충돌 체크
@@ -331,7 +332,7 @@ class CHARACTER():
                     self.Y -= self.Gravity * 3
                     self.timer += game_framework.frame_time
             else:
-                if self.DownSpeed <= 10:
+                if self.DownSpeed <= 15:
                     self.DownSpeed += self.Gravity
                 if self.Conflict_checking(1, -self.DownSpeed):
                     self.Y -= self.DownSpeed
@@ -373,7 +374,7 @@ class CHARACTER():
             self.scale -= 0.5
             self.scale = clamp(0, self.scale, 60)
             self.MotionIndex = (self.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) / 2) % 16 % 6 + 16 * 5 + 6
-            if self.timer >= 1:
+            if self.scale <= 0:
                 self.timer = 0
                 self.enter_walking = False
         elif self.Stun_state:
