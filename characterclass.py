@@ -21,18 +21,20 @@ WALK_SPEED_MPM = (WALK_SPEED_KMPH * 1000.0 / 60.0)
 WALK_SPEED_MPS = (WALK_SPEED_MPM / 60.0)
 WALK_SPEED_PPS = (WALK_SPEED_MPS * PIXEL_PER_METER)
 
-if mode == 1:
-    GRAVITY_ASPEED_KMPH = 1.2  # 1.2
-elif mode == 2:
-    GRAVITY_ASPEED_KMPH = 2.3      # 2.3
+# if mode == 1:
+#     GRAVITY_ASPEED_KMPH = 1.2  # 1.2
+# elif mode == 2:
+#     GRAVITY_ASPEED_KMPH = 2.3      # 2.3
+GRAVITY_ASPEED_KMPH = 1.0
 GRAVITY_ASPEED_MPM = (GRAVITY_ASPEED_KMPH * 1000.0 / 60.0)
 GRAVITY_ASPEED_MPS = (GRAVITY_ASPEED_MPM / 60.0)
 GRAVITY_ASPEED_PPS = (GRAVITY_ASPEED_MPS * PIXEL_PER_METER)
 
-if mode == 1:
-    JUMP_SPEED_KMPH = 130.0  # 120
-elif mode == 2:
-    JUMP_SPEED_KMPH = 100.0     # 100
+# if mode == 1:
+#     JUMP_SPEED_KMPH = 120.0  # 120
+# elif mode == 2:
+#     JUMP_SPEED_KMPH = 100.0     # 100
+JUMP_SPEED_KMPH = 90.0
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
@@ -42,7 +44,7 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
 class CHARACTER():
-    HP = 5
+    HP = 1
     ATK = 1
     Action = 0
     MotionIndex = 0
@@ -62,6 +64,7 @@ class CHARACTER():
 
     Gravity = None
     JumpSpeed = None
+    JUMP_Distance = 0
     DownSpeed = 0
     Down_Distance = 0
 
@@ -91,13 +94,14 @@ class CHARACTER():
     Hanging_jump = False
     enter_walking = True
     jump_landing = True
-
     image = None
     grid_image = None
 
     jump_sound = None
     landing_sound = None
     whip_sound = None
+    hit_sound = None
+    stun_sound = None
 
     whip = SUB()
     stun = SUB()
@@ -108,7 +112,10 @@ class CHARACTER():
         self.jump_sound = load_wav('./sound/player_jump.wav')
         self.landing_sound = load_wav('./sound/Landing.wav')
         self.whip_sound = load_wav('./sound/whip.wav')
+        self.hit_sound = load_wav('./sound/damage.wav')
+        self.stun_sound = load_wav('./sound/stun.wav')
         self.landing_sound.set_volume(30)
+        self.stun_sound.set_volume(30)
 
     def Place(self):
         if CHARACTER.image == None:
@@ -129,6 +136,7 @@ class CHARACTER():
                     if self.Y < 200:
                         self.camera_move_y = self.Y - HEIGHT / 2
                     self.scale =40
+                    self.JUMP_Distance = 0
 
     def Conflict_checking(self, mode, move): # mode : 충돌체크 유형 , move : 다음에 움직일 크기
         if mode == 1:       # Y충돌 체크
@@ -224,23 +232,37 @@ class CHARACTER():
         return False
 
     def Jump(self):  # 점프키 입력시간에 비례하여 점프 높이 조절
-        grav = clamp(0, self.DownSpeed, JUMP_SPEED_PPS * game_framework.frame_time)
+        # grav = clamp(0, self.DownSpeed, JUMP_SPEED_PPS * game_framework.frame_time)
+        # if self.Hanging_jump:
+        #     self.JumpSpeed = (JUMP_SPEED_PPS * game_framework.frame_time - grav) * 2 / 3
+        # else:
+        #     self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time - grav
+        # # print(JUMP_SPEED_PPS, game_framework.frame_time, self.JumpSpeed, self.Hanging_jump)
+        # if self.JumpSpeed > 0 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
+        #     self.Gravity = GRAVITY_ASPEED_PPS * game_framework.frame_time
+        #     if not self.Attack_state:
+        #         self.MotionIndex = (self.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16 % 8 + 16 * 9
+        #     if self.JumpSpeed > 0:
+        #         if self.Conflict_checking(1, self.JumpSpeed):
+        #             self.Y += self.JumpSpeed
+        #         if self.Y - self.camera_move_y >= HEIGHT - 200:
+        #             self.camera_move_y += self.JumpSpeed
+        # 점프 크기 똑같이 하고 올라가는 높이 측정 ==> 최대 높이로 올라가면 점프키 비활성화
         if self.Hanging_jump:
-            self.JumpSpeed = (JUMP_SPEED_PPS * game_framework.frame_time - grav) * 2 / 3
+            self.JumpSpeed = (JUMP_SPEED_PPS * game_framework.frame_time) * 2 / 3
         else:
-            self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time - grav
-        # print(JUMP_SPEED_PPS, game_framework.frame_time, self.JumpSpeed, self.Hanging_jump)
-        if self.JumpSpeed > 0 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
-            self.Gravity = GRAVITY_ASPEED_PPS * game_framework.frame_time
+            self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
+        if self.JUMP_Distance < 120 and self.Conflict_checking(1, self.JumpSpeed) and not self.Climb_state and not self.Hanging_state:
             if not self.Attack_state:
                 self.MotionIndex = (self.MotionIndex + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16 % 8 + 16 * 9
-            if self.JumpSpeed > 0:
-                if self.Conflict_checking(1, self.JumpSpeed):
-                    self.Y += self.JumpSpeed
-                if self.Y - self.camera_move_y >= HEIGHT - 200:
-                    self.camera_move_y += self.JumpSpeed
+            if self.Conflict_checking(1, self.JumpSpeed):
+                self.Y += self.JumpSpeed
+                self.JUMP_Distance += self.JumpSpeed
+            if self.Y - self.camera_move_y >= HEIGHT - 200:
+                self.camera_move_y += self.JumpSpeed
         else:
             self.Jump_Key_State = False
+            self.JUMP_Distance = 0
             self.JumpSpeed = JUMP_SPEED_PPS * game_framework.frame_time
 
     def Attack(self, monster):
@@ -269,7 +291,6 @@ class CHARACTER():
                     self.whip.Y = self.Y - 10
         else:
             if self.attack_conflict_checking(monster):
-                print(type(monster).__name__)
                 monster.hit_sound.play()
                 monster.HP -= 1
             self.Attack_state = False
@@ -311,7 +332,7 @@ class CHARACTER():
                     self.DownSpeed += self.Gravity
                 if self.Conflict_checking(1, -self.DownSpeed):
                     self.Y -= self.DownSpeed
-                self.Down_Distance += self.DownSpeed
+                    self.Down_Distance += self.DownSpeed
                 if self.Y - self.camera_move_y <= 200:
                     self.camera_move_y -= self.DownSpeed
                 if not self.Attack_state and not self.Stun_state and self.DownSpeed > 1:
@@ -335,8 +356,8 @@ class CHARACTER():
             self.Can_Jump = True
 
     def Stun(self):
+        self.stun_sound.play()
         self.stun.MotionIndex = (self.stun.MotionIndex + (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)) % 16 % 11 + 16 * 13
-        print( (FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time))
         self.timer += game_framework.frame_time
         if self.timer >= 2:
             self.Stun_state = False
@@ -363,12 +384,15 @@ class CHARACTER():
 
             if self.Jump_Key_State:
                 self.Jump()
-            elif self.Down_Jump_state:
-                self.Down_Jump()
+            # elif self.Down_Jump_state:
+            #     self.Down_Jump()
 
             if self.Climb_state:
                 self.walk_move_speed = WALK_SPEED_PPS * game_framework.frame_time
                 self.Can_Jump = True
+                self.jump_landing = True
+                self.Jump_Key_State = False
+                self.Action = 0
                 if self.Climb_up_key_state and self.Conflict_checking(3, self.walk_move_speed):
                     self.Y += self.walk_move_speed
                     if self.Y - self.camera_move_y >= HEIGHT - 200:
@@ -452,7 +476,7 @@ class CHARACTER():
                         for i in range(3):
                             self.handle_item.bullet_object[i].move()
                             self.handle_item.update(self)
-                            print(self.reload)
+
                             for m in monster:
                                 for i in range(3):
                                     self.handle_item.bullet_object[i].Conflict_check(2, 0, m)
@@ -478,7 +502,6 @@ class CHARACTER():
                         self.Climb_up_key_state = True
                         self.Climb_state = True
                         self.Can_Jump = True
-                        self.JumpSpeed = 3
                         self.jump_landing = True
                         self.Jump_Key_State = False
                         self.Action = 0

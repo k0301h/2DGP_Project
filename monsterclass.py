@@ -110,6 +110,8 @@ class Snake():
                     character.HP -= self.ATK
                     if character.HP > 0:
                         character.hit_state = True
+                    if character.HP > 0 and not character.hit_state:
+                        character.hit_sound.play()
         else:
             self.Action = 0
 
@@ -237,6 +239,8 @@ class Bat():
                 character.HP -= self.ATK
                 if character.HP > 0:
                     character.hit_state = True
+                if character.HP > 0 and not character.hit_state:
+                    character.hit_sound.play()
 
     def Motion(self, character):
         if self.Action == 0:
@@ -371,10 +375,11 @@ class Horned_Lizard():
             # character.Stun_state = True
             if character.mode and not character.hit_state:
                 character.HP -= self.ATK
+                character.hit_sound.play()
                 if character.HP > 0:
                     character.hit_state = True
-        # if self.Conflict_checking(3, character):
-        #     self.Action = 0
+                if character.HP > 0 and not character.hit_state:
+                    character.hit_sound.play()
 
     def Jump(self):
         if self.Conflict_checking(1, self.JumpSpeed) and not self.Jump_state:
