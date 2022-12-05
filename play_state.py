@@ -50,14 +50,14 @@ def enter():
             monster.Place(monster_place[count][0], monster_place[count][1])
             count += 1
     # stage image
-    if 1 <= round_check <= 3:
+    if 1 <= round_check <= 2:
         BG_stage_I = load_image('./Textures/bg_cave.png')
-    elif 4 <= round_check <= 6:
+    elif 3 <= round_check <= 4:
         BG_stage_I = load_image('./Textures/bg_jungle.png')
 
-    if 1 <= round_check <= 3:
+    if 1 <= round_check <= 2:
         FLOOR_stage_I = load_image('./Textures/floor_cave.png')
-    elif 4 <= round_check <= 6:
+    elif 3 <= round_check <= 4:
         FLOOR_stage_I = load_image('./Textures/floor_jungle.png')
 
     Deco_tutorial_I = load_image('./Textures/deco_tutorial.png')

@@ -18,14 +18,14 @@ def enter():
     main_character = CHARACTER()
     main_character.Place()
 
-    if 1 <= play_state.round_check <= 3:
+    if 1 <= play_state.round_check <= 2:
         BG_stage_I = load_image('./Textures/bg_cave.png')
-    elif 4 <= play_state.round_check <= 6:
+    elif 3 <= play_state.round_check <= 4:
         BG_stage_I = load_image('./Textures/bg_jungle.png')
 
-    if 1 <= play_state.round_check <= 3:
+    if 1 <= play_state.round_check <= 2:
         FLOOR_stage_I = load_image('./Textures/floor_cave.png')
-    elif 4 <= play_state.round_check <= 6:
+    elif 3 <= play_state.round_check <= 4:
         FLOOR_stage_I = load_image('./Textures/floor_jungle.png')
 
 
