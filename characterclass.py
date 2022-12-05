@@ -1,7 +1,3 @@
-from map_floor import *
-from pico2d import *
-import game_framework
-import time
 from itemclass import *
 
 class SUB():

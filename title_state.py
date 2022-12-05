@@ -156,7 +156,7 @@ def draw():
         sub_image0.clip_draw(0, 0, 1024, 256, WIDTH / 2 + move, HEIGHT / 5, (2 * WIDTH) / 3, HEIGHT / 4)
 
         if running:
-            font.draw(WIDTH * 3 / 7, HEIGHT * 3 / 5, 'Game Start', (255, 255, 255))
+            font.draw(WIDTH * 6 / 15, HEIGHT * 3 / 5, 'Game Start', (255, 255, 255))
             if character == 'Anna':
                 font.draw(WIDTH * 7 / 15, HEIGHT / 2, 'Anna', (255, 255, 255))
             elif character == 'spelunky':

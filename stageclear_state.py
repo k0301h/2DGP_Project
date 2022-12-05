@@ -1,6 +1,5 @@
-from pico2d import *
 from play_state import *
-
+import play_state
 from characterclass import *
 import game_framework
 import drawscreen

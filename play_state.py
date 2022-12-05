@@ -1,9 +1,4 @@
-from pico2d import *
-
 import game_world
-import game_framework
-
-import play_state
 import gameover_state
 import title_state
 import stageclear_state

@@ -1,6 +1,5 @@
 from characterclass import *
 import random
-import math
 
 PIXEL_PER_METER = (10 / 0.5)
 

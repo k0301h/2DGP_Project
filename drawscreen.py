@@ -1,7 +1,5 @@
-from map_floor import *
 from monsterclass import *
 import time
-import threading
 
 start = 0
 end = 0
