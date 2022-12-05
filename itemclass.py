@@ -49,7 +49,7 @@ class bullet:
             character_index_y = int((HEIGHT - self.Y) // 60)
             if not self.DIRECTION:
                 character_index_x += 1
-                if (2 <= map_floor_array[character_index_y][character_index_x] <= 29 or 40 <= map_floor_array[character_index_y][character_index_x] <= 41) and \
+                if character_index_x < map_size - 1 and (2 <= map_floor_array[character_index_y][character_index_x] <= 29 or 40 <= map_floor_array[character_index_y][character_index_x] <= 41) and \
                         abs(self.Y - 10 - (HEIGHT - character_index_y * 60 - 30)) < 40 and abs(self.X + move - character_index_x * 60) <= 20:
                     return False
             else:

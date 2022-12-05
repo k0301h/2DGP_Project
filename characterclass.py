@@ -44,7 +44,7 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
 class CHARACTER():
-    HP = 1
+    HP = 5
     ATK = 1
     Action = 0
     MotionIndex = 0
@@ -57,7 +57,7 @@ class CHARACTER():
 
     type = 'Anna'
 
-    mode = 0
+    mode = 1
     itemmode = 0 # 0 : 맨손 1 : 샷건
     handle_item = shotgun()
     reload = True
