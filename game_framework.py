@@ -115,6 +115,11 @@ def run(start_state):
         stack[-1].handle_events()
         stack[-1].update()
         stack[-1].draw()
+
+        def test_game_framework():
+            start_state = TestGameState('StartState')
+            run(start_state)
+
         global frame_time
         frame_time = time.time() - current_time
         frame_rate = 1.0 / frame_time
@@ -128,9 +133,7 @@ def run(start_state):
         stack.pop()
 
 
-def test_game_framework():
-    start_state = TestGameState('StartState')
-    run(start_state)
+
 
 
 
